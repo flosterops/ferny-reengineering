@@ -101,24 +101,25 @@ app.on("window-all-closed", () => {
   }
 });
 
-app.on("ready", () => {
+app.whenReady().then(() => {
   app.setUserTasks([{
-      program: process.execPath,
-      arguments: "--new-tab",
-      iconPath: process.execPath,
-      iconIndex: 0,
-      title: "New tab",
-      description: "Open a new browser tab"
-    }, {
-      program: process.execPath,
-      arguments: "--overlay",
-      iconPath: process.execPath,
-      iconIndex: 0,
-      title: "Show overlay",
-      description: "Open the overlay tab"
-    }
-  ]);
+    program: process.execPath,
+    arguments: "--new-tab",
+    iconPath: process.execPath,
+    iconIndex: 0,
+    title: "New tab",
+    description: "Open a new browser tab"
+  }, {
+    program: process.execPath,
+    arguments: "--overlay",
+    iconPath: process.execPath,
+    iconIndex: 0,
+    title: "Show overlay",
+    description: "Open the overlay tab"
+  }])
+})
 
+app.on("ready", () => {
   autoUpdater.logger = require("electron-log");
   autoUpdater.logger.transports.file.level = "info";
   autoUpdater.autoDownload = false;
