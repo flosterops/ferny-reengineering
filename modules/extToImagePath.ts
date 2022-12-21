@@ -1,4 +1,4 @@
-function extToImagePath(ext) {
+function extToImagePath(ext: string): string {
     let res = "../assets/imgs/old-icons16/page.png";
     if(ext === "zip" || ext === "tar" || ext === "wim" || ext === "z") {
         res = "../assets/imgs/old-icons16/archive.png";

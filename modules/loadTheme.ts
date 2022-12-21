@@ -3,8 +3,13 @@ const path = require("path");
 
 const loadFileFromJsonFolder = require("../modules/loadFileFromJsonFolder.js");
 
-function loadTheme(name: string) {
-    return new Promise(function(resolve, reject) {
+interface ITheme {
+    theme: any;
+    dark: boolean
+}
+
+function loadTheme(name: string): Promise<ITheme> {
+    return new Promise(function(resolve) {
         let theme = {
             name: "ferny",
             dark: false

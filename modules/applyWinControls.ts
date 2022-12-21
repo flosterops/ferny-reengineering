@@ -1,4 +1,4 @@
-function applyWinControls(show, type) {
+function applyWinControls(show: boolean, type?: string): void {
     if(show) {
         setNone();
     } else {
@@ -12,13 +12,13 @@ function applyWinControls(show, type) {
     }
 }
 
-function setNone() {
+function setNone(): void {
     const windowControls = document.getElementById("window-controls");
     windowControls.innerHTML = "";
     document.body.classList.add("system-titlebar");
 }
 
-function setWindows(type) {
+function setWindows(type?: string): void {
     const windowControls = document.getElementById("window-controls");
     windowControls.classList.add("windows");
 
@@ -44,7 +44,7 @@ function setWindows(type) {
     }
 }
 
-function setLinux(type) {
+function setLinux(type?: string) {
     const windowControls = document.getElementById("window-controls");
     windowControls.classList.add("linux");
 

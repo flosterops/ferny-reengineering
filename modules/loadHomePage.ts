@@ -2,8 +2,8 @@ const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
 
-function loadHomePage() {
-    return new Promise(function(resolve, reject) {
+function loadHomePage(): Promise<any> {
+    return new Promise(function(resolve) {
         let Data = {
             url: "https://duckduckgo.com",
             on: 0

@@ -3,8 +3,8 @@ const fs = require("fs");
 
 const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 
-function loadLastTab() {
-    return new Promise((resolve, reject) => {
+function loadLastTab(): Promise<string> {
+    return new Promise((resolve) => {
         const defaultValue = "overlay";
         const possibleValues = ["overlay", "new-tab", "new-tab-overlay", "quit"];
         try {
@@ -21,7 +21,7 @@ function loadLastTab() {
                 }
             });
         } catch (e) {
-            saveFileToJsonFolder(null, "lasttab", defaultValue).then((bool) => {
+            saveFileToJsonFolder(null, "lasttab", defaultValue).then(() => {
                 resolve(defaultValue);
             })
         }

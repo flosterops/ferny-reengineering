@@ -1,4 +1,4 @@
-function bytesToSize(bytes) {
+function bytesToSize(bytes: number): string {
     const sizes = ["bytes", "Kb", "Mb", "Gb", "Tb"];
     if (bytes === 0) {
         return "0 Byte";
