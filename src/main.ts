@@ -6,16 +6,16 @@ const os = require("os");
 const fs = require("fs");
 const ppath = require("persist-path")("Ferny");
 
-const saveFileToJsonFolder = require(app.getAppPath() + "/modules/saveFileToJsonFolder.js");
-const loadTheme = require(app.getAppPath() + "/modules/loadTheme.js");
-const loadLastTabModule = require(app.getAppPath() + "/modules/loadLastTab.js");
-const loadStartupModule = require(app.getAppPath() + "/modules/loadStartup.js");
-const loadHomePage = require(app.getAppPath() + "/modules/loadHomePage.js");
-const loadBounds = require(app.getAppPath() + "/modules/loadBounds.js");
-const loadWinControlsModule = require(app.getAppPath() + "/modules/loadWinControls.js");
+const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
+const loadTheme = require("../modules/loadTheme.js");
+const loadLastTabModule = require("../modules/loadLastTab.js");
+const loadStartupModule = require("../modules/loadStartup.js");
+const loadHomePage = require("../modules/loadHomePage.js");
+const loadBounds = require("../modules/loadBounds.js");
+const loadWinControlsModule = require("../modules/loadWinControls.js");
 
-const TabManager = require(app.getAppPath() + "/modules/TabManager/TabManager.js");
-const Overlay = require(app.getAppPath() + "/modules/Overlay/Overlay.js");
+const TabManager = require("../modules/TabManager/TabManager.js");
+const Overlay = require("../modules/Overlay/Overlay.js");
 
 // Variables
 
@@ -61,21 +61,21 @@ app.on("window-all-closed", () => {
   }
 });
 app.whenReady().then(() => {
-  app.setUserTasks([{
-    program: process.execPath,
-    arguments: "--new-tab",
-    iconPath: process.execPath,
-    iconIndex: 0,
-    title: "New tab",
-    description: "Open a new browser tab"
-  }, {
-    program: process.execPath,
-    arguments: "--overlay",
-    iconPath: process.execPath,
-    iconIndex: 0,
-    title: "Show overlay",
-    description: "Open the overlay tab"
-  }])
+  // app.setUserTasks([{
+  //   program: process.execPath,
+  //   arguments: "--new-tab",
+  //   iconPath: process.execPath,
+  //   iconIndex: 0,
+  //   title: "New tab",
+  //   description: "Open a new browser tab"
+  // }, {
+  //   program: process.execPath,
+  //   arguments: "--overlay",
+  //   iconPath: process.execPath,
+  //   iconIndex: 0,
+  //   title: "Show overlay",
+  //   description: "Open the overlay tab"
+  // }])
 })
 app.on("ready", () => {
   autoUpdater.logger = require("electron-log");
@@ -124,7 +124,7 @@ app.on("ready", () => {
     }
   });
 
-  session.defaultSession.on("will-download", (event, item, webContents) => {
+  session.defaultSession.on("will-download", (event, item) => {
     const index = downloadCounter++;
 
     if(downloadsFolder !== "?ask?") {
@@ -1148,8 +1148,8 @@ function showAboutWindow() {
           },
           backgroundColor: backgroundColor
         });
-    
-        aboutWindow.loadFile(app.getAppPath() + "/pages/html/about.html");
+
+        aboutWindow.loadFile(app.getAppPath() + "/pages/about/about.html");
   
         aboutWindow.on("focus", () => {
           aboutWindow.webContents.send("window-focus");
@@ -1193,7 +1193,7 @@ function showSettingsWindow(categoryId = '') {
           backgroundColor: backgroundColor
         });
     
-        settingsWindow.loadFile(app.getAppPath() + "/pages/html/settings.html").then(() => {
+        settingsWindow.loadFile(app.getAppPath() + "/pages/settings/settings.html").then(() => {
           settingsWindow.webContents.send("settings-showCategory", categoryId);
         });
   
@@ -1245,7 +1245,7 @@ function showMainWindow() {
           backgroundColor: backgroundColor
         });
       
-        mainWindow.loadFile(app.getAppPath() + "/pages/html/browser.html");
+        mainWindow.loadFile(app.getAppPath() + "/pages/browser/browser.html");
       
         mainWindow.webContents.on("context-menu", (event, params) => {
           if(params.isEditable) {
@@ -1468,7 +1468,7 @@ function showWelcomeWindow() {
       welcomeWindow.webContents.send('action-blur-window');
     });
   
-    welcomeWindow.loadFile(app.getAppPath() + '/pages/html/welcome.html');
+    welcomeWindow.loadFile(app.getAppPath() + '/pages/welcome/welcome.html');
   
     welcomeWindow.once('ready-to-show', () => {
       welcomeWindow.show();

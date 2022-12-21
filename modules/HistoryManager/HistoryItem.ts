@@ -6,10 +6,10 @@ const { ipcRenderer, clipboard } = require("electron");
 const parsePath = require("parse-path");
 const fileExtension = require("file-extension");
 
-const extToImagePath = require(__dirname + "/../extToImagePath.js");
-const rgbToRgbaString = require(__dirname + "/../rgbToRgbaString.js");
-const epochToDate = require(__dirname + "/../epochToDate.js");
-const epochToTime = require(__dirname + "/../epochToTime.js");
+const extToImagePath = require("../extToImagePath");
+const rgbToRgbaString = require("../rgbToRgbaString");
+const epochToDate = require("../epochToDate");
+const epochToTime = require("../epochToTime");
 
 class HistoryItem extends EventEmitter {
     history = [];

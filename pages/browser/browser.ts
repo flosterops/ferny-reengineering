@@ -5,13 +5,13 @@
 const { ipcRenderer } = require("electron");
 const dragula = require("dragula");
 
-const applyTheme = require("../../modules/applyTheme.js");
-const loadTheme = require("../../modules/loadTheme.js");
-const applyWinControls = require("../../modules/applyWinControls.js");
-const loadWinControlsModule = require("../../modules/loadWinControls.js");
+const applyTheme = require("../../modules/applyTheme");
+const loadTheme = require("../../modules/loadTheme");
+const applyWinControls = require("../../modules/applyWinControls");
+const loadWinControlsModule = require("../../modules/loadWinControls");
 
-const NotificationManager = require("../../modules/NotificationManager/NotificationManager.js");
-const TabRenderer = require("../../modules/TabManager/TabRenderer.js");
+const NotificationManager = require("../../modules/NotificationManager/NotificationManager");
+const TabRenderer = require("../../modules/TabManager/TabRenderer");
 
 // Functions themes
 

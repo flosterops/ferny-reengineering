@@ -6,10 +6,10 @@ const fs = require("fs");
 
 // Modules
 
-const saveFileToJsonFolder = require("../../modules/saveFileToJsonFolder.js");
-const loadTheme = require("../../modules/loadTheme.js");
-const applyTheme = require("../../modules/applyTheme.js");
-const applyWinControls = require("../../modules/applyWinControls.js");
+const saveFileToJsonFolder = require("../../modules/saveFileToJsonFolder");
+const loadTheme = require("../../modules/loadTheme");
+const applyTheme = require("../../modules/applyTheme");
+const applyWinControls = require("../../modules/applyWinControls");
 
 // Functions
 

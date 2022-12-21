@@ -1,4 +1,4 @@
-const loadFileFromJsonFolder = require("../modules/loadFileFromJsonFolder.js");
+const loadFileFromJsonFolder = require("./loadFileFromJsonFolder");
 
 interface ILoadBounds {
     x: null | number;

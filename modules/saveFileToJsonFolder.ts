@@ -28,7 +28,7 @@ function saveFileToJsonFolder(subfolder: string | null, fileName: string | numbe
 }
 
 function checkDirExists(path: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fs.exists(path, (exists) => {
             if(exists) {
                 resolve(true);

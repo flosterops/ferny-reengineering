@@ -2,10 +2,10 @@
 
 const EventEmitter = require("events");
 
-const TextNotification = require(__dirname + '/Notifications/TextNotification.js');
-const StatusNotification = require(__dirname + '/Notifications/StatusNotification.js');
-const QuestNotification = require(__dirname + '/Notifications/QuestNotification.js');
-const ZoomNotification = require(__dirname + '/Notifications/ZoomNotification.js');
+const TextNotification = require('./Notifications/TextNotification');
+const StatusNotification = require('./Notifications/StatusNotification');
+const QuestNotification = require('./Notifications/QuestNotification');
+const ZoomNotification = require('./Notifications/ZoomNotification');
 
 class NotificationManager extends EventEmitter {
     maxNotifCount = 1;

@@ -6,11 +6,11 @@ const ppath = require("persist-path")("Ferny");
 const readlPromise = require("readline-promise").default;
 const fs = require("fs");
 
-const saveFileToJsonFolder = require("../saveFileToJsonFolder.js");
-const loadFileFromJsonFolder = require("../loadFileFromJsonFolder.js");
-const checkFileExists = require("../checkFileExists.js");
+const saveFileToJsonFolder = require("../saveFileToJsonFolder");
+const loadFileFromJsonFolder = require("../loadFileFromJsonFolder");
+const checkFileExists = require("../checkFileExists");
 
-const HistoryItem = require(__dirname + "/HistoryItem.js");
+const HistoryItem = require("./HistoryItem");
 
 interface IHistoryReadline {
     id: number;

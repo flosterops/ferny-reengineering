@@ -7,9 +7,9 @@ const ppath = require("persist-path")("Ferny");
 const readlPromise = require("readline-promise").default;
 const parseUrl = require("parse-url");
 
-const saveFileToJsonFolder = require("../saveFileToJsonFolder.js");
-const loadFileFromJsonFolder = require("../loadFileFromJsonFolder.js");
-const checkFileExists = require("../checkFileExists.js");
+const saveFileToJsonFolder = require("../saveFileToJsonFolder");
+const loadFileFromJsonFolder = require("../loadFileFromJsonFolder");
+const checkFileExists = require("../checkFileExists");
 
 interface IBookmarkReadline {
     id: number;
@@ -19,8 +19,8 @@ interface IBookmarkReadline {
     folder: number;
 }
 
-const Folder = require(__dirname + "/Folder.js");
-const Bookmark = require(__dirname + "/Bookmark.js");
+const Folder = require("./Folder.js");
+const Bookmark = require("./Bookmark.js");
 
 class BookmarkManager extends EventEmitter {
     folderContainer = null;

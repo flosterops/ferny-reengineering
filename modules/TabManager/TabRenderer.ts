@@ -3,7 +3,7 @@ const { ipcRenderer } = require('electron');
 const GetAvColor = require('color.js');
 const parseUrl = require('parse-url');
 
-const rgbToRgbaString = require('../rgbToRgbaString.js');
+const rgbToRgbaString = require('../rgbToRgbaString');
 
 class TabRenderer extends EventEmitter {
   tabContainer = null;

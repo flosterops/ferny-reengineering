@@ -6,7 +6,7 @@ const fileExtension = require("file-extension");
 const parsePath = require("parse-path");
 const parseUrl = require("parse-url");
 
-const extToImagePath = require(__dirname + "/../extToImagePath.js");
+const extToImagePath = require("../extToImagePath");
 
 class Tab extends EventEmitter {
     id = null;
