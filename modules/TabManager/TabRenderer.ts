@@ -55,7 +55,7 @@ class TabRenderer extends EventEmitter {
     tab.id = 'tab-' + id;
     tab.name = id;
     tab.innerHTML = `
-            <img class='tabman-tab-icon' src='../imgs/icon16.png'>
+            <img class='tabman-tab-icon' src='../../assets/imgs/icon16.png'>
             <label class='tabman-tab-title'>` + title + `</label>
             <div class='tabman-tab-buttons'></div>
         `;

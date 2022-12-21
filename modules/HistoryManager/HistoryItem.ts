@@ -58,7 +58,7 @@ class HistoryItem extends EventEmitter {
         } else {
             historyIcon.src = "http://www.google.com/s2/favicons?domain=" + url;
             historyIcon.onerror = () => {
-                historyIcon.src = __dirname + "/../../imgs/old-icons16/history.png";
+                historyIcon.src = __dirname + "/../../assets/imgs/old-icons16/history.png";
                 this.updateHistoryIconColor();
             };
             if(title.substring(0, 4) == "http") {

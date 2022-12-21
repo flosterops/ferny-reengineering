@@ -35,7 +35,7 @@ class Bookmark extends EventEmitter {
         bookmarkIcon.classList.add("bookmark-icon");
         bookmarkIcon.src = "http://www.google.com/s2/favicons?domain=" + url;
         bookmarkIcon.onerror = () => {
-            bookmarkIcon.src = __dirname + "/../../imgs/old-icons16/star.png";
+            bookmarkIcon.src = __dirname + "/../../assets/imgs/old-icons16/star.png";
             this.updateBookmarkColor()
         };
         this.node.appendChild(bookmarkIcon);

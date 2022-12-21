@@ -373,7 +373,7 @@ class TabManager extends EventEmitter {
         } else {
             m.append(new MenuItem({ 
                 label: "New Tab", 
-                icon: this.appPath + "/imgs/icons16/create.png", 
+                icon: this.appPath + "/assets/imgs/icons16/create.png",
                 accelerator: "CmdOrCtrl+T", 
                 click: () => { this.newTab(); } 
             }));
@@ -382,7 +382,7 @@ class TabManager extends EventEmitter {
         m.append(new MenuItem({ type: "separator" }));
         m.append(new MenuItem({ 
             label: "Next tab", 
-            icon: this.appPath + "/imgs/icons16/next.png", 
+            icon: this.appPath + "/assets/imgs/icons16/next.png",
             accelerator: "CmdOrCtrl+Tab", 
             enabled: this.hasTabs(),
             click: () => { 
@@ -399,7 +399,7 @@ class TabManager extends EventEmitter {
         }));
         m.append(new MenuItem({ 
             label: "Previous tab", 
-            icon: this.appPath + "/imgs/icons16/prev.png", 
+            icon: this.appPath + "/assets/imgs/icons16/prev.png",
             accelerator: "CmdOrCtrl+Shift+Tab", 
             enabled: this.hasTabs(),
             click: () => {
@@ -418,7 +418,7 @@ class TabManager extends EventEmitter {
         m.append(new MenuItem({ 
             label: "Close all tabs", 
             accelerator: "CmdOrCtrl+Q",
-            icon: this.appPath + "/imgs/icons16/close.png", 
+            icon: this.appPath + "/assets/imgs/icons16/close.png",
             enabled: this.hasTabs(),
             click: () => { 
                 this.closeAllTabs();

@@ -25,7 +25,7 @@ let mainWindow = null;
 let welcomeWindow = null;
 let aboutWindow = null;
 let settingsWindow = null;
-let downloads = [];
+const downloads = [];
 let downloadCounter = 0;
 let downloadsFolder = "?downloads?";
 let updateCancellationToken = null;
@@ -113,7 +113,7 @@ app.on("ready", () => {
 
   autoUpdater.on("download-progress", (progress) => {
     if(progress != null) {
-      let perc = Math.round(progress.percent);
+      const perc = Math.round(progress.percent);
       if(perc % 25 == 0 && perc != 100) {
         mainWindow.webContents.send("notificationManager-addQuestNotif", { text: `Update is being downloaded: ${perc}%`, ops: [{ 
           text: "Cancel", 
@@ -125,7 +125,7 @@ app.on("ready", () => {
   });
 
   session.defaultSession.on("will-download", (event, item, webContents) => {
-    let index = downloadCounter++;
+    const index = downloadCounter++;
 
     if(downloadsFolder !== "?ask?") {
       if(downloadsFolder === "?downloads?") {
@@ -200,19 +200,19 @@ ipcMain.on("main-openDownloadsFolder", (event) => {
   openDownloadsFolder();
 });
 ipcMain.on("main-bookmarkAllTabs", (event) => {
-  let arr = [];
+  const arr = [];
   tabManager.getTabs().forEach((tab, index) => {
     arr.push({ name: tab.getTitle(), url: tab.getURL() });
   });
   overlay.addFolderWithBookmarks("Bookmarked tabs", arr);
 });
 ipcMain.on("main-popupHomePageOptions", (event) => {
-  let homePageOptions = Menu.buildFromTemplate([{
+  const homePageOptions = Menu.buildFromTemplate([{
     label: "Edit home page",
     click: () => {
       showSettingsWindow("home-page");
     },
-    icon: app.getAppPath() + "/imgs/icons16/edit.png"
+    icon: app.getAppPath() + "/assets/imgs/icons16/edit.png"
   }]);
   homePageOptions.popup(mainWindow);
 });
@@ -278,7 +278,7 @@ ipcMain.on('request-clear-browsing-data', (event, arg) => {
     });
 
     ses.getCacheSize().then(function(value) {
-      let Data = {
+      const Data = {
         cacheSize: value
       };
     
@@ -297,7 +297,7 @@ ipcMain.on('request-set-cache-size', (event, arg) => {
   const ses = mainWindow.webContents.session;
 
   ses.getCacheSize().then(function(value) {
-    let Data = {
+    const Data = {
       cacheSize: value
     };
   
@@ -306,8 +306,8 @@ ipcMain.on('request-set-cache-size', (event, arg) => {
 });
 
 ipcMain.on('request-info-contextmenu', (event, arg) => {
-  let infoMenu = Menu.buildFromTemplate([
-    { label: 'Certificate info', icon: app.getAppPath() + '/imgs/icons16/certificate.png', click: () => { mainWindow.webContents.send('action-page-certificate'); } }
+  const infoMenu = Menu.buildFromTemplate([
+    { label: 'Certificate info', icon: app.getAppPath() + '/assets/imgs/icons16/certificate.png', click: () => { mainWindow.webContents.send('action-page-certificate'); } }
   ]);
   infoMenu.popup(mainWindow);
 });
@@ -317,7 +317,7 @@ ipcMain.on('action-show-welcome-screen', (event, arg) => {
 });
 
 ipcMain.on('request-set-about', (event, arg) => {
-  let Data = {
+  const Data = {
     version: app.getVersion(),
     arch: os.arch(),
     platform: process.platform
@@ -430,7 +430,7 @@ ipcMain.on("overlay-removeFolder", (event, id) => {
 
 ipcMain.on("overlay-bookmarkThisPage", (event) => {
   if(tabManager.hasActiveTab()) {
-    let at = tabManager.getActiveTab();
+    const at = tabManager.getActiveTab();
     overlay.addBookmark(at.getTitle(), at.getURL());
     overlay.scrollToId("bookmarks-title"); 
   }
@@ -449,8 +449,8 @@ ipcMain.on("overlay-showBookmarkOptions", (event, id) => {
 });
 
 ipcMain.on("overlay-showMenu", (event, id) => {
-  let tabMenu = Menu.buildFromTemplate([{ 
-    label: "Back", icon: (this as any).appPath + "/imgs/icons16/back.png", accelerator: "Alt+Left", enabled: (this as any).view.webContents.canGoBack(), click: () => {
+  const tabMenu = Menu.buildFromTemplate([{
+    label: "Back", icon: (this as any).appPath + "/assets/imgs/icons16/back.png", accelerator: "Alt+Left", enabled: (this as any).view.webContents.canGoBack(), click: () => {
       (this as any).goBack();
     } }
   ]);
@@ -604,21 +604,21 @@ function initTabManager(theme) {
     if(tabClosed === "overlay") {
       overlay.show();
     } else if(tabClosed === "next-tab") {
-      let nextTab = tabManager.getTabByPosition(pos + 1);
+      const nextTab = tabManager.getTabByPosition(pos + 1);
       if(nextTab != null) {
         nextTab.activate();
       } else {
-        let prevTab = tabManager.getTabByPosition(pos - 1);
+        const prevTab = tabManager.getTabByPosition(pos - 1);
         if(prevTab != null) {
           prevTab.activate();
         }
       }
     } else if(tabClosed === "prev-tab") {
-      let prevTab = tabManager.getTabByPosition(pos - 1);
+      const prevTab = tabManager.getTabByPosition(pos - 1);
       if(prevTab != null) {
         prevTab.activate();
       } else {
-        let nextTab = tabManager.getTabByPosition(pos + 1);
+        const nextTab = tabManager.getTabByPosition(pos + 1);
         if(nextTab != null) {
           nextTab.activate();
         }
@@ -710,9 +710,7 @@ function loadDownloadCounter() {
 
 function saveDownloadCounter() {
   try {
-    fs.writeFile(ppath + "/json/downloads/download-counter.json", downloadCounter, (err) => {
-
-    });
+    fs.writeFile(ppath + "/json/downloads/download-counter.json", downloadCounter);
   } catch (e) {
     
   }
@@ -737,13 +735,13 @@ function openDownloadsFolder() {
 // Functions menu
 
 function sideMenuConstructor(hasActiveTab: boolean, hasTabs: boolean) {
-  let constructor = [{
-    label: "Tab group", icon: app.getAppPath() + "/imgs/icons16/blocks.png", submenu: [{ 
-      label: "New tab", icon: app.getAppPath() + "/imgs/icons16/create.png", accelerator: "CmdOrCtrl+T", click: () => { 
+  const constructor = [{
+    label: "Tab group", icon: app.getAppPath() + "/assets/imgs/icons16/blocks.png", submenu: [{
+      label: "New tab", icon: app.getAppPath() + "/assets/imgs/icons16/create.png", accelerator: "CmdOrCtrl+T", click: () => {
         tabManager.newTab(); 
       } }, { type: "separator" }, {
-      label: "Switch tab", enabled: hasTabs, icon: app.getAppPath() + "/imgs/icons16/list.png", submenu: [{ 
-        label: "Next tab", icon: app.getAppPath() + "/imgs/icons16/next.png", accelerator: "CmdOrCtrl+Tab", click: () => { 
+      label: "Switch tab", enabled: hasTabs, icon: app.getAppPath() + "/assets/imgs/icons16/list.png", submenu: [{
+        label: "Next tab", icon: app.getAppPath() + "/assets/imgs/icons16/next.png", accelerator: "CmdOrCtrl+Tab", click: () => {
           if(tabManager.hasTabs()) {
             if(tabManager.hasActiveTab()) {
               if(tabManager.getActiveTab().getPosition() == tabManager.getMaxPosition()) {
@@ -756,7 +754,7 @@ function sideMenuConstructor(hasActiveTab: boolean, hasTabs: boolean) {
             }
           }
         } }, { 
-        label: "Previous tab", icon: app.getAppPath() + "/imgs/icons16/prev.png", accelerator: "CmdOrCtrl+Shift+Tab", click: () => { 
+        label: "Previous tab", icon: app.getAppPath() + "/assets/imgs/icons16/prev.png", accelerator: "CmdOrCtrl+Shift+Tab", click: () => {
           if(tabManager.hasTabs()) {
             if(tabManager.hasActiveTab()) {
               if(tabManager.getActiveTab().getPosition() == 0) {
@@ -797,8 +795,8 @@ function sideMenuConstructor(hasActiveTab: boolean, hasTabs: boolean) {
           tabManager.switchTab(9); 
         } }
       ] }, { type: "separator" }, {
-      label: "Switch tab group", icon: app.getAppPath() + "/imgs/icons16/blocks.png", submenu: [ {
-        label: "Green", icon: app.getAppPath() + "/imgs/icons16/one.png", accelerator: "CmdOrCtrl+Shift+1", click: () => { 
+      label: "Switch tab group", icon: app.getAppPath() + "/assets/imgs/icons16/blocks.png", submenu: [ {
+        label: "Green", icon: app.getAppPath() + "/assets/imgs/icons16/one.png", accelerator: "CmdOrCtrl+Shift+1", click: () => {
           tabManager.switchTabGroup(0);
         } }, {
         label: "Blue", accelerator: "CmdOrCtrl+Shift+2", click: () => { 
@@ -807,100 +805,98 @@ function sideMenuConstructor(hasActiveTab: boolean, hasTabs: boolean) {
         label: "Orange", accelerator: "CmdOrCtrl+Shift+3", click: () => { 
           tabManager.switchTabGroup(2);
         } }, { type: "separator" }, {
-        enabled: false, label: "Incognito", icon: app.getAppPath() + "/imgs/icons16/incognito.png", accelerator: "CmdOrCtrl+I", click: () => { 
-
-        } }
+        enabled: false, label: "Incognito", icon: app.getAppPath() + "/assets/imgs/icons16/incognito.png", accelerator: "CmdOrCtrl+I", click: () => undefined}
       ] }, { type: "separator" }, {
-      label: "Close all tabs", enabled: hasTabs, icon: app.getAppPath() + "/imgs/icons16/close.png", accelerator: "CmdOrCtrl+Q", click: () => { 
+      label: "Close all tabs", enabled: hasTabs, icon: app.getAppPath() + "/assets/imgs/icons16/close.png", accelerator: "CmdOrCtrl+Q", click: () => {
         tabManager.closeAllTabs();
       } }
     ]}, { 
-    label: "Active tab", enabled: hasActiveTab, icon: app.getAppPath() + "/imgs/icons16/tab.png", submenu: [{ 
-      label: "Back", accelerator: "Alt+Left", icon: app.getAppPath() + "/imgs/icons16/back.png", click: () => { 
+    label: "Active tab", enabled: hasActiveTab, icon: app.getAppPath() + "/assets/imgs/icons16/tab.png", submenu: [{
+      label: "Back", accelerator: "Alt+Left", icon: app.getAppPath() + "/assets/imgs/icons16/back.png", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().goBack(); 
         } 
       } }, { 
-      label: "Forward", accelerator: "Alt+Right", icon: app.getAppPath() + "/imgs/icons16/forward.png", click: () => { 
+      label: "Forward", accelerator: "Alt+Right", icon: app.getAppPath() + "/assets/imgs/icons16/forward.png", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().goForward(); 
         } 
       } }, { 
-      label: "Reload", icon: app.getAppPath() + "/imgs/icons16/reload.png", accelerator: "F5", click: () => { 
+      label: "Reload", icon: app.getAppPath() + "/assets/imgs/icons16/reload.png", accelerator: "F5", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().reload(); 
         } 
       } }, { 
-      label: "Reload ignoring cache", icon: app.getAppPath() + "/imgs/icons16/db-reload.png", accelerator: "CmdOrCtrl+Shift+F5", click: () => { 
+      label: "Reload ignoring cache", icon: app.getAppPath() + "/assets/imgs/icons16/db-reload.png", accelerator: "CmdOrCtrl+Shift+F5", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().reloadIgnoringCache();
         }
       } }, { type: "separator" }, { 
-      label: "Duplicate", icon: app.getAppPath() + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+Shift+D", click: () => { 
+      label: "Duplicate", icon: app.getAppPath() + "/assets/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+Shift+D", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().duplicate(); 
         } 
       } }, { 
-      label: "Copy URL", icon: app.getAppPath() + "/imgs/icons16/link.png", accelerator: "CmdOrCtrl+Shift+C", click: () => { 
+      label: "Copy URL", icon: app.getAppPath() + "/assets/imgs/icons16/link.png", accelerator: "CmdOrCtrl+Shift+C", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().copyURL(); 
         }
       } }, { 
-      label: "Go home", icon: app.getAppPath() + "/imgs/icons16/home.png", accelerator: "CmdOrCtrl+Shift+H", click: () => { 
+      label: "Go home", icon: app.getAppPath() + "/assets/imgs/icons16/home.png", accelerator: "CmdOrCtrl+Shift+H", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().goHome(); 
         }
       } }, { type: "separator" }, { 
-      label: "Move tab", icon: app.getAppPath() + "/imgs/icons16/move-horizontal.png", submenu: [{
-        label: "Move left", accelerator: "CmdOrCtrl+Shift+PageUp", icon: app.getAppPath() + "/imgs/icons16/prev.png", click: () => {
+      label: "Move tab", icon: app.getAppPath() + "/assets/imgs/icons16/move-horizontal.png", submenu: [{
+        label: "Move left", accelerator: "CmdOrCtrl+Shift+PageUp", icon: app.getAppPath() + "/assets/imgs/icons16/prev.png", click: () => {
             if(tabManager.hasActiveTab()) {
               tabManager.getActiveTab().moveLeft();
             }
         } }, {
-        label: "Move right", accelerator: "CmdOrCtrl+Shift+PageDown", icon: app.getAppPath() + "/imgs/icons16/next.png", click: () => {
+        label: "Move right", accelerator: "CmdOrCtrl+Shift+PageDown", icon: app.getAppPath() + "/assets/imgs/icons16/next.png", click: () => {
           if(tabManager.hasActiveTab()) {
             tabManager.getActiveTab().moveRight();
           }
         } }, { type: "separator" }, {
-        label: "Move to start", accelerator: "CmdOrCtrl+Shift+Home", icon: app.getAppPath() + "/imgs/icons16/to-start.png", click: () => {
+        label: "Move to start", accelerator: "CmdOrCtrl+Shift+Home", icon: app.getAppPath() + "/assets/imgs/icons16/to-start.png", click: () => {
           if(tabManager.hasActiveTab()) {
             tabManager.getActiveTab().moveToStart();
           }
         } }, {
-        label: "Move to end", accelerator: "CmdOrCtrl+Shift+End", icon: app.getAppPath() + "/imgs/icons16/to-end.png", click: () => {
+        label: "Move to end", accelerator: "CmdOrCtrl+Shift+End", icon: app.getAppPath() + "/assets/imgs/icons16/to-end.png", click: () => {
           if(tabManager.hasActiveTab()) {
             tabManager.getActiveTab().moveToEnd();
           }
         } } 
     ] }, { type: "separator" }, {
-      label: "Close tabs to the right", icon: app.getAppPath() + "/imgs/icons16/swipe-right.png", click: () => { 
+      label: "Close tabs to the right", icon: app.getAppPath() + "/assets/imgs/icons16/swipe-right.png", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().closeToTheRight(); 
         }
       } }, { 
-      label: "Close others", icon: app.getAppPath() + "/imgs/icons16/swipe-both.png", accelerator: "CmdOrCtrl+Shift+W", click: () => { 
+      label: "Close others", icon: app.getAppPath() + "/assets/imgs/icons16/swipe-both.png", accelerator: "CmdOrCtrl+Shift+W", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().closeOthers(); 
         }
       } }, { 
-      label: "Close tab", icon: app.getAppPath() + "/imgs/icons16/close.png", accelerator: "CmdOrCtrl+W", click: () => { 
+      label: "Close tab", icon: app.getAppPath() + "/assets/imgs/icons16/close.png", accelerator: "CmdOrCtrl+W", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().close(); 
         }
       } }
     ] }, { type: "separator" }, { 
-    label: "Bookmarks", icon: app.getAppPath() + "/imgs/icons16/bookmarks.png", submenu: [{ 
-      label: "Bookmark manager", icon: app.getAppPath() + "/imgs/icons16/bookmarks.png", accelerator: "CmdOrCtrl+B", click: () => { 
+    label: "Bookmarks", icon: app.getAppPath() + "/assets/imgs/icons16/bookmarks.png", submenu: [{
+      label: "Bookmark manager", icon: app.getAppPath() + "/assets/imgs/icons16/bookmarks.png", accelerator: "CmdOrCtrl+B", click: () => {
         overlay.scrollToId("bookmarks-title"); 
       } }, { type: "separator" }, { 
-      label: "Bookmark this page", enabled: hasActiveTab, icon: app.getAppPath() + "/imgs/icons16/add-bookmark.png", accelerator: "CmdOrCtrl+Shift+B", click: () => { 
+      label: "Bookmark this page", enabled: hasActiveTab, icon: app.getAppPath() + "/assets/imgs/icons16/add-bookmark.png", accelerator: "CmdOrCtrl+Shift+B", click: () => {
         if(tabManager.hasActiveTab()) {
-          let at = tabManager.getActiveTab();
+          const at = tabManager.getActiveTab();
           overlay.addBookmark(at.getTitle(), at.getURL());
           overlay.scrollToId("bookmarks-title"); 
         }
       } }, { 
-      label: "Bookmark all tabs", enabled: hasTabs, icon: app.getAppPath() + "/imgs/icons16/blocks.png", click: () => { 
+      label: "Bookmark all tabs", enabled: hasTabs, icon: app.getAppPath() + "/assets/imgs/icons16/blocks.png", click: () => {
         if(tabManager.hasTabs()) {
           mainWindow.webContents.send("notificationManager-addQuestNotif", { text: "Are you sure to bookmark all opened tabs?", ops: [{ 
             text: "Bookmark tabs", 
@@ -912,88 +908,88 @@ function sideMenuConstructor(hasActiveTab: boolean, hasTabs: boolean) {
         }
       } }
     ] }, { 
-    label: "History", accelerator: "CmdOrCtrl+H", icon: app.getAppPath() + "/imgs/icons16/history.png", click: () => { 
+    label: "History", accelerator: "CmdOrCtrl+H", icon: app.getAppPath() + "/assets/imgs/icons16/history.png", click: () => {
       overlay.scrollToId("history-title");
     } }, { 
-    label: "Downloads", icon: app.getAppPath() + "/imgs/icons16/download.png", submenu: [{
-      label: "Downloads", accelerator: "CmdOrCtrl+D", icon: app.getAppPath() + "/imgs/icons16/download.png", click: () => { 
+    label: "Downloads", icon: app.getAppPath() + "/assets/imgs/icons16/download.png", submenu: [{
+      label: "Downloads", accelerator: "CmdOrCtrl+D", icon: app.getAppPath() + "/assets/imgs/icons16/download.png", click: () => {
         overlay.scrollToId("downloads-title"); 
       } }, { type: "separator" }, { 
-      label: "Open folder", icon: app.getAppPath() + "/imgs/icons16/folder.png", click: () => { 
+      label: "Open folder", icon: app.getAppPath() + "/assets/imgs/icons16/folder.png", click: () => {
         openDownloadsFolder();
       } }
     ] }, { type: "separator" }, { 
-    label: "Zoom", icon: app.getAppPath() + "/imgs/icons16/zoom.png", submenu: [{ 
-      label: "Zoom in", enabled: hasActiveTab, icon: app.getAppPath() + "/imgs/icons16/zoom-in.png", accelerator: "CmdOrCtrl+=", click: () => { 
+    label: "Zoom", icon: app.getAppPath() + "/assets/imgs/icons16/zoom.png", submenu: [{
+      label: "Zoom in", enabled: hasActiveTab, icon: app.getAppPath() + "/assets/imgs/icons16/zoom-in.png", accelerator: "CmdOrCtrl+=", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().zoomIn(); 
         }
       } }, { 
-      label: "Zoom out", enabled: hasActiveTab, icon: app.getAppPath() + "/imgs/icons16/zoom-out.png", accelerator: "CmdOrCtrl+-", click: () => { 
+      label: "Zoom out", enabled: hasActiveTab, icon: app.getAppPath() + "/assets/imgs/icons16/zoom-out.png", accelerator: "CmdOrCtrl+-", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().zoomOut(); 
         }
       } }, { type: "separator" }, {
-      label: "Actual size", enabled: hasActiveTab, icon: app.getAppPath() + "/imgs/icons16/one.png", accelerator: "CmdOrCtrl+0", click: () => { 
+      label: "Actual size", enabled: hasActiveTab, icon: app.getAppPath() + "/assets/imgs/icons16/one.png", accelerator: "CmdOrCtrl+0", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().zoomToActualSize(); 
         }
       } }, { type: "separator" }, { 
-      label: "Fullscreen", icon: app.getAppPath() + "/imgs/icons16/fullscreen.png", accelerator: "F11", click: () => { 
+      label: "Fullscreen", icon: app.getAppPath() + "/assets/imgs/icons16/fullscreen.png", accelerator: "F11", click: () => {
         toggleFullscreen(); 
       } },
     ] }, { 
-    label: "Edit", icon: app.getAppPath() + "/imgs/icons16/edit.png", submenu: [{ 
-      label: "Cut", icon: app.getAppPath() + "/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", click: () => { 
+    label: "Edit", icon: app.getAppPath() + "/assets/imgs/icons16/edit.png", submenu: [{
+      label: "Cut", icon: app.getAppPath() + "/assets/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().cut(); 
         } else {
           overlay.cut();
         }
       } }, { 
-      label: "Copy", icon: app.getAppPath() + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", click: () => { 
+      label: "Copy", icon: app.getAppPath() + "/assets/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().copy(); 
         } else {
           overlay.copy();
         }
       } }, { 
-      label: "Paste", icon: app.getAppPath() + "/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", click: () => { 
+      label: "Paste", icon: app.getAppPath() + "/assets/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().paste(); 
         } else {
           overlay.paste();
         }
       } }, { type: "separator" }, { 
-      label: "Paste as plain text", icon: app.getAppPath() + "/imgs/icons16/paste-special.png", accelerator: "CmdOrCtrl+Shift+V", click: () => { 
+      label: "Paste as plain text", icon: app.getAppPath() + "/assets/imgs/icons16/paste-special.png", accelerator: "CmdOrCtrl+Shift+V", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().pasteAndMatchStyle(); 
         } else {
           overlay.pasteAndMatchStyle();
         }
       } }, { type: "separator" }, { 
-      label: "Undo", icon: app.getAppPath() + "/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", click: () => { 
+      label: "Undo", icon: app.getAppPath() + "/assets/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().undo();
         } else {
           overlay.undo();
         }
       } }, { 
-      label: "Redo", icon: app.getAppPath() + "/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", click: () => { 
+      label: "Redo", icon: app.getAppPath() + "/assets/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().redo(); 
         } else {
           overlay.redo();
         }
       } }, { type: "separator" }, { 
-      label: "Select all", icon: app.getAppPath() + "/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", click: () => { 
+      label: "Select all", icon: app.getAppPath() + "/assets/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().selectAll();
         } else {
           overlay.selectAll();
         }
       } }, { type: "separator" }, { 
-      label: "Delete", icon: app.getAppPath() + "/imgs/icons16/delete.png", accelerator: "Backspace", click: () => { 
+      label: "Delete", icon: app.getAppPath() + "/assets/imgs/icons16/delete.png", accelerator: "Backspace", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().delete();
         } else {
@@ -1001,111 +997,112 @@ function sideMenuConstructor(hasActiveTab: boolean, hasTabs: boolean) {
         }
       } },
     ] }, { 
-    label: "Page", enabled: hasActiveTab, icon: app.getAppPath() + "/imgs/icons16/file.png", submenu: [{ 
-      label: "Find in page", icon: app.getAppPath() + "/imgs/icons16/zoom.png", submenu: [{
-        label: "Find next", icon: app.getAppPath() + "/imgs/icons16/zoom.png", accelerator: "CmdOrCtrl+F", click: () => { 
+    label: "Page", enabled: hasActiveTab, icon: app.getAppPath() + "/assets/imgs/icons16/file.png", submenu: [{
+      label: "Find in page", icon: app.getAppPath() + "/assets/imgs/icons16/zoom.png", submenu: [{
+        label: "Find next", icon: app.getAppPath() + "/assets/imgs/icons16/zoom.png", accelerator: "CmdOrCtrl+F", click: () => {
           mainWindow.webContents.focus();
           mainWindow.webContents.send("findInPage-findNext");
         } }, {
-        label: "Find previous", icon: app.getAppPath() + "/imgs/icons16/prev.png", accelerator: "CmdOrCtrl+Shift+F", click: () => { 
+        label: "Find previous", icon: app.getAppPath() + "/assets/imgs/icons16/prev.png", accelerator: "CmdOrCtrl+Shift+F", click: () => {
           mainWindow.webContents.focus();
           mainWindow.webContents.send("findInPage-findPrev"); 
         } }
       ] }, { type: "separator" }, { 
-      enabled: false, label: "Certificate info", icon: app.getAppPath() + "/imgs/icons16/license.png", click: () => {
+      enabled: false, label: "Certificate info", icon: app.getAppPath() + "/assets/imgs/icons16/license.png", click: () => {
+
       } }, { type: "separator" }, { 
-      label: "Download page", icon: app.getAppPath() + "/imgs/icons16/download.png", accelerator: "CmdOrCtrl+Shift+S", click: () => { 
+      label: "Download page", icon: app.getAppPath() + "/assets/imgs/icons16/download.png", accelerator: "CmdOrCtrl+Shift+S", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().downloadPage();
         }
       } }, { 
-      label: "View page source", icon: app.getAppPath() + "/imgs/icons16/code.png", accelerator: "CmdOrCtrl+U", click: () => { 
+      label: "View page source", icon: app.getAppPath() + "/assets/imgs/icons16/code.png", accelerator: "CmdOrCtrl+U", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().viewPageSource();
         }
       } }, { 
-      label: "Developer tools", icon: app.getAppPath() + "/imgs/icons16/tool.png", accelerator: "F12", click: () => { 
+      label: "Developer tools", icon: app.getAppPath() + "/assets/imgs/icons16/tool.png", accelerator: "F12", click: () => {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().openDevTools();
         }
       } }
     ] }, { type: "separator" }, { 
-    label: "Settings", icon: app.getAppPath() + "/imgs/icons16/settings.png", accelerator: "CmdOrCtrl+,", click: () => { 
+    label: "Settings", icon: app.getAppPath() + "/assets/imgs/icons16/settings.png", accelerator: "CmdOrCtrl+,", click: () => {
       showSettingsWindow();
     } }, { 
-    label: "Help", icon: app.getAppPath() + "/imgs/icons16/help.png", submenu: [{ 
-      label: "Check for updates", icon: app.getAppPath() + "/imgs/icons16/reload.png", accelerator: "CmdOrCtrl+Shift+U", click: () => { 
+    label: "Help", icon: app.getAppPath() + "/assets/imgs/icons16/help.png", submenu: [{
+      label: "Check for updates", icon: app.getAppPath() + "/assets/imgs/icons16/reload.png", accelerator: "CmdOrCtrl+Shift+U", click: () => {
         checkForUpdates(); 
       } }, { type: "separator" }, { 
-      label: "About", icon: app.getAppPath() + "/imgs/icons16/info.png", accelerator: "CmdOrCtrl+Shift+F1", click: () => { 
+      label: "About", icon: app.getAppPath() + "/assets/imgs/icons16/info.png", accelerator: "CmdOrCtrl+Shift+F1", click: () => {
         showAboutWindow();
-      } }, { type: "separator" }, { 
-      label: "Report an issue", icon: app.getAppPath() + "/imgs/icons16/bug-report.png", accelerator: "CmdOrCtrl+Shift+I", click: () => { 
+      } }, { type: "separator" }, {
+      label: "Report an issue", icon: app.getAppPath() + "/assets/imgs/icons16/bug-report.png", accelerator: "CmdOrCtrl+Shift+I", click: () => {
         tabManager.addTab("https://github.com/ModuleArt/ferny/issues", true);
       } }
     ] }, { 
-    label: "More", icon: app.getAppPath() + "/imgs/icons16/more.png", submenu: [{ 
-      label: "Clear browsing data", icon: app.getAppPath() + "/imgs/icons16/clean.png", accelerator: "CmdOrCtrl+Shift+Delete", click: () => { 
+    label: "More", icon: app.getAppPath() + "/assets/imgs/icons16/more.png", submenu: [{
+      label: "Clear browsing data", icon: app.getAppPath() + "/assets/imgs/icons16/clean.png", accelerator: "CmdOrCtrl+Shift+Delete", click: () => {
         showSettingsWindow("clear-browsing-data");
       } }, { type: "separator" }, { 
-      label: "Open files", icon: app.getAppPath() + "/imgs/icons16/folder.png", accelerator: "CmdOrCtrl+O", click: () => { 
+      label: "Open files", icon: app.getAppPath() + "/assets/imgs/icons16/folder.png", accelerator: "CmdOrCtrl+O", click: () => {
         openFileDialog(); 
       } }, { type: "separator" }, { 
-      label: "Show overlay", enabled: hasActiveTab, icon: app.getAppPath() + "/imgs/icons16/overlay.png", accelerator: "F1", click: () => { 
+      label: "Show overlay", enabled: hasActiveTab, icon: app.getAppPath() + "/assets/imgs/icons16/overlay.png", accelerator: "F1", click: () => {
         overlay.show(); 
       } }, { 
-      label: "Open search", icon: app.getAppPath() + "/imgs/icons16/zoom.png", accelerator: "F6", click: () => { 
+      label: "Open search", icon: app.getAppPath() + "/assets/imgs/icons16/zoom.png", accelerator: "F6", click: () => {
         if(tabManager.hasActiveTab()) {
           overlay.goToSearch(tabManager.getActiveTab().getURL());
         } else {
           overlay.goToSearch();
         }
       } }, { 
-      label: "Additional hotkeys", icon: app.getAppPath() + "/imgs/icons16/key.png", submenu: [{ 
-        label: "New tab", icon: app.getAppPath() + "/imgs/icons16/create.png", accelerator: "CmdOrCtrl+N", click: () => { 
+      label: "Additional hotkeys", icon: app.getAppPath() + "/assets/imgs/icons16/key.png", submenu: [{
+        label: "New tab", icon: app.getAppPath() + "/assets/imgs/icons16/create.png", accelerator: "CmdOrCtrl+N", click: () => {
           tabManager.newTab(); 
         } }, { type: "separator" }, { 
-        label: "Reload", enabled: hasActiveTab, icon: app.getAppPath() + "/imgs/icons16/reload.png", accelerator: "CmdOrCtrl+R", click: () => { 
+        label: "Reload", enabled: hasActiveTab, icon: app.getAppPath() + "/assets/imgs/icons16/reload.png", accelerator: "CmdOrCtrl+R", click: () => {
           if(tabManager.hasActiveTab()) {
             tabManager.getActiveTab().reload(); 
           } 
         } }, { 
-        label: "Reload ignoring cache", enabled: hasActiveTab, icon: app.getAppPath() + "/imgs/icons16/db-reload.png", accelerator: "CmdOrCtrl+Shift+R", click: () => { 
+        label: "Reload ignoring cache", enabled: hasActiveTab, icon: app.getAppPath() + "/assets/imgs/icons16/db-reload.png", accelerator: "CmdOrCtrl+Shift+R", click: () => {
           if(tabManager.hasActiveTab()) {
             tabManager.getActiveTab().reloadIgnoringCache();
           }
         } }, { type: "separator" }, { 
-        label: "Redo", icon: app.getAppPath() + "/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Y", click: () => { 
+        label: "Redo", icon: app.getAppPath() + "/assets/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Y", click: () => {
           if(tabManager.hasActiveTab()) {
             tabManager.getActiveTab().redo(); 
           } else {
             overlay.redo();
           }
         } }, { type: "separator" }, { 
-        label: "Find next", enabled: hasActiveTab, icon: app.getAppPath() + "/imgs/icons16/zoom.png", accelerator: "F3", click: () => { 
+        label: "Find next", enabled: hasActiveTab, icon: app.getAppPath() + "/assets/imgs/icons16/zoom.png", accelerator: "F3", click: () => {
           mainWindow.webContents.focus();
           mainWindow.webContents.send("findInPage-findNext"); 
         } }, {
-        label: "Find previous", enabled: hasActiveTab, icon: app.getAppPath() + "/imgs/icons16/prev.png", accelerator: "F2", click: () => { 
+        label: "Find previous", enabled: hasActiveTab, icon: app.getAppPath() + "/assets/imgs/icons16/prev.png", accelerator: "F2", click: () => {
           mainWindow.webContents.focus();
           mainWindow.webContents.send("findInPage-findPrev"); 
         } }, { type: "separator" }, { 
-        label: "Developer tools", enabled: hasActiveTab, icon: app.getAppPath() + "/imgs/icons16/tool.png", accelerator: "CmdOrCtrl+Shift+I", click: () => { 
+        label: "Developer tools", enabled: hasActiveTab, icon: app.getAppPath() + "/assets/imgs/icons16/tool.png", accelerator: "CmdOrCtrl+Shift+I", click: () => {
           if(tabManager.hasActiveTab()) {
             tabManager.getActiveTab().openDevTools();
           }
         } }
       ] }, { type: "separator" }, { 
-      label: "Developer [Danger]", icon: app.getAppPath() + "/imgs/icons16/code.png", submenu: [{ 
-        label: "Developer mode (Main window)", icon: app.getAppPath() + "/imgs/icons16/window.png", accelerator: "CmdOrCtrl+Shift+F12", click: () => { 
+      label: "Developer [Danger]", icon: app.getAppPath() + "/assets/imgs/icons16/code.png", submenu: [{
+        label: "Developer mode (Main window)", icon: app.getAppPath() + "/assets/imgs/icons16/window.png", accelerator: "CmdOrCtrl+Shift+F12", click: () => {
           mainWindow.webContents.openDevTools(); 
         } }, { 
-        label: "Developer mode (Overlay)", icon: app.getAppPath() + "/imgs/icons16/overlay.png", accelerator: "CmdOrCtrl+Shift+F11", click: () => { 
+        label: "Developer mode (Overlay)", icon: app.getAppPath() + "/assets/imgs/icons16/overlay.png", accelerator: "CmdOrCtrl+Shift+F11", click: () => {
           overlay.openDevTools(); 
         } }
       ] }
     ] }, { type: "separator" }, { 
-    label: "Quit Ferny", icon: app.getAppPath() + "/imgs/icons16/exit.png", accelerator: "CmdOrCtrl+Shift+Q", click: () => { 
+    label: "Quit Ferny", icon: app.getAppPath() + "/assets/imgs/icons16/exit.png", accelerator: "CmdOrCtrl+Shift+Q", click: () => {
       app.quit(); 
     } }
   ];
@@ -1116,7 +1113,7 @@ function sideMenuConstructor(hasActiveTab: boolean, hasTabs: boolean) {
 // Functions
 
 function saveBounds() {
-  let Data = {
+  const Data = {
     x: mainWindow.getBounds().x,
     y: mainWindow.getBounds().y,
     width: mainWindow.getBounds().width,
@@ -1145,14 +1142,14 @@ function showAboutWindow() {
           resizable: false,
           show: false,
           frame: winControls.systemTitlebar,
-          icon: app.getAppPath() + "/imgs/icon.ico",
+          icon: app.getAppPath() + "/assets/imgs/icon.ico",
           webPreferences: {
             nodeIntegration: true
           },
           backgroundColor: backgroundColor
         });
     
-        aboutWindow.loadFile(app.getAppPath() + "/html/about.html");
+        aboutWindow.loadFile(app.getAppPath() + "/pages/html/about.html");
   
         aboutWindow.on("focus", () => {
           aboutWindow.webContents.send("window-focus");
@@ -1170,7 +1167,7 @@ function showAboutWindow() {
   }
 }
 
-function showSettingsWindow(categoryId: string = '') {
+function showSettingsWindow(categoryId = '') {
   if(settingsWindow === null || settingsWindow.isDestroyed()) {
     loadTheme().then(({theme, dark}) => {
       let backgroundColor;
@@ -1189,14 +1186,14 @@ function showSettingsWindow(categoryId: string = '') {
           width: 640, height: 480,
           resizable: false,
           show: false,
-          icon: app.getAppPath() + "/imgs/icon.ico",
+          icon: app.getAppPath() + "/assets/imgs/icon.ico",
           webPreferences: {
             nodeIntegration: true
           },
           backgroundColor: backgroundColor
         });
     
-        settingsWindow.loadFile(app.getAppPath() + "/html/settings.html").then(() => {
+        settingsWindow.loadFile(app.getAppPath() + "/pages/html/settings.html").then(() => {
           settingsWindow.webContents.send("settings-showCategory", categoryId);
         });
   
@@ -1241,37 +1238,37 @@ function showMainWindow() {
           width: Data.width, height: Data.height,
           minWidth: 400, minHeight: 240,
           frame: winControls.systemTitlebar,
-          icon: app.getAppPath() + "/imgs/icon.ico",
+          icon: app.getAppPath() + "/assets/imgs/icon.ico",
           webPreferences: {
             nodeIntegration: true
           },
           backgroundColor: backgroundColor
         });
       
-        mainWindow.loadFile(app.getAppPath() + "/html/browser.html");
+        mainWindow.loadFile(app.getAppPath() + "/pages/html/browser.html");
       
         mainWindow.webContents.on("context-menu", (event, params) => {
           if(params.isEditable) {
-            let searchMenu = Menu.buildFromTemplate([
-              { label: "Cut", icon: app.getAppPath() + "/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => { 
+            const searchMenu = Menu.buildFromTemplate([
+              { label: "Cut", icon: app.getAppPath() + "/assets/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => {
                 mainWindow.webContents.cut(); } },
-              { label: "Copy", icon: app.getAppPath() + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => { 
+              { label: "Copy", icon: app.getAppPath() + "/assets/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => {
                 mainWindow.webContents.copy(); } },
-              { label: "Paste", icon: app.getAppPath() + "/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
+              { label: "Paste", icon: app.getAppPath() + "/assets/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => {
                 mainWindow.webContents.paste(); } },
               { type: "separator" },
-              { label: "Paste and search", icon: app.getAppPath() + "/imgs/icons16/zoom.png", enabled: params.editFlags.canPaste, click: () => { 
+              { label: "Paste and search", icon: app.getAppPath() + "/assets/imgs/icons16/zoom.png", enabled: params.editFlags.canPaste, click: () => {
                 overlay.performSearch(clipboard.readText()); } },
               { type: "separator" },
-              { label: "Undo", icon: app.getAppPath() + "/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => { 
+              { label: "Undo", icon: app.getAppPath() + "/assets/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => {
                 mainWindow.webContents.undo(); } },
-              { label: "Redo", icon: app.getAppPath() + "/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
+              { label: "Redo", icon: app.getAppPath() + "/assets/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
                 mainWindow.webContents.redo(); } },
               { type: "separator" },
-              { label: "Select all", icon: app.getAppPath() + "/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => { 
+              { label: "Select all", icon: app.getAppPath() + "/assets/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => {
                 mainWindow.webContents.selectAll(); } },
               { type: "separator" },
-              { label: "Delete", icon: app.getAppPath() + "/imgs/icons16/delete.png", accelerator: "Backspace", enabled: params.editFlags.canDelete, click: () => { 
+              { label: "Delete", icon: app.getAppPath() + "/assets/imgs/icons16/delete.png", accelerator: "Backspace", enabled: params.editFlags.canDelete, click: () => {
                 mainWindow.webContents.delete(); } }
             ]);
             searchMenu.popup(mainWindow);
@@ -1341,7 +1338,7 @@ function showMainWindow() {
         mainWindow.on("app-command", (event, command) => {
           if(command == "browser-backward") {
             if(tabManager.hasActiveTab()) {
-              let activeTab = tabManager.getActiveTab();
+              const activeTab = tabManager.getActiveTab();
               if(activeTab.canGoBack()) {
                 activeTab.goBack();
               } else {
@@ -1471,7 +1468,7 @@ function showWelcomeWindow() {
       welcomeWindow.webContents.send('action-blur-window');
     });
   
-    welcomeWindow.loadFile(app.getAppPath() + '/html/welcome.html');
+    welcomeWindow.loadFile(app.getAppPath() + '/pages/html/welcome.html');
   
     welcomeWindow.once('ready-to-show', () => {
       welcomeWindow.show();
@@ -1493,7 +1490,7 @@ function openFileDialog() {
 
 function loadWelcome() {
   try {
-    var welcomeOn = fs.readFileSync(ppath + "/json/welcome.json");
+    const welcomeOn = fs.readFileSync(ppath + "/json/welcome.json");
     if(welcomeOn == 1) {
       showWelcomeWindow();
     }

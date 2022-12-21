@@ -2,7 +2,7 @@ function setIconsStyle(str) {
     const icons = document.getElementsByClassName("theme-icon");
   
     for(let i = 0; i < icons.length; i++) {
-        (icons[i] as any).src = "../imgs/theme-icons/" + str + "/" + (icons[i] as any).name + ".png";
+        (icons[i] as any).src = "../assets/imgs/theme-icons/" + str + "/" + (icons[i] as any).name + ".png";
         icons[i].classList.add("loaded");
     }
 }

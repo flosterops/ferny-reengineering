@@ -31,7 +31,7 @@ class Tab extends EventEmitter {
 
         this.view = new BrowserView({
             webPreferences: {
-                preload: appPath + "/js/webview.js"
+                preload: appPath + "/pages/webview/webview.js"
             }
         });
         this.view.setAutoResize({
@@ -57,7 +57,7 @@ class Tab extends EventEmitter {
         });
 
         this.view.webContents.on("did-navigate", (event, url, httpResponseCode, httpStatusText) => {
-            this.window.webContents.send("tabRenderer-setTabIcon", { id: this.id, icon: __dirname + "/../../imgs/gifs/page-loading.gif" });
+            this.window.webContents.send("tabRenderer-setTabIcon", { id: this.id, icon: __dirname + "/../../assets/imgs/gifs/page-loading.gif" });
             this.window.webContents.send("tabRenderer-updateNavigationButtons", {
                 canGoBack: this.view.webContents.canGoBack(),
                 canGoForward: this.view.webContents.canGoForward(),
@@ -159,28 +159,28 @@ class Tab extends EventEmitter {
 
             if(params.isEditable) {
                 const editableItems = [{
-                    label: "Cut", icon: this.appPath + "/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => { 
+                    label: "Cut", icon: this.appPath + "/assets/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => {
                         this.cut();
                     } }, { 
-                    label: "Copy", icon: this.appPath + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => { 
+                    label: "Copy", icon: this.appPath + "/assets/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => {
                         this.copy();
                     } }, {
-                    label: "Paste", icon: this.appPath + "/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
+                    label: "Paste", icon: this.appPath + "/assets/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => {
                         this.paste();
                     } }, { type: "separator" }, { 
-                    label: "Paste as plain text", icon: this.appPath + "/imgs/icons16/paste-special.png", accelerator: "CmdOrCtrl+Shift+V", enabled: params.editFlags.canPaste, click: () => { 
+                    label: "Paste as plain text", icon: this.appPath + "/assets/imgs/icons16/paste-special.png", accelerator: "CmdOrCtrl+Shift+V", enabled: params.editFlags.canPaste, click: () => {
                         this.pasteAndMatchStyle();
                     } }, { type: "separator" }, { 
-                    label: "Undo", icon: this.appPath + "/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => { 
+                    label: "Undo", icon: this.appPath + "/assets/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => {
                         this.undo();
                     } }, { 
-                    label: "Redo", icon: this.appPath + "/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
+                    label: "Redo", icon: this.appPath + "/assets/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
                         this.redo();
                     } }, { type: "separator" }, { 
-                    label: "Select all", icon: this.appPath + "/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => { 
+                    label: "Select all", icon: this.appPath + "/assets/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => {
                         this.selectAll();
                     } }, { type: "separator" }, { 
-                    label: "Delete", icon: this.appPath + "/imgs/icons16/delete.png", accelerator: "Backspace", enabled: params.editFlags.canDelete, click: () => { 
+                    label: "Delete", icon: this.appPath + "/assets/imgs/icons16/delete.png", accelerator: "Backspace", enabled: params.editFlags.canDelete, click: () => {
                         this.delete();
                     } }, { type: "separator" }
                 ];
@@ -194,19 +194,19 @@ class Tab extends EventEmitter {
                         text = text.substring(0, 30) + "...";
                     }
                     const linkItems = [{
-                        label: "Open link in new tab", icon: this.appPath + "/imgs/icons16/tab.png", click: () => { 
+                        label: "Open link in new tab", icon: this.appPath + "/assets/imgs/icons16/tab.png", click: () => {
                             this.emit("add-tab", params.linkURL, false);
                         } }, { type: "separator" }, { 
-                        label: "Copy link text", icon: this.appPath + "/imgs/icons16/text.png", enabled: (params.linkText > 0), click: () => { 
+                        label: "Copy link text", icon: this.appPath + "/assets/imgs/icons16/text.png", enabled: (params.linkText > 0), click: () => {
                             clipboard.writeText(params.linkText); 
                         } }, { 
-                        label: "Copy link address", icon: this.appPath + "/imgs/icons16/link.png", click: () => { 
+                        label: "Copy link address", icon: this.appPath + "/assets/imgs/icons16/link.png", click: () => {
                             clipboard.writeText(params.linkURL); 
                         } }, {
-                        label: "Bookmark link", icon: this.appPath + "/imgs/icons16/add-bookmark.png", click: () => { 
+                        label: "Bookmark link", icon: this.appPath + "/assets/imgs/icons16/add-bookmark.png", click: () => {
                             this.emit("bookmark-tab", params.linkText, params.linkURL);
                         } }, {
-                        label: `Search for "${text}"`, icon: this.appPath + "/imgs/icons16/zoom.png", enabled: (text.length > 0), click: () => { 
+                        label: `Search for "${text}"`, icon: this.appPath + "/assets/imgs/icons16/zoom.png", enabled: (text.length > 0), click: () => {
                             this.emit("search-for", params.linkText);
                         } }, { type: "separator" }
                     ];
@@ -216,16 +216,16 @@ class Tab extends EventEmitter {
                 if(params.hasImageContents) {
                     pageBool = false;
                     const imageItems = [{
-                        label: "Open image in new tab", icon: this.appPath + "/imgs/icons16/image.png", click: () => { 
+                        label: "Open image in new tab", icon: this.appPath + "/assets/imgs/icons16/image.png", click: () => {
                             this.emit("add-tab", params.srcURL, true);
                         } }, { type: "separator" }, { 
-                        label: "Download image", icon: this.appPath + "/imgs/icons16/download.png", click: () => { 
+                        label: "Download image", icon: this.appPath + "/assets/imgs/icons16/download.png", click: () => {
                             this.view.webContents.downloadURL(params.srcURL);
                         } }, { 
-                        label: "Copy image", icon: this.appPath + "/imgs/icons16/copy.png", click: () => { 
+                        label: "Copy image", icon: this.appPath + "/assets/imgs/icons16/copy.png", click: () => {
                             this.view.webContents.copyImageAt(params.x, params.y);
                         } }, { 
-                        label: "Copy image address", icon: this.appPath + "/imgs/icons16/link.png", click: () => { 
+                        label: "Copy image address", icon: this.appPath + "/assets/imgs/icons16/link.png", click: () => {
                             clipboard.writeText(params.srcURL);
                         } }, { type: "separator" }
                     ];
@@ -239,10 +239,10 @@ class Tab extends EventEmitter {
                         text = text.substring(0, 30) + "...";
                     }
                     const textItems = [{
-                        label: "Copy", icon: this.appPath + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => { 
+                        label: "Copy", icon: this.appPath + "/assets/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => {
                             this.copy();
                         } }, {
-                        label: `Search for "${text}"`, icon: this.appPath + "/imgs/icons16/zoom.png", enabled: params.editFlags.canCopy, click: () => { 
+                        label: `Search for "${text}"`, icon: this.appPath + "/assets/imgs/icons16/zoom.png", enabled: params.editFlags.canCopy, click: () => {
                             this.emit("search-for", params.selectionText);
                         } }, { type: "separator" }
                     ];
@@ -251,25 +251,25 @@ class Tab extends EventEmitter {
 
                 if(pageBool) {
                     const pageItems = [{
-                        label: "Back", icon: this.appPath + "/imgs/icons16/back.png", accelerator: "Alt+Left", enabled: this.view.webContents.canGoBack(), click: () => { 
+                        label: "Back", icon: this.appPath + "/assets/imgs/icons16/back.png", accelerator: "Alt+Left", enabled: this.view.webContents.canGoBack(), click: () => {
                             this.goBack();
                         } }, { 
-                        label: "Forward", icon: this.appPath + "/imgs/icons16/forward.png", accelerator: "Alt+Right", enabled: this.view.webContents.canGoForward(), click: () => { 
+                        label: "Forward", icon: this.appPath + "/assets/imgs/icons16/forward.png", accelerator: "Alt+Right", enabled: this.view.webContents.canGoForward(), click: () => {
                             this.goForward();
                         } }, { 
-                        label: "Reload", icon: this.appPath + "/imgs/icons16/reload.png", accelerator: "F5", click: () => { 
+                        label: "Reload", icon: this.appPath + "/assets/imgs/icons16/reload.png", accelerator: "F5", click: () => {
                             this.reload();
                         } }, { type: "separator" }, {
-                        label: "Download page", icon: this.appPath + "/imgs/icons16/download.png", accelerator: "CmdOrCtrl+Shift+S", click: () => { 
+                        label: "Download page", icon: this.appPath + "/assets/imgs/icons16/download.png", accelerator: "CmdOrCtrl+Shift+S", click: () => {
                             this.downloadPage();
                         } }, {
-                        label: "Bookmark page", icon: this.appPath + "/imgs/icons16/add-bookmark.png", click: () => { 
+                        label: "Bookmark page", icon: this.appPath + "/assets/imgs/icons16/add-bookmark.png", click: () => {
                             this.emit("bookmark-tab", this.getTitle(), this.getURL());
                         } }, { type: "separator" }, {
-                        label: "Select all", icon: this.appPath + "/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", click: () => { 
+                        label: "Select all", icon: this.appPath + "/assets/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", click: () => {
                             this.selectAll();
                         } }, { type: "separator" }, {
-                        label: "View page source", icon: this.appPath + "/imgs/icons16/code.png", click: () => {
+                        label: "View page source", icon: this.appPath + "/assets/imgs/icons16/code.png", click: () => {
                             this.viewPageSource();
                         } }
                     ];
@@ -278,7 +278,7 @@ class Tab extends EventEmitter {
             }
 
             rmbMenuItems.push({
-                label: "Inspect element", icon: this.appPath + "/imgs/icons16/inspect.png", click: () => {
+                label: "Inspect element", icon: this.appPath + "/assets/imgs/icons16/inspect.png", click: () => {
                     this.inspectElement(params.x, params.y);
                 } }
             );
@@ -403,51 +403,51 @@ class Tab extends EventEmitter {
 
     showMenu() {
         const tabMenu = Menu.buildFromTemplate([{ 
-            label: "Back", icon: this.appPath + "/imgs/icons16/back.png", accelerator: "Alt+Left", enabled: this.view.webContents.canGoBack(), click: () => { 
+            label: "Back", icon: this.appPath + "/assets/imgs/icons16/back.png", accelerator: "Alt+Left", enabled: this.view.webContents.canGoBack(), click: () => {
                 this.goBack(); 
             } }, { 
-            label: "Forward", icon: this.appPath + "/imgs/icons16/forward.png", accelerator: "Alt+Right", enabled: this.view.webContents.canGoForward(), click: () => { 
+            label: "Forward", icon: this.appPath + "/assets/imgs/icons16/forward.png", accelerator: "Alt+Right", enabled: this.view.webContents.canGoForward(), click: () => {
                 this.goForward(); 
             } }, { 
-            label: "Reload", icon: this.appPath + "/imgs/icons16/reload.png", accelerator: "F5", click: () => { 
+            label: "Reload", icon: this.appPath + "/assets/imgs/icons16/reload.png", accelerator: "F5", click: () => {
                 this.reload(); 
             } }, {
-            label: "Reload ignoring cache", icon: this.appPath + "/imgs/icons16/db-reload.png", accelerator: "CmdOrCtrl+Shift+F5", click: () => { 
+            label: "Reload ignoring cache", icon: this.appPath + "/assets/imgs/icons16/db-reload.png", accelerator: "CmdOrCtrl+Shift+F5", click: () => {
                 this.reloadIgnoringCache(); 
             } }, { type: "separator" }, { 
-            label: "Duplicate", icon: this.appPath + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+Shift+D", click: () => { 
+            label: "Duplicate", icon: this.appPath + "/assets/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+Shift+D", click: () => {
                 this.duplicate(); 
             } }, { 
-            label: "Copy URL", icon: this.appPath + "/imgs/icons16/link.png", accelerator: "CmdOrCtrl+Shift+C", click: () => { 
+            label: "Copy URL", icon: this.appPath + "/assets/imgs/icons16/link.png", accelerator: "CmdOrCtrl+Shift+C", click: () => {
                 this.copyURL(); 
             } }, { 
-            label: "Go home", icon: this.appPath + "/imgs/icons16/home.png", accelerator: "CmdOrCtrl+Shift+H", click: () => { 
+            label: "Go home", icon: this.appPath + "/assets/imgs/icons16/home.png", accelerator: "CmdOrCtrl+Shift+H", click: () => {
                 this.goHome(); 
             } }, { 
-            label: "Bookmark tab", icon: this.appPath + "/imgs/icons16/add-bookmark.png", accelerator: "CmdOrCtrl+Shift+B", click: () => { 
+            label: "Bookmark tab", icon: this.appPath + "/assets/imgs/icons16/add-bookmark.png", accelerator: "CmdOrCtrl+Shift+B", click: () => {
                 this.emit("bookmark-tab", this.getTitle(), this.getURL());
             } }, { type: "separator" }, { 
-            label: "Move tab", icon: this.appPath + "/imgs/icons16/move-horizontal.png", submenu: [{
-                label: "Move left", accelerator: "CmdOrCtrl+Shift+PageUp", icon: this.appPath + "/imgs/icons16/prev.png", click: () => {
+            label: "Move tab", icon: this.appPath + "/assets/imgs/icons16/move-horizontal.png", submenu: [{
+                label: "Move left", accelerator: "CmdOrCtrl+Shift+PageUp", icon: this.appPath + "/assets/imgs/icons16/prev.png", click: () => {
                     this.moveLeft();
                 } }, {
-                label: "Move right", accelerator: "CmdOrCtrl+Shift+PageDown", icon: this.appPath + "/imgs/icons16/next.png", click: () => {
+                label: "Move right", accelerator: "CmdOrCtrl+Shift+PageDown", icon: this.appPath + "/assets/imgs/icons16/next.png", click: () => {
                     this.moveRight();
                 } }, { type: "separator" }, {
-                label: "Move to start", accelerator: "CmdOrCtrl+Shift+Home", icon: this.appPath + "/imgs/icons16/to-start.png", click: () => {
+                label: "Move to start", accelerator: "CmdOrCtrl+Shift+Home", icon: this.appPath + "/assets/imgs/icons16/to-start.png", click: () => {
                     this.moveToStart();
                 } }, {
-                label: "Move to end", accelerator: "CmdOrCtrl+Shift+End", icon: this.appPath + "/imgs/icons16/to-end.png", click: () => {
+                label: "Move to end", accelerator: "CmdOrCtrl+Shift+End", icon: this.appPath + "/assets/imgs/icons16/to-end.png", click: () => {
                     this.moveToEnd();
                 } } 
             ] }, { type: "separator" }, { 
-            label: "Close to the right", icon: this.appPath + "/imgs/icons16/swipe-right.png", click: () => { 
+            label: "Close to the right", icon: this.appPath + "/assets/imgs/icons16/swipe-right.png", click: () => {
                 this.closeToTheRight(); 
             } }, { 
-            label: "Close others", icon: this.appPath + "/imgs/icons16/swipe-both.png", accelerator: "CmdOrCtrl+Shift+W", click: () => { 
+            label: "Close others", icon: this.appPath + "/assets/imgs/icons16/swipe-both.png", accelerator: "CmdOrCtrl+Shift+W", click: () => {
                 this.closeOthers(); 
             } }, { 
-            label: "Close tab", icon: this.appPath + "/imgs/icons16/close.png", accelerator: "CmdOrCtrl+W", click: () => { 
+            label: "Close tab", icon: this.appPath + "/assets/imgs/icons16/close.png", accelerator: "CmdOrCtrl+W", click: () => {
                 this.close(); 
             } }
         ]);
