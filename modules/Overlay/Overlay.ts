@@ -24,30 +24,30 @@ class Overlay extends EventEmitter {
             width: true,
             height: true
         });
-        this.view.webContents.loadFile(this.appPath + "/html/overlay.html");
+        this.view.webContents.loadFile(this.appPath + "/pages/html/overlay.html");
 
         this.view.webContents.on("context-menu", (event, params) => {
             if(params.isEditable) {
                 const editMenu = Menu.buildFromTemplate([{ 
-                    label: "Cut", icon: this.appPath + "/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => { 
+                    label: "Cut", icon: this.appPath + "/assets/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => {
                         this.view.webContents.cut();
                     } }, { 
-                    label: "Copy", icon: this.appPath + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => { 
+                    label: "Copy", icon: this.appPath + "/assets/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => {
                         this.view.webContents.copy();
                     } }, { 
-                    label: "Paste", icon: this.appPath + "/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
+                    label: "Paste", icon: this.appPath + "/assets/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => {
                         this.view.webContents.paste();
                     } }, { type: "separator" }, { 
-                    label: "Undo", icon: this.appPath + "/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => { 
+                    label: "Undo", icon: this.appPath + "/assets/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => {
                         this.view.webContents.undo();
                     } }, { 
-                    label: "Redo", icon: this.appPath + "/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
+                    label: "Redo", icon: this.appPath + "/assets/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
                         this.view.webContents.redo();
                     } }, { type: "separator" }, { 
-                    label: "Select all", icon: this.appPath + "/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => { 
+                    label: "Select all", icon: this.appPath + "/assets/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => {
                         this.view.webContents.selectAll();
                     } }, { type: "separator" }, { 
-                    label: "Delete", icon: this.appPath + "/imgs/icons16/delete.png", accelerator: "Backspace", enabled: params.editFlags.canDelete, click: () => { 
+                    label: "Delete", icon: this.appPath + "/assets/imgs/icons16/delete.png", accelerator: "Backspace", enabled: params.editFlags.canDelete, click: () => {
                         this.view.webContents.delete();
                     } }
                 ]);
@@ -55,7 +55,7 @@ class Overlay extends EventEmitter {
                 if(params.y < 320) {
                     const mi = new MenuItem({
                         label: "Paste and search", 
-                        icon: appPath + "/imgs/icons16/zoom.png", 
+                        icon: appPath + "/assets/imgs/icons16/zoom.png",
                         enabled: params.editFlags.canPaste, 
                         click: () => { 
                             this.performSearch(clipboard.readText()); }
@@ -108,16 +108,16 @@ class Overlay extends EventEmitter {
 
     showButtonMenu() {
         const buttonMenu = Menu.buildFromTemplate([{ 
-            label: "Show overlay", icon: this.appPath + "/imgs/icons16/overlay.png", accelerator: "F1", click: () => { 
+            label: "Show overlay", icon: this.appPath + "/assets/imgs/icons16/overlay.png", accelerator: "F1", click: () => {
                 this.show(); 
             } }, { type: "separator" }, { 
-            label: "Bookmarks", icon: this.appPath + "/imgs/icons16/bookmarks.png", accelerator: "CmdOrCtrl+B", click: () => { 
+            label: "Bookmarks", icon: this.appPath + "/assets/imgs/icons16/bookmarks.png", accelerator: "CmdOrCtrl+B", click: () => {
                 this.scrollToId("bookmarks-title"); 
             } }, { 
-            label: "History", icon: this.appPath + "/imgs/icons16/history.png", accelerator: "CmdOrCtrl+H", click: () => { 
+            label: "History", icon: this.appPath + "/assets/imgs/icons16/history.png", accelerator: "CmdOrCtrl+H", click: () => {
                 this.scrollToId("history-title"); 
             } }, { 
-            label: "Downloads", icon: this.appPath + "/imgs/icons16/download.png", accelerator: "CmdOrCtrl+D", click: () => { 
+            label: "Downloads", icon: this.appPath + "/assets/imgs/icons16/download.png", accelerator: "CmdOrCtrl+D", click: () => {
                 this.scrollToId("downloads-title"); 
             } }
           ]);

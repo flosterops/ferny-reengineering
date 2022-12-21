@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="/imgs/icon128.png">
+  <img src="/assets/imgs/icon128.png">
 </p>
 <h1 align="center">Ferny</h1>
 <h3 align="center">Web Browser</h3>

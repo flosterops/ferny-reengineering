@@ -44,7 +44,7 @@
     "dist": "build --win --linux",
     "dist-win": "build --win",
     "dist-linux": "build --linux",
-    "arkit": "LEVEL=info npx arkit -e \"previews, themes, fonts, themes-old, backgrounds, imgs, test, dist, coverage\" -o puml"
+    "arkit": "LEVEL=info npx arkit -e \"assets/previews, assets/themes, fonts, themes-old, backgrounds, imgs, test, dist, coverage\" -o puml"
   },
   "eslintConfig": {
     "extends": "./.eslintrc.json"

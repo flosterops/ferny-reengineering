@@ -18,7 +18,7 @@ function loadTheme(name: string) {
             if(data.toString().length > 0) {
                 theme = JSON.parse(data);
             }
-            fs.readFile(path.join(__dirname, "/../themes/", theme.name + ".json"), (err, objStr) => {
+            fs.readFile(path.join(__dirname, "/../assets/themes/", theme.name + ".json"), (err, objStr) => {
                 resolve({ theme: JSON.parse(objStr), dark: theme.dark });
             });
         });
