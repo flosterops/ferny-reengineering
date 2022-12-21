@@ -7,13 +7,13 @@ const GetAvColor = require("color.js");
 const rgbToRgbaString = require("../rgbToRgbaString.js");
 
 class Bookmark extends EventEmitter {
-    id = null;
-    name = null;
-    url = null;
+    id: number | null = null;
+    name: string | null = null;
+    url: string | null = null;
     node = null;
-    position = null;
+    position: string | null = null;
 
-    constructor(id, name, url, position) {
+    constructor(id: number, name: string, url: string, position: string) {
         super();
 
         this.id = id;
@@ -41,19 +41,19 @@ class Bookmark extends EventEmitter {
         this.node.appendChild(bookmarkIcon);
         this.updateBookmarkColor();
         
-        this.node.onclick = () => {
+        this.node.onclick = (): void => {
             this.open();
         };
-        this.node.onauxclick = (event) => {
+        this.node.onauxclick = (event: MouseEvent): void => {
             event.preventDefault();
             if(event.which === 2) {
                 ipcRenderer.send("tabManager-addTab", url, false);
             }
         };
-        this.node.oncontextmenu = () => {
+        this.node.oncontextmenu = (): void => {
             this.toggleOptions();
         };
-        this.node.onkeyup = (event) => {
+        this.node.onkeyup = (event: KeyboardEvent): void => {
             event.preventDefault();
         };
 
@@ -61,7 +61,7 @@ class Bookmark extends EventEmitter {
         optionsBtn.classList.add("bookmark-options");
         optionsBtn.title = "Toggle options";
         optionsBtn.innerHTML = `<img name="options-12" class="theme-icon">`;
-        optionsBtn.onclick = (event) => {
+        optionsBtn.onclick = (event: MouseEvent): void => {
             event.stopPropagation();
             this.toggleOptions();
         }
@@ -89,7 +89,7 @@ class Bookmark extends EventEmitter {
         editBtn.classList.add("nav-btn", "with-border");
         editBtn.title = "Edit bookmark";
         editBtn.innerHTML = `<img name="edit-16" class="theme-icon"><label>Edit</label>`;
-        editBtn.onclick = (event) => {
+        editBtn.onclick = (event: MouseEvent): void => {
             event.stopPropagation();
             this.toggleEditor();
         }
@@ -99,14 +99,14 @@ class Bookmark extends EventEmitter {
         deleteBtn.classList.add("nav-btn", "with-border");
         deleteBtn.title = "Delete bookmark";
         deleteBtn.innerHTML = `<img name="delete-16" class="theme-icon"><label>Delete</label>`;
-        deleteBtn.onclick = (event) => {
+        deleteBtn.onclick = (event: MouseEvent): void => {
             event.stopPropagation();
             this.delete();
         }
         bookmarkMenu.appendChild(deleteBtn);
     }
 
-    updateBookmarkColor() {
+    updateBookmarkColor(): void {
         const icon = this.node.getElementsByClassName("bookmark-icon")[0];
         const color = new GetAvColor(icon);
         color.mostUsed((result) => {
@@ -127,25 +127,24 @@ class Bookmark extends EventEmitter {
         }
     }
 
-    setPosition(position) {
+    setPosition(position: string): void {
         this.position = position;
         this.node.position = position;
     }
 
-    getPosition() {
+    getPosition(): string {
         return this.position;
     }
 
-    open() {
+    open(): void {
         ipcRenderer.send("tabManager-addTab", this.url, true);
-        return null;
     }
 
-    getId() {
+    getId(): number {
         return this.id;
     }
 
-    edit(name, url) {
+    edit(name: string, url: string): void {
         this.name = name;
         this.url = url;
 
@@ -161,52 +160,49 @@ class Bookmark extends EventEmitter {
         return null;
     }
 
-    setName(name) {
+    setName(name: string): void {
         this.name = name;
-        return null;
     }
 
-    getName() {
+    getName(): string {
         return this.name;
     }
 
-    setURL(url) {
+    setURL(url: string): void {
         this.url = url;
-        return null;
     }
 
-    getURL() {
+    getURL(): string {
         return this.url;
     }
 
-    getNode() {
+    getNode(): any {
         return this.node;
     }
 
-    toggleOptions() {
+    toggleOptions(): void {
         this.node.classList.toggle("show-menu");
         this.node.classList.remove("show-editor");
 
-        const bookmarkEditor = this.node.getElementsByClassName("bookmark-editor")[0];
+        const bookmarkEditor = this.node.querySelector(".bookmark-editor");
+
         if(bookmarkEditor != null) {
             this.node.removeChild(bookmarkEditor);
         }
-        
-        return null;
     }
 
-    toggleEditor() {
+    toggleEditor(): void {
         this.node.classList.remove("show-menu");
         this.node.classList.toggle("show-editor");
 
-        let bookmarkEditor = this.node.getElementsByClassName("bookmark-editor")[0];
-        if(bookmarkEditor == null) {
+        let bookmarkEditor = this.node.querySelector(".bookmark-editor");
+        if(!bookmarkEditor) {
             bookmarkEditor = document.createElement("div");
             bookmarkEditor.classList.add("bookmark-editor");
-            bookmarkEditor.onclick = (event) => {
+            bookmarkEditor.onclick = (event: MouseEvent): void => {
                 event.stopPropagation();
             } 
-            bookmarkEditor.oncontextmenu = (event) => {
+            bookmarkEditor.oncontextmenu = (event: Event): void => {
                 event.stopPropagation();
             };
             this.node.appendChild(bookmarkEditor);
@@ -227,7 +223,7 @@ class Bookmark extends EventEmitter {
             const saveBtn = document.createElement("button");
             saveBtn.classList.add("nav-btn", "with-border");
             saveBtn.innerHTML = `<img class="theme-icon" name="save-16"><label>Save</label>`;
-            saveBtn.onclick = () => {
+            saveBtn.onclick = (): void => {
                 this.edit(nameInput.value, urlInput.value);
                 this.toggleEditor();
             }
@@ -236,7 +232,7 @@ class Bookmark extends EventEmitter {
             const cancelBtn = document.createElement("button");
             cancelBtn.classList.add("nav-btn", "with-border");
             cancelBtn.innerHTML = `<img class="theme-icon" name="cancel-16"><label>Cancel</label>`;
-            cancelBtn.onclick = () => {
+            cancelBtn.onclick = (): void => {
                 this.toggleEditor();
             }
             bookmarkEditor.appendChild(cancelBtn);
@@ -245,22 +241,18 @@ class Bookmark extends EventEmitter {
         }
 
         this.emit("toggle-editor");
-        return null;
     }
 
-    copyURL() {
+    copyURL(): void {
         clipboard.writeText(this.url);
-        return null;
     }
 
-    delete() {
+    delete(): void {
         this.emit("delete", this.id);
-        return null;
     }
 
-    focus() {
+    focus(): void {
         this.node.focus();
-        return null;
     }
 }
 

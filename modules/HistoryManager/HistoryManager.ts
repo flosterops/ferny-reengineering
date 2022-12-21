@@ -12,13 +12,20 @@ const checkFileExists = require("../checkFileExists.js");
 
 const HistoryItem = require(__dirname + "/HistoryItem.js");
 
+interface IHistoryReadline {
+    id: number;
+    url: string;
+    time: number;
+    title: string;
+}
+
 class HistoryManager extends EventEmitter {
     history = [];
     historyContainer = null;
     historyCounter = 0;
     historyLimiter = true;
 
-    constructor(historyContainer) {
+    constructor(historyContainer: HTMLElement) {
         super();
 
         this.historyContainer = historyContainer;
@@ -26,16 +33,15 @@ class HistoryManager extends EventEmitter {
         this.setLimiter(true);
     }
 
-    appendHistoryItem(id, url, time, title) {
+    appendHistoryItem(id: number, url: string, time: number, title: string): void {
         const historyItem = new HistoryItem(id, url, time, title);
         this.history.push(historyItem);
         this.historyContainer.appendChild(historyItem.getNode());
 
         this.emit("history-item-added");
-        return null;
     }
 
-    insertBeforeHistoryItem(url) {
+    insertBeforeHistoryItem(url: string): void {
         const Data = {
             id: this.historyCounter++,
             url: url, 
@@ -52,15 +58,15 @@ class HistoryManager extends EventEmitter {
             this.historyContainer.insertBefore(historyItem.getNode(), this.historyContainer.children[0]);
         }
 
-        historyItem.on("title-updated", (title) => {
+        historyItem.on("title-updated", (title: string): void => {
             Data.title = title;
             
             try {
-                prependFile(ppath + "/json/history/history.json", JSON.stringify(Data) + "\n", (err) => {
+                prependFile(ppath + "/json/history/history.json", JSON.stringify(Data) + "\n", (): void => {
                     saveFileToJsonFolder("history", "history-counter", this.historyCounter);
                 });
-            } catch (error) {
-                saveFileToJsonFolder("history", "history", JSON.stringify(Data)).then(() => {
+            } catch (error: any) {
+                saveFileToJsonFolder("history", "history", JSON.stringify(Data)).then((): void => {
                     saveFileToJsonFolder("history", "history-counter", this.historyCounter);
                 });
             }
@@ -72,23 +78,22 @@ class HistoryManager extends EventEmitter {
         }
 
         this.emit("history-item-added");
-        return null;
     }
 
-    loadHistory(count: number | null = null) {
-        loadFileFromJsonFolder("history", "history-counter").then((historyCounter) => {
+    loadHistory(count: number | null = null): void {
+        loadFileFromJsonFolder("history", "history-counter").then((historyCounter): void => {
             this.historyCounter = historyCounter;
         });
 
-        checkFileExists(ppath + "/json/history/history.json").then(() => {
+        checkFileExists(ppath + "/json/history/history.json").then((): void => {
             this.historyContainer.innerHTML = "";
 
             const historyReadline = readlPromise.createInterface({
                 terminal: false, 
                 input: fs.createReadStream(ppath + "/json/history/history.json")
             });
-            historyReadline.forEach((line, index) => {
-                const obj = JSON.parse(line);
+            historyReadline.forEach((line: string, index: number): void => {
+                const obj: IHistoryReadline = JSON.parse(line);
                 if(count == null) {
                     this.appendHistoryItem(obj.id, obj.url, obj.time, obj.title);
                 } else {
@@ -98,34 +103,28 @@ class HistoryManager extends EventEmitter {
                 }
             });
         });
-
-        return null;
     }
 
-    askClearHistory() {
+    askClearHistory(): void {
         if(this.history.length > 0) {
             this.emit("clear-history");
         } else {
             this.emit("history-already-cleared");
         }
-
-        return null;
     }
 
-    clearHistory() {
-        saveFileToJsonFolder("history", "history-counter", 0).then(() => {
+    clearHistory(): void {
+        saveFileToJsonFolder("history", "history-counter", 0).then((): void => {
             this.historyCounter = 0;
-            saveFileToJsonFolder("history", "history", "").then(() => {
+            saveFileToJsonFolder("history", "history", "").then((): void => {
                 this.history = [];
                 this.historyContainer.innerHTML = "";
                 this.emit("history-cleared");
             });
         });
-
-        return null;
     }
 
-    deleteSelectedHistory() {
+    deleteSelectedHistory(): void {
         const arr = [];
 
         for(let i = 0; i < this.history.length; i++) {
@@ -138,29 +137,25 @@ class HistoryManager extends EventEmitter {
         }
 
         if(arr.length > 0) {
-            checkFileExists(ppath + "/json/history/history.json").then(() => {
+            checkFileExists(ppath + "/json/history/history.json").then((): void => {
                 fs.readFile(ppath + "/json/history/history.json", (err, data) => {
                     const text = data.toString();
                     const lines = text.split("\n");
-                    saveFileToJsonFolder("history", "history", "").then(() => {
+                    saveFileToJsonFolder("history", "history", "").then((): void => {
                         for(let i = 0; i < lines.length - 1; i++) {
                             const obj = JSON.parse(lines[i]);
                             if(arr.includes(obj.id)) {
                                 continue;
                             }
-                            fs.appendFile(ppath + "/json/history/history.json", lines[i] + "\n", (err) => {
-    
-                            });
+                            fs.appendFile(ppath + "/json/history/history.json", lines[i] + "\n");
                         }
                     });
                 });
             });
         }
-
-        return null;
     }
 
-    setLimiter(bool) {
+    setLimiter(bool: boolean): void {
         this.historyLimiter = bool;
         if(bool) {
             document.getElementById("more-history-btn").style.display = "";

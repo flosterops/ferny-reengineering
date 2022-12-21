@@ -15,11 +15,11 @@ const DownloadManager = require("../../modules/DownloadManager/DownloadManager.j
 // Search
 
 const searchManager = new SearchManager(
-  document.getElementById('search-input'), 
-  document.getElementById('search-suggest'), 
-  document.getElementById('search-suggest-container'),
-  document.getElementById('search-engines'),
-  document.getElementById('clear-search-btn')
+  document.querySelector<HTMLInputElement>('#search-input'),
+  document.querySelector<HTMLElement>('#search-suggest'),
+  document.querySelector<HTMLElement>('#search-suggest-container'),
+  document.querySelector<HTMLElement>('#search-engines'),
+  document.querySelector<HTMLButtonElement>('#clear-search-btn')
 );
 
 // Bookmarks
@@ -81,7 +81,7 @@ bookmarkManager.on("update-bookmarked", (exists, id) => {
 
 // History
 
-const historyManager = new HistoryManager(document.getElementById("history-container"));
+const historyManager = new HistoryManager(document.querySelector<HTMLElement>("#history-container"));
 
 historyManager.on("history-item-added", () => {
   updateTheme();

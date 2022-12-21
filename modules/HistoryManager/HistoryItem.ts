@@ -13,13 +13,13 @@ const epochToTime = require(__dirname + "/../epochToTime.js");
 
 class HistoryItem extends EventEmitter {
     history = [];
-    node = null;
+    node: HTMLButtonElement | null = null;
     url = null;
     id = null;
     time = null;
     title = null;
 
-    constructor(id, url, time, title) {
+    constructor(id: number, url: string, time: number, title: string) {
         super();
 
         this.id = id;
@@ -29,23 +29,23 @@ class HistoryItem extends EventEmitter {
 
         this.node = document.createElement("button");
         this.node.classList.add("history-item");
-        this.node.name = id;
-        this.node.id = "history-" + id;
+        this.node.name = String(id);
+        this.node.id = `history-${id}`;
         this.node.innerHTML = `
             <label class='history-title'>${title}</label>
             <label class='history-url'>${url}</label>
             <label class="history-time">${epochToDate(time)} / ${epochToTime(time)}</label>
         `;        
-        this.node.onclick = () => {
+        this.node.onclick = (): void => {
             this.open();
         };
-        this.node.onauxclick = (event) => {
+        this.node.onauxclick = (event: MouseEvent): void => {
             event.preventDefault();
             if(event.which === 2) {
                 ipcRenderer.send("tabManager-addTab", url, false);
             }
         };
-        this.node.onkeyup = (event) => {
+        this.node.onkeyup = (event: KeyboardEvent) => {
             event.preventDefault();
         };
 
@@ -62,7 +62,7 @@ class HistoryItem extends EventEmitter {
                 this.updateHistoryIconColor();
             };
             if(title.substring(0, 4) == "http") {
-                this.loadTitle().then((text) => {
+                this.loadTitle().then((text: string): void => {
                     this.setTitle(text);
                 });
             }
@@ -73,7 +73,7 @@ class HistoryItem extends EventEmitter {
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.classList.add("history-checkbox");
-        checkbox.onclick = (event) => {
+        checkbox.onclick = (event: MouseEvent): void => {
             event.stopPropagation();
         }
         this.node.appendChild(checkbox);
@@ -82,29 +82,29 @@ class HistoryItem extends EventEmitter {
         copyBtn.classList.add("history-copy");
         copyBtn.title = "Copy URL";
         copyBtn.innerHTML = `<img name="copy-12" class="theme-icon">`;
-        copyBtn.onclick = (event) => {
+        copyBtn.onclick = (event: MouseEvent): void => {
             event.stopPropagation();
             this.copyURL();
         }
         this.node.appendChild(copyBtn);
     }
 
-    updateHistoryIconColor() {
-        const icon = this.node.getElementsByClassName("history-icon")[0];
+    updateHistoryIconColor(): void {
+        const icon = this.node.querySelector<HTMLButtonElement>(".history-icon");
         const color = new GetAvColor(icon);
         color.mostUsed((result) => {
             if(Array.isArray(result)) {
-                icon.parentNode.style.backgroundColor = rgbToRgbaString(result[0]);
+                (icon.parentNode as HTMLElement).style.backgroundColor = rgbToRgbaString(result[0]);
             } else {
-                icon.parentNode.style.backgroundColor = rgbToRgbaString(result);
+                (icon.parentNode as HTMLElement).style.backgroundColor = rgbToRgbaString(result);
             }
         });
     }
 
     loadTitle() {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve): void => {
             const xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = () => {
+            xhr.onreadystatechange = (): void => {
                 if (xhr.readyState == XMLHttpRequest.DONE) {
                     resolve(xhr.responseText);
                 }
@@ -114,44 +114,42 @@ class HistoryItem extends EventEmitter {
         });
     }
 
-    open() {
+    open(): void {
         ipcRenderer.send("tabManager-addTab", this.url, true);
-        return null;
     }
 
-    getNode() {
+    getNode(): HTMLButtonElement {
         return this.node;
     }
 
-    getId() {
+    getId(): number {
         return this.id;
     }
     
-    getURL() {
+    getURL(): string {
         return this.url;
     }
 
-    getTime() {
+    getTime(): number {
         return this.time;
     }
 
-    getTitle() {
+    getTitle(): string {
         return this.title;
     }
 
-    setTitle(text) {
+    setTitle(text: string): void {
         this.title = text;
         this.node.getElementsByClassName("history-title")[0].innerHTML = text;
         this.emit("title-updated", text);
     }
 
-    isSelected() {
-        return this.node.getElementsByClassName("history-checkbox")[0].checked;
+    isSelected(): boolean {
+        return this.node.querySelector<HTMLInputElement>(".history-checkbox").checked;
     }
 
-    copyURL() {
+    copyURL(): void {
         clipboard.writeText(this.url);
-        return null;
     }
 }
 

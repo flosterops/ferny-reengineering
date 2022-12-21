@@ -3,13 +3,20 @@
 const EventEmitter = require("events");
 const { BrowserView, Menu, MenuItem, clipboard } = require("electron");
 
+interface IDownload {
+    id: number,
+    url: string,
+    name: string,
+    time: number
+}
+
 class Overlay extends EventEmitter {
     window = null;
     view = null;
     top = 75;
     appPath = null;
 
-    constructor(window, appPath) {
+    constructor(window: Window, appPath: string) {
         super();
 
         this.window = window;
@@ -29,25 +36,25 @@ class Overlay extends EventEmitter {
         this.view.webContents.on("context-menu", (event, params) => {
             if(params.isEditable) {
                 const editMenu = Menu.buildFromTemplate([{ 
-                    label: "Cut", icon: this.appPath + "/assets/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => {
+                    label: "Cut", icon: this.appPath + "/assets/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: (): void => {
                         this.view.webContents.cut();
                     } }, { 
-                    label: "Copy", icon: this.appPath + "/assets/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => {
+                    label: "Copy", icon: this.appPath + "/assets/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: (): void => {
                         this.view.webContents.copy();
                     } }, { 
-                    label: "Paste", icon: this.appPath + "/assets/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => {
+                    label: "Paste", icon: this.appPath + "/assets/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: (): void => {
                         this.view.webContents.paste();
                     } }, { type: "separator" }, { 
-                    label: "Undo", icon: this.appPath + "/assets/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => {
+                    label: "Undo", icon: this.appPath + "/assets/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: (): void => {
                         this.view.webContents.undo();
                     } }, { 
-                    label: "Redo", icon: this.appPath + "/assets/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
+                    label: "Redo", icon: this.appPath + "/assets/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: (): void => {
                         this.view.webContents.redo();
                     } }, { type: "separator" }, { 
-                    label: "Select all", icon: this.appPath + "/assets/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => {
+                    label: "Select all", icon: this.appPath + "/assets/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: (): void => {
                         this.view.webContents.selectAll();
                     } }, { type: "separator" }, { 
-                    label: "Delete", icon: this.appPath + "/assets/imgs/icons16/delete.png", accelerator: "Backspace", enabled: params.editFlags.canDelete, click: () => {
+                    label: "Delete", icon: this.appPath + "/assets/imgs/icons16/delete.png", accelerator: "Backspace", enabled: params.editFlags.canDelete, click: (): void => {
                         this.view.webContents.delete();
                     } }
                 ]);
@@ -57,7 +64,7 @@ class Overlay extends EventEmitter {
                         label: "Paste and search", 
                         icon: appPath + "/assets/imgs/icons16/zoom.png",
                         enabled: params.editFlags.canPaste, 
-                        click: () => { 
+                        click: (): void => {
                             this.performSearch(clipboard.readText()); }
                     });
                     const sep = new MenuItem({
@@ -72,7 +79,7 @@ class Overlay extends EventEmitter {
         });
     }
 
-    refreshBounds() {
+    refreshBounds(): void {
         const size = this.window.getSize();
         if(this.window.isMaximized() && process.platform == "win32") {
             this.view.setBounds({ 
@@ -91,159 +98,154 @@ class Overlay extends EventEmitter {
         }
     }
 
-    show() {
+    show(): void {
         this.window.setBrowserView(this.view);
         this.refreshBounds();
         this.window.webContents.send("overlay-toggleButton", true);
         this.view.webContents.focus();
 
         this.emit("show");
-        return null;
     }
 
-    scrollToId(id) {
+    scrollToId(id: string): void {
         this.show();
         this.view.webContents.send("overlay-scrollToId", id);
     }
 
-    showButtonMenu() {
+    showButtonMenu(): void {
         const buttonMenu = Menu.buildFromTemplate([{ 
-            label: "Show overlay", icon: this.appPath + "/assets/imgs/icons16/overlay.png", accelerator: "F1", click: () => {
+            label: "Show overlay", icon: this.appPath + "/assets/imgs/icons16/overlay.png", accelerator: "F1", click: (): void => {
                 this.show(); 
             } }, { type: "separator" }, { 
-            label: "Bookmarks", icon: this.appPath + "/assets/imgs/icons16/bookmarks.png", accelerator: "CmdOrCtrl+B", click: () => {
+            label: "Bookmarks", icon: this.appPath + "/assets/imgs/icons16/bookmarks.png", accelerator: "CmdOrCtrl+B", click: (): void => {
                 this.scrollToId("bookmarks-title"); 
             } }, { 
-            label: "History", icon: this.appPath + "/assets/imgs/icons16/history.png", accelerator: "CmdOrCtrl+H", click: () => {
+            label: "History", icon: this.appPath + "/assets/imgs/icons16/history.png", accelerator: "CmdOrCtrl+H", click: (): void => {
                 this.scrollToId("history-title"); 
             } }, { 
-            label: "Downloads", icon: this.appPath + "/assets/imgs/icons16/download.png", accelerator: "CmdOrCtrl+D", click: () => {
+            label: "Downloads", icon: this.appPath + "/assets/imgs/icons16/download.png", accelerator: "CmdOrCtrl+D", click: (): void => {
                 this.scrollToId("downloads-title"); 
             } }
           ]);
         buttonMenu.popup(this.window);
     }
 
-    openDevTools() {
+    openDevTools(): void {
         this.view.webContents.openDevTools();
     }
 
-    goToSearch(text, cursorPos) {
+    goToSearch(text: string, cursorPos: any): void {
         this.scrollToId("search-title"); 
         this.view.webContents.send("searchManager-goToSearch", text, cursorPos);
     }
 
-    performSearch(text) {
+    performSearch(text: string): void {
         this.view.webContents.send("searchManager-performSearch", text);
     }
 
-    addBookmark(name, url) {
+    addBookmark(name: string, url: string): void {
         this.view.webContents.send("bookmarkManager-addBookmark", name, url);
     }
 
-    addFolderWithBookmarks(folderName, bookmarks) {
+    addFolderWithBookmarks(folderName: string, bookmarks: { name: string, url: string, [key: string]: any }): void {
         this.view.webContents.send("bookmarkManager-addFolderWithBookmarks", folderName, bookmarks);
     }
 
-    addHistoryItem(url) {
+    addHistoryItem(url: string): void {
         this.view.webContents.send("historyManager-insertBeforeHistoryItem", url);
     }
 
-    clearHistory() {
+    clearHistory(): void {
         this.view.webContents.send("historyManager-clearHistory");
     }
 
-    clearDownloads() {
+    clearDownloads(): void {
         this.view.webContents.send("downloadManager-clearDownloads");
     }
 
-    updateTheme() {
+    updateTheme(): void {
         this.view.webContents.send("overlay-updateTheme");
     }
 
-    removeFolder(id) {
+    removeFolder(id: string): void {
         this.view.webContents.send("bookmarkManager-removeFolder", id);
     }
 
-    createDownload(download) {
+    createDownload(download: IDownload): void {
         this.view.webContents.send("downloadManager-createDownload", download);
     }
 
-    setDownloadStatusInterrupted(download) {
+    setDownloadStatusInterrupted(download: IDownload): void {
         this.view.webContents.send("downloadManager-setDownloadStatusInterrupted", download);
     }
 
-    setDownloadStatusPause(download) {
+    setDownloadStatusPause(download: IDownload): void {
         this.view.webContents.send("downloadManager-setDownloadStatusPause", download);
     }
 
-    setDownloadProcess(download) {
+    setDownloadProcess(download: IDownload): void {
         this.view.webContents.send("downloadManager-setDownloadProcess", download);
     }
 
-    setDownloadStatusDone(download) {
+    setDownloadStatusDone(download: IDownload): void {
         this.view.webContents.send("downloadManager-setDownloadStatusDone", download);
     }
 
-    setDownloadStatusFailed(download) {
+    setDownloadStatusFailed(download: IDownload): void {
         this.view.webContents.send("downloadManager-setDownloadStatusFailed", download);
     }
 
-    setSearchEngine(engineName) {
+    setSearchEngine(engineName: string): void {
         this.view.webContents.send("searchManager-setSearchEngine", engineName);
     }
 
-    setFullscreen(bool) {
-        if(bool) {
-            this.top = 0;
-        } else {
-            this.top = 75;
-        }
+    setFullscreen(bool: boolean): void {
+        this.top = bool ? 0 : 75;
         this.refreshBounds();
     }
 
-    checkIfBookmarked(url) {
+    checkIfBookmarked(url: string): void {
         this.view.webContents.send("bookmarkManager-checkIfBookmarked", url);
     }
 
-    showBookmarkOptions(id) {
+    showBookmarkOptions(id: number): void {
         this.scrollToId("bookmarks-title");
         this.view.webContents.send("bookmarkManager-showBookmarkOptions", id);
     }
 
-    switchTabGroup(tabGroupId) {
+    switchTabGroup(tabGroupId: number): void {
         this.view.webContents.send("overlay-switchTabGroup", tabGroupId);
     }
 
-    cut() {
+    cut(): void {
         this.view.webContents.cut();
     }
 
-    copy() {
+    copy(): void {
         this.view.webContents.copy();
     }
 
-    paste() {
+    paste(): void {
         this.view.webContents.paste();
     }
 
-    pasteAndMatchStyle() {
+    pasteAndMatchStyle(): void {
         this.view.webContents.pasteAndMatchStyle();
     }
 
-    undo() {
+    undo(): void {
         this.view.webContents.undo();
     }
 
-    redo() {
+    redo(): void {
         this.view.webContents.redo();
     }
 
-    selectAll() {
+    selectAll(): void {
         this.view.webContents.selectAll();
     }
 
-    delete() {
+    delete(): void {
         this.view.webContents.delete();
     }
 }
