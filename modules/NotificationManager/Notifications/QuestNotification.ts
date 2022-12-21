@@ -5,7 +5,7 @@ const rgbToRgbaString = require(__dirname + "/../../rgbToRgbaString.js");
 const TextNotification = require(__dirname + "/TextNotification.js");
 
 class QuestNotification extends TextNotification {
-    constructor(id, autoClose, text, buttons) {
+    constructor(id: number, autoClose: boolean, text: string, buttons: any[]) {
         super(id, autoClose, text);
 
         const img = document.createElement("img");

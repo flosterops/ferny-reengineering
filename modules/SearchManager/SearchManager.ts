@@ -16,7 +16,7 @@ class SearchManager extends EventEmitter {
     searchEngines = null;
     clearSearchButton = null;
 
-    constructor(searchInput, searchSuggest, searchSuggestContainer, searchEngines, clearSearchButton) {
+    constructor(searchInput: HTMLInputElement, searchSuggest: HTMLElement, searchSuggestContainer: HTMLElement, searchEngines: HTMLElement, clearSearchButton: HTMLButtonElement) {
         super();
 
         this.clearSearchButton = clearSearchButton;
@@ -24,9 +24,9 @@ class SearchManager extends EventEmitter {
         this.searchSuggest = searchSuggest;
 
         this.searchEngines = searchEngines;
-        const engines = searchEngines.getElementsByClassName("search-engine");
+        const engines = searchEngines.querySelectorAll<HTMLElement>(".search-engine");
 
-        Array.from(engines).forEach((item) => {
+        Array.from(engines).forEach((item: any): void => {
             (item as any).onclick = () => {
                 this.searchWith(null, (item as any).name);
             }
@@ -35,12 +35,13 @@ class SearchManager extends EventEmitter {
         this.searchSuggestContainer = searchSuggestContainer;
 
         this.searchInput = searchInput;
-        this.searchInput.oninput = () => {
+        this.searchInput.oninput = (): void => {
             this.getSuggestions();
         };
-        this.searchInput.onkeydown = (event) => {
+        this.searchInput.onkeydown = (event: KeyboardEvent): void => {
+            let suggestions;
             if (event.keyCode === 40) {
-                var suggestions = this.searchSuggestContainer.childNodes;
+                suggestions = this.searchSuggestContainer.childNodes;
                 let i = 0;
                 while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
                     i++;    
@@ -51,7 +52,7 @@ class SearchManager extends EventEmitter {
                     suggestions[i].nextSibling.classList.add("active");
                 }
             } else if (event.keyCode === 38) {
-                var suggestions = this.searchSuggestContainer.childNodes;
+                suggestions = this.searchSuggestContainer.childNodes;
                 let i = 0;
                 while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
                     i++;
@@ -63,7 +64,7 @@ class SearchManager extends EventEmitter {
                 }
             }
         };
-        this.searchInput.onkeyup = (event) => {
+        this.searchInput.onkeyup = (event: KeyboardEvent): void => {
             event.preventDefault();
 
             if (this.searchInput.value.length > 0) {
@@ -86,12 +87,12 @@ class SearchManager extends EventEmitter {
             }
         };
 
-        loadSearchEngineModule().then((searchEngine) => {
+        loadSearchEngineModule().then((searchEngine: string): void => {
             this.setSearchEngine(searchEngine);
         });
     }
 
-    updateClearSearchButton() {
+    updateClearSearchButton(): void {
         if(this.searchInput.value.length > 0) {
             this.clearSearchButton.classList.add("show");
         } else {
@@ -99,7 +100,7 @@ class SearchManager extends EventEmitter {
         }
     }
 
-    getSuggestions() {    
+    getSuggestions(): void {
         if (this.searchInput.value.length > 0) {
             this.searchSuggest.style.display = "";
             this.searchSuggest.classList.remove("hide");
@@ -114,7 +115,7 @@ class SearchManager extends EventEmitter {
             firstInput.onclick = () => {
                 this.navigateSuggest(firstInput.value);
             };
-            firstInput.onauxclick = (event) => {
+            firstInput.onauxclick = (event: MouseEvent): void => {
                 event.preventDefault();
                 if(event.which === 2) {
                     this.navigateSuggest(firstInput.value, true);
@@ -122,7 +123,7 @@ class SearchManager extends EventEmitter {
             };
             this.searchSuggestContainer.appendChild(firstInput);
 
-            autoSuggest(this.searchInput.value, (err, suggestions) => {
+            autoSuggest(this.searchInput.value, (err, suggestions: any[]): void => {
                 if (suggestions != null && suggestions.length > 0) {
                     if (this.searchSuggestContainer.childNodes.length < 5) {
                         for (let i = 0; i < 5; i++) {
@@ -134,7 +135,7 @@ class SearchManager extends EventEmitter {
                                 s.onclick = () => {
                                     this.navigateSuggest(s.value);
                                 };
-                                s.onauxclick = (event) => {
+                                s.onauxclick = (event: MouseEvent): void => {
                                     event.preventDefault();
                                     if(event.which === 2) {
                                         this.navigateSuggest(s.value, true);
@@ -149,7 +150,7 @@ class SearchManager extends EventEmitter {
         }
     }
       
-    searchWith(text, engine, background = false) {
+    searchWith(text: string, engine: string, background = false): void {
         if(text == null) {
             const suggestions = this.searchSuggestContainer.childNodes;
             let i = 0;
@@ -224,7 +225,7 @@ class SearchManager extends EventEmitter {
         }
     }
       
-    navigateSuggest(text, background = false) {
+    navigateSuggest(text: string, background = false): void {
         if(text !== "" && text !== null) {
             if(isUrl(text)) {
                 this.newTab(text);
@@ -240,12 +241,11 @@ class SearchManager extends EventEmitter {
         }
     }
 
-    newTab(url: string, background = false) {
+    newTab(url: string, background = false): void {
         ipcRenderer.send("tabManager-addTab", url, !background);
-        return null;
     }
 
-    setSearchEngine(engineName) {
+    setSearchEngine(engineName: string): void {
         const engines = this.searchEngines.getElementsByClassName("search-engine");
         for(let i = 0; i < engines.length; i++) {
             if(engines[i].name == engineName) {
@@ -255,11 +255,9 @@ class SearchManager extends EventEmitter {
                 engines[i].classList.remove("active");
             }
         }
-
-        return null;
     }
 
-    goToSearch(text, cursorPos) {
+    goToSearch(text: string, cursorPos: any): void {
         if(text == null) {
             this.searchInput.value = "";
         } else {
@@ -273,11 +271,9 @@ class SearchManager extends EventEmitter {
         this.searchInput.focus();
 
         this.getSuggestions();
-
-        return null;
     }
 
-    clearSearch() {
+    clearSearch(): void {
         this.searchInput.value = "";
 
         this.searchSuggestContainer.innerHTML = "";
@@ -285,11 +281,9 @@ class SearchManager extends EventEmitter {
         this.searchSuggest.classList.add("hide");
 
         this.updateClearSearchButton();
-
-        return null;
     }
 
-    performSearch(text) {
+    performSearch(text: string): void {
         this.navigateSuggest(text);
     }
 }

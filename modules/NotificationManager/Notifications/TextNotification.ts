@@ -5,7 +5,7 @@ const BlankNotification = require(__dirname + "/BlankNotification.js");
 class TextNotification extends BlankNotification {
     text = "";
 
-    constructor(id, autoClose, text) {
+    constructor(id: number, autoClose: boolean, text: string) {
         super(id, autoClose);
 
         this.text = text;

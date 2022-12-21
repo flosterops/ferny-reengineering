@@ -3,12 +3,12 @@
 const EventEmitter = require("events");
 
 class BlankNotification extends EventEmitter {
-    id = null;
-    node = null;
-    timeout = null;
+    id: number | null = null;
+    node: HTMLDivElement | null = null;
+    timeout: NodeJS.Timeout | null = null;
     autoClose = false;
 
-    constructor(id, autoClose) {
+    constructor(id: number, autoClose: boolean) {
         super();
 
         this.id = id;
@@ -21,7 +21,7 @@ class BlankNotification extends EventEmitter {
                 <div class='notif-body'></div>
             </div>
         `;
-        this.node.onauxclick = (event) => {
+        this.node.onauxclick = (event: MouseEvent): void => {
             event.preventDefault();
             if(event.which === 2) {
                 this.close();
@@ -29,7 +29,7 @@ class BlankNotification extends EventEmitter {
         };
 
         const closeButton = document.createElement("button");
-        closeButton.onclick = () => {
+        closeButton.onclick = (): void => {
             this.close.call(this);
         }
         closeButton.title = "Close";
@@ -41,30 +41,28 @@ class BlankNotification extends EventEmitter {
         this.refreshTimeout();
     }
 
-    getId() {
+    getId(): number {
         return this.id;
     }
 
-    getNode() {
+    getNode(): HTMLDivElement {
         return this.node;
     }
 
-    refreshTimeout() {
+    refreshTimeout(): void {
         clearTimeout(this.timeout);
         if(this.autoClose) {
             this.timeout = setTimeout(() => {
                 this.close.call(this);
             }, 2500);
         }
-        return null;
     }
 
-    close() {
+    close(): void {
         this.node.classList.add("closed");
         setTimeout(() => {
             this.emit("close", this);
         }, 250);
-        return null;
     }
 }
 

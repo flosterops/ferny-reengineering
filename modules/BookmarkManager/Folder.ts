@@ -4,12 +4,12 @@ const EventEmitter = require("events");
 
 class Folder extends EventEmitter {
     bookmarks = [];
-    name = null;
-    id = null;
+    name: string | null = null;
+    id: number | null = null;
     node = null;
     position = null;
 
-    constructor(id, name, editable, position) {
+    constructor(id: number, name: string, editable: boolean, position: string) {
         super();
 
         this.id = id;
@@ -39,17 +39,17 @@ class Folder extends EventEmitter {
             editFolderBtn.onclick = () => {
                 this.toggleEditor();
             }
-            this.node.getElementsByClassName("folder-header")[0].appendChild(editFolderBtn);
+            this.node.querySelector(".folder-header").appendChild(editFolderBtn);
         }
 
         const addBookmarkBtn = document.createElement("button");
         addBookmarkBtn.classList.add("nav-btn", "add-bookmark-btn");
         addBookmarkBtn.title = "Create bookmark here";
         addBookmarkBtn.innerHTML = "<img class='theme-icon' name='add-bookmark-16'>";
-        addBookmarkBtn.onclick = () => {
+        addBookmarkBtn.onclick = (): void => {
             this.newBookmark();
         }
-        this.node.getElementsByClassName("folder-header")[0].appendChild(addBookmarkBtn);
+        this.node.querySelector(".folder-header").appendChild(addBookmarkBtn);
 
         const openAllBtn = document.createElement("button");
         openAllBtn.classList.add("nav-btn", "open-all-btn");
@@ -58,10 +58,10 @@ class Folder extends EventEmitter {
         openAllBtn.onclick = () => {
             this.openAllBookmarks();
         }
-        this.node.getElementsByClassName("folder-header")[0].appendChild(openAllBtn);
+        this.node.querySelector(".folder-header").appendChild(openAllBtn);
     }
 
-    toString() {
+    toString(): string {
         return JSON.stringify({
             id: this.id,
             name: this.name,
@@ -69,19 +69,19 @@ class Folder extends EventEmitter {
         });
     }
 
-    getId() {
+    getId(): number {
         return this.id;
     }
 
-    newBookmark() {
+    newBookmark(): void {
         this.emit("add-bookmark", this, "New bookmark", "https://");
     }
 
-    addBookmark(name, url) {
+    addBookmark(name: string, url: string): void {
         this.emit("add-bookmark", this, name, url);
     }
 
-    appendBookmark(bookmark) {
+    appendBookmark(bookmark: any): void {
         bookmark.on("toggle-editor", () => {
             this.emit("bookmark-editor-toggled");
         });
@@ -95,8 +95,9 @@ class Folder extends EventEmitter {
 
         this.bookmarks.push(bookmark);
 
-        const cont = this.node.getElementsByClassName("folder-container")[0];
+        const cont = this.node.querySelector(".folder-container");
         const nodes = cont.childNodes;
+
         if(nodes.length > 0) {
             if(bookmark.getPosition() != null) {
                 for(let i = 0; i < nodes.length; i++) {
@@ -117,10 +118,9 @@ class Folder extends EventEmitter {
         }
 
         this.emit("append-bookmark");
-        return null;
     }
 
-    removeBookmark(id) {
+    removeBookmark(id: number): void {
         for(let i = 0; i < this.bookmarks.length; i++) {
             if(this.bookmarks[i].getId() == id) {
                 this.node.getElementsByClassName("folder-container")[0].removeChild(this.bookmarks[i].getNode());
@@ -130,7 +130,7 @@ class Folder extends EventEmitter {
         }
     }
 
-    spliceBookmark(id) {
+    spliceBookmark(id: number): void {
         for(let i = 0; i < this.bookmarks.length; i++) {
             if(this.bookmarks[i].getId() == id) {
                 this.bookmarks.splice(i, 1);
@@ -139,21 +139,19 @@ class Folder extends EventEmitter {
         }
     }
 
-    pushBookmark(bookmark) {
+    pushBookmark(bookmark: any): void {
         this.bookmarks.push(bookmark);
     } 
 
-    setName(name) {
+    setName(name: string): void {
         this.name = name;
-
-        return null;
     }
 
-    getName() {
+    getName(): string {
         return this.name;
     }
 
-    getBookmarkById(id) {
+    getBookmarkById(id: number): any {
         for(let i = 0; i < this.bookmarks.length; i++) {
             if(id == this.bookmarks[i].getId()) {
                 return this.bookmarks[i];
@@ -161,21 +159,21 @@ class Folder extends EventEmitter {
         }
     }
 
-    getNode() {
+    getNode(): HTMLElement {
         return this.node;
     }
 
-    setPosition(position) {
+    setPosition(position: string) {
         this.position = position;
         this.node.position = position;
     }
 
-    getPosition() {
+    getPosition(): string {
         return this.position;
     }
 
-    updateBookmarksPositions() {
-        return new Promise((resolve, reject) => {
+    updateBookmarksPositions(): Promise<boolean> {
+        return new Promise((resolve) => {
             const divs = this.node.getElementsByClassName("bookmark");
             for(let i = 0; i < divs.length; i++) {
                 this.getBookmarkById(divs[i].name).setPosition(i);
@@ -184,26 +182,25 @@ class Folder extends EventEmitter {
         });
     }
 
-    openAllBookmarks() {
+    openAllBookmarks(): void {
         for(let i = 0; i < this.bookmarks.length; i++) {
             this.bookmarks[i].open();
         }
     }
 
-    edit(name) {
+    edit(name: string): void {
         this.name = name;
 
         this.node.getElementsByClassName("folder-name")[0].innerHTML = name;
         this.node.getElementsByClassName("folder-header")[0].title = name;
 
         this.emit("edit")
-        return null;
     }
 
-    toggleEditor() {
-        let folderEditor = this.node.getElementsByClassName("folder-editor")[0];
-        if(folderEditor == null) {
-            this.node.getElementsByClassName("folder-header")[0].style.display = "none";
+    toggleEditor(): void {
+        let folderEditor = this.node.querySelector(".folder-editor");
+        if(!folderEditor) {
+            this.node.querySelector(".folder-header").style.display = "none";
 
             folderEditor = document.createElement("div");
             folderEditor.classList.add("folder-editor");
@@ -219,7 +216,7 @@ class Folder extends EventEmitter {
             const saveBtn = document.createElement("button");
             saveBtn.classList.add("nav-btn", "with-border");
             saveBtn.innerHTML = "<img class='theme-icon' name='save-16'><label>Save</label>";
-            saveBtn.onclick = () => {
+            saveBtn.onclick = (): void => {
                 this.edit(nameInput.value);
                 this.toggleEditor();
             }
@@ -228,7 +225,7 @@ class Folder extends EventEmitter {
             const cancelBtn = document.createElement("button");
             cancelBtn.classList.add("nav-btn", "with-border");
             cancelBtn.innerHTML = `<img class="theme-icon" name="cancel-16"><label>Cancel</label>`;
-            cancelBtn.onclick = () => {
+            cancelBtn.onclick = (): void => {
                 this.toggleEditor();
             }
             folderEditor.appendChild(cancelBtn);
@@ -236,7 +233,7 @@ class Folder extends EventEmitter {
             const deleteBtn = document.createElement("button");
             deleteBtn.classList.add("nav-btn", "with-border");
             deleteBtn.innerHTML = `<img class="theme-icon" name="delete-16"><label>Delete</label>`;
-            deleteBtn.onclick = () => {
+            deleteBtn.onclick = (): void => {
                 this.askForDelete();
             }
             folderEditor.appendChild(deleteBtn);
@@ -247,20 +244,17 @@ class Folder extends EventEmitter {
         }
 
         this.emit("toggle-editor");
-        return null;
     }
 
-    askForDelete() {
+    askForDelete(): void {
         this.emit("ask-for-delete", this.id, this.name);
-        return null;
     }
 
-    delete() {
+    delete(): void {
         this.emit("delete", this.id);
-        return null;
     }
 
-    getBookmarks() {
+    getBookmarks(): any {
         return this.bookmarks;
     }
 }

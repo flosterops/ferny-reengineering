@@ -12,14 +12,14 @@ const epochToTime = require(__dirname + "/../epochToTime.js");
 const rgbToRgbaString = require(__dirname + "/../rgbToRgbaString.js");
 
 class Download extends EventEmitter {
-    id = null;
-    name = null;
-    url = null;
-    time = null;
-    path = null;
+    id: number | null = null;
+    name: string | null = null;
+    url: string | null = null;
+    time: number | null = null;
+    path: string | null = null;
     status = "started";
     node = null;
-    constructor(id, name, url, time) {
+    constructor(id: number, name: string, url: string, time: number) {
         super();
 
         this.id = id;
@@ -30,7 +30,7 @@ class Download extends EventEmitter {
         this.node = document.createElement("div");
         this.node.classList.add("download-item");
         this.node.name = id;
-        this.node.id = "download-" + id;
+        this.node.id = `download-${id}`;
         this.node.innerHTML = `
             <div class="download-body">
                 <img class="download-icon" src="${extToImagePath(fileExtension(name))}">
@@ -44,7 +44,7 @@ class Download extends EventEmitter {
         `;
 
         const color = new GetAvColor(this.node.getElementsByClassName("download-icon")[0]);
-        color.mostUsed(result => {
+        color.mostUsed((result): void => {
             if(Array.isArray(result)) {
                 this.node.style.backgroundColor = rgbToRgbaString(result[0]);
             } else {
@@ -53,15 +53,15 @@ class Download extends EventEmitter {
         });
     }
 
-    getNode() {
+    getNode(): HTMLElement {
         return this.node;
     }
 
-    getId() {
+    getId(): number {
         return this.id;
     }
 
-    setStatusInterrupted() {
+    setStatusInterrupted(): void {
         this.status = "interrupted";
         this.node.getElementsByClassName("download-status")[0].innerHTML = "Interrupted";
 
@@ -76,10 +76,9 @@ class Download extends EventEmitter {
         `;
 
         this.emit("status-changed");
-        return null;
     }
 
-    setStatusDone(path) {
+    setStatusDone(path: string): void {
         this.status = "done";
         this.path = path;
         this.node.getElementsByClassName("download-status")[0].innerHTML = "Completed";
@@ -96,10 +95,9 @@ class Download extends EventEmitter {
         `;
 
         this.emit("status-changed");
-        return null;
     }
 
-    setStatusFailed() {
+    setStatusFailed(): void {
         this.status = "failed";
         this.node.getElementsByClassName("download-status")[0].innerHTML = "Failed";
 
@@ -111,20 +109,18 @@ class Download extends EventEmitter {
         `;
 
         this.emit("status-changed");
-        return null;
     }
 
-    setStatusStopped(path) {
+    setStatusStopped(): void {
         this.status = "stopped";
         this.node.getElementsByClassName("download-status")[0].innerHTML = "Done";
 
         this.node.getElementsByClassName("download-buttons")[0].innerHTML = "";
 
         this.emit("status-changed");
-        return null;
     }
 
-    setStatusPause(bytes, total) {
+    setStatusPause(bytes: number, total: number): void {
         this.status = "pause";
         this.node.getElementsByClassName("download-status")[0].innerHTML = `
             Paused - ${percent(bytes, total)}%<br>(${bytesToSize(bytes)} / ${bytesToSize(total)})
@@ -141,10 +137,9 @@ class Download extends EventEmitter {
         `;
 
         this.emit("status-changed");
-        return null;
     }
 
-    setProcess(bytes, total) {
+    setProcess(bytes: number, total: number): void {
         this.node.getElementsByClassName("download-status")[0].innerHTML = `
             Downloading - ${percent(bytes, total)}%<br>(${bytesToSize(bytes)} / ${bytesToSize(total)})
         `;
@@ -164,7 +159,6 @@ class Download extends EventEmitter {
         }
 
         this.emit("status-changed");
-        return null;
     }
 }
 

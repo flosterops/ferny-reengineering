@@ -23,9 +23,9 @@ function updateTheme() {
 
 // Notifications
 
-const notificationManager = new NotificationManager(document.getElementById("notif-panel"));
+const notificationManager = new NotificationManager(document.querySelector<HTMLElement>("#notif-panel"));
 
-notificationManager.on("notif-added", (notif) => {
+notificationManager.on("notif-added", () => {
   updateTheme();
 });
 
