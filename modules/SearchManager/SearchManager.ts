@@ -7,7 +7,7 @@ const { ipcRenderer } = require("electron");
 const isUrl = require("validate.io-uri");
 const autoSuggest = require("suggestion");
 
-const loadSearchEngineModule = require("../loadSearchEngine.js");
+const loadSearchEngineModule = require("../loadSearchEngine");
 
 class SearchManager extends EventEmitter {
     searchInput = null;

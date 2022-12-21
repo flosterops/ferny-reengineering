@@ -4,12 +4,12 @@ const EventEmitter = require("events");
 const fileExtension = require("file-extension");
 const GetAvColor = require("color.js");
 
-const extToImagePath = require(__dirname + "/../extToImagePath.js");
-const bytesToSize = require(__dirname + "/../bytesToSize.js");
-const percent = require(__dirname + "/../percent.js");
-const epochToDate = require(__dirname + "/../epochToDate.js");
-const epochToTime = require(__dirname + "/../epochToTime.js");
-const rgbToRgbaString = require(__dirname + "/../rgbToRgbaString.js");
+const extToImagePath = require("../extToImagePath");
+const bytesToSize = require("../bytesToSize");
+const percent = require("../percent");
+const epochToDate = require("../epochToDate");
+const epochToTime = require("../epochToTime");
+const rgbToRgbaString = require("../rgbToRgbaString");
 
 class Download extends EventEmitter {
     id: number | null = null;

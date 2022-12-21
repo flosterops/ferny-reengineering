@@ -4,10 +4,10 @@
 
 const { ipcRenderer } = require("electron");
 
-const loadTheme = require("../../modules/loadTheme.js");
-const applyTheme = require("../../modules/applyTheme.js");
-const applyWinControls = require("../../modules/applyWinControls.js");
-const loadWinControlsModule = require("../../modules/loadWinControls.js");
+const loadTheme = require("../../modules/loadTheme");
+const applyTheme = require("../../modules/applyTheme");
+const applyWinControls = require("../../modules/applyWinControls");
+const loadWinControlsModule = require("../../modules/loadWinControls");
 
 // Functions
 

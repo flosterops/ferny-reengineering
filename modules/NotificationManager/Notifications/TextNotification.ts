@@ -1,6 +1,6 @@
 "use strict";
 
-const BlankNotification = require(__dirname + "/BlankNotification.js");
+const BlankNotification = require("./BlankNotification");
 
 class TextNotification extends BlankNotification {
     text = "";

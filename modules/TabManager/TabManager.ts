@@ -3,9 +3,9 @@
 const EventEmitter = require("events");
 const { Menu, MenuItem } = require("electron");
 
-const loadTabClosedModule = require("../loadTabClosed.js");
+const loadTabClosedModule = require("../loadTabClosed");
 
-const Tab = require(__dirname + "/Tab.js");
+const Tab = require("./Tab");
 
 class TabManager extends EventEmitter {
     left = 0; 

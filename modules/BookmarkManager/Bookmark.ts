@@ -4,7 +4,7 @@ const EventEmitter = require("events");
 const { ipcRenderer, clipboard } = require("electron");
 const GetAvColor = require("color.js");
 
-const rgbToRgbaString = require("../rgbToRgbaString.js");
+const rgbToRgbaString = require("../rgbToRgbaString");
 
 class Bookmark extends EventEmitter {
     id: number | null = null;

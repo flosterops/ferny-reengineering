@@ -6,17 +6,17 @@ const { ipcRenderer } = require("electron");
 const fs = require("fs");
 const path = require("path");
 
-const saveFileToJsonFolder = require("../../modules/saveFileToJsonFolder.js");
-const loadFileFromJsonFolder = require("../../modules/loadFileFromJsonFolder.js");
-const loadTheme = require("../../modules/loadTheme.js");
-const applyTheme = require("../../modules/applyTheme.js");
-const bytesToSize = require("../../modules/bytesToSize.js");
-const applyWinControls = require("../../modules/applyWinControls.js");
-const loadLastTabModule = require("../../modules/loadLastTab.js");
-const loadSearchEngineModule = require("../../modules/loadSearchEngine.js");
-const loadStartupModule = require("../../modules/loadStartup.js");
-const loadTabClosedModule = require("../../modules/loadTabClosed.js");
-const loadWinControlsModule = require("../../modules/loadWinControls.js");
+const saveFileToJsonFolder = require("../../modules/saveFileToJsonFolder");
+const loadFileFromJsonFolder = require("../../modules/loadFileFromJsonFolder");
+const loadTheme = require("../../modules/loadTheme");
+const applyTheme = require("../../modules/applyTheme");
+const bytesToSize = require("../../modules/bytesToSize");
+const applyWinControls = require("../../modules/applyWinControls");
+const loadLastTabModule = require("../../modules/loadLastTab");
+const loadSearchEngineModule = require("../../modules/loadSearchEngine");
+const loadStartupModule = require("../../modules/loadStartup");
+const loadTabClosedModule = require("../../modules/loadTabClosed");
+const loadWinControlsModule = require("../../modules/loadWinControls");
 
 // Functions themes
 

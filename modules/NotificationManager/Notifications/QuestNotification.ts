@@ -1,8 +1,8 @@
 "use strict";
 
-const rgbToRgbaString = require(__dirname + "/../../rgbToRgbaString.js");
+const rgbToRgbaString = require("../../rgbToRgbaString");
 
-const TextNotification = require(__dirname + "/TextNotification.js");
+const TextNotification = require("./TextNotification");
 
 class QuestNotification extends TextNotification {
     constructor(id: number, autoClose: boolean, text: string, buttons: any[]) {

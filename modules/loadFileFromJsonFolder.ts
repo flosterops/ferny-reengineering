@@ -1,7 +1,7 @@
 const fs = require("fs");
 const ppath = require("persist-path")("Ferny");
 
-const checkFileExists = require(__dirname + "/checkFileExists.js");
+const checkFileExists = require("./checkFileExists");
 
 function checkDirExists(path: string): Promise<boolean> {
     return new Promise((resolve) => {

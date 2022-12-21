@@ -39,7 +39,6 @@
   },
   "scripts": {
     "start": "electron .",
-    "build": "tsc",
     "go": "tsc && electron .",
     "dist": "build --win --linux",
     "dist-win": "build --win",

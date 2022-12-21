@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const loadFileFromJsonFolder = require("../modules/loadFileFromJsonFolder.js");
+const loadFileFromJsonFolder = require("./loadFileFromJsonFolder");
 
 interface ITheme {
     theme: any;

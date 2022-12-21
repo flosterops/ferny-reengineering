@@ -4,13 +4,13 @@
 
 const { ipcRenderer, shell } = require("electron");
 
-const loadTheme = require("../../modules/loadTheme.js");
-const applyTheme = require("../../modules/applyTheme.js");
+const loadTheme = require("../../modules/loadTheme");
+const applyTheme = require("../../modules/applyTheme");
 
-const BookmarkManager = require("../../modules/BookmarkManager/BookmarkManager.js");
-const SearchManager = require("../../modules/SearchManager/SearchManager.js");
-const HistoryManager = require("../../modules/HistoryManager/HistoryManager.js");
-const DownloadManager = require("../../modules/DownloadManager/DownloadManager.js");
+const BookmarkManager = require("../../modules/BookmarkManager/BookmarkManager");
+const SearchManager = require("../../modules/SearchManager/SearchManager");
+const HistoryManager = require("../../modules/HistoryManager/HistoryManager");
+const DownloadManager = require("../../modules/DownloadManager/DownloadManager");
 
 // Search
 

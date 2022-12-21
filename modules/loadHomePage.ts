@@ -1,4 +1,4 @@
-const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
+const saveFileToJsonFolder = require("./saveFileToJsonFolder");
 const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
 

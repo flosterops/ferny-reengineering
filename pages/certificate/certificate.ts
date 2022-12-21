@@ -5,8 +5,8 @@ const sslCertificate = require('get-ssl-certificate');
 
 // Modules
 
-const loadTheme = require("../../modules/loadTheme.js");
-const applyTheme = require("../../modules/applyTheme.js");
+const loadTheme = require("../../modules/loadTheme");
+const applyTheme = require("../../modules/applyTheme");
 
 // Functions
 

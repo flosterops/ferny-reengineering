@@ -31,7 +31,7 @@ class Overlay extends EventEmitter {
             width: true,
             height: true
         });
-        this.view.webContents.loadFile(this.appPath + "/pages/html/overlay.html");
+        this.view.webContents.loadFile(this.appPath + "/pages/overlay/overlay.html");
 
         this.view.webContents.on("context-menu", (event, params) => {
             if(params.isEditable) {

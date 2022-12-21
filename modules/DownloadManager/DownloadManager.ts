@@ -6,8 +6,8 @@ const readlPromise = require("readline-promise").default;
 const prependFile = require("prepend-file");
 const fs = require("fs");
 
-const saveFileToJsonFolder = require("../saveFileToJsonFolder.js");
-const checkFileExists = require("../checkFileExists.js");
+const saveFileToJsonFolder = require("../saveFileToJsonFolder");
+const checkFileExists = require("../checkFileExists");
 
 interface IDownloadReadline {
     id: number;
@@ -16,7 +16,7 @@ interface IDownloadReadline {
     name: string;
 }
 
-const Download = require(__dirname + "/Download.js");
+const Download = require("./Download");
 
 class DownloadManager extends EventEmitter {
     downloads = [];

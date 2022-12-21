@@ -1,7 +1,7 @@
 const ppath = require("persist-path")("Ferny");
 const fs = require("fs");
 
-const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
+const saveFileToJsonFolder = require("./saveFileToJsonFolder");
 
 interface IWindowControls {
     systemTitlebar: boolean;
