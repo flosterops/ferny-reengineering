@@ -1,4 +1,4 @@
-function epochToTime(time) {
+function epochToTime(time: number): string {
     const date = new Date(0);
     date.setUTCSeconds(time);
   

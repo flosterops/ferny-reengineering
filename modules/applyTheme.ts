@@ -1,4 +1,4 @@
-function setIconsStyle(str) {
+function setIconsStyle(str: string): void {
     const icons = document.getElementsByClassName("theme-icon");
   
     for(let i = 0; i < icons.length; i++) {
@@ -7,7 +7,7 @@ function setIconsStyle(str) {
     }
 }
 
-function applyTheme(theme, dark) {
+function applyTheme(theme: any, dark: boolean) {
     document.documentElement.style.setProperty("--px-radius", theme.pxRadius);
 
     if(dark) {

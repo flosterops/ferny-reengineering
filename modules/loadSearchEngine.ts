@@ -3,8 +3,8 @@ const fs = require("fs");
 
 const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 
-function loadSearchEngine() {
-    return new Promise((resolve, reject) => {
+function loadSearchEngine(): Promise<string> {
+    return new Promise((resolve) => {
         const defaultValue = "duckduckgo";
         const possibleValues = ["duckduckgo", "google", "bing", "wikipedia", "yahoo", "yandex", "mailru", 
             "baidu", "naver", "qwant", "youtube", "youtube", "ecosia", "twitter", "amazon", "twitch", 
@@ -23,7 +23,7 @@ function loadSearchEngine() {
                 }
             });
         } catch (e) {
-            saveFileToJsonFolder(null, "search-engine", defaultValue).then((bool) => {
+            saveFileToJsonFolder(null, "search-engine", defaultValue).then(() => {
                 resolve(defaultValue);
             })
         }

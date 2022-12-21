@@ -1,7 +1,7 @@
 const fs = require("fs");
 const ppath = require('persist-path')('Ferny');
 
-function saveFileToJsonFolder(subfolder, fileName, data) {
+function saveFileToJsonFolder(subfolder: string | null, fileName: string | number, data: any): Promise<boolean> {
     return new Promise((resolve, reject) => {
         checkDirExists(ppath).then(() => {
             checkDirExists(ppath + "/json").then(() => {
@@ -21,11 +21,13 @@ function saveFileToJsonFolder(subfolder, fileName, data) {
                     });
                 }
             });
+        }).catch((e: any) => {
+            reject(false);
         });
     });
 }
 
-function checkDirExists(path) {
+function checkDirExists(path: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
         fs.exists(path, (exists) => {
             if(exists) {

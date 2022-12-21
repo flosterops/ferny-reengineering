@@ -3,8 +3,8 @@ const fs = require("fs");
 
 const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 
-function loadTabClosed() {
-    return new Promise((resolve, reject) => {
+function loadTabClosed(): Promise<string> {
+    return new Promise((resolve) => {
         const defaultValue = "prev-tab";
         const possibleValues = ["overlay", "next-tab", "prev-tab"];
         try {
@@ -21,7 +21,7 @@ function loadTabClosed() {
                 }
             });
         } catch (e) {
-            saveFileToJsonFolder(null, "tabclosed", defaultValue).then((bool) => {
+            saveFileToJsonFolder(null, "tabclosed", defaultValue).then(() => {
                 resolve(defaultValue);
             });
         }

@@ -3,8 +3,13 @@ const fs = require("fs");
 
 const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 
-function loadWinControls() {
-    return new Promise(function(resolve, reject) {
+interface IWindowControls {
+    systemTitlebar: boolean;
+    [key: string]: any
+}
+
+function loadWinControls(): Promise<IWindowControls> {
+    return new Promise(function(resolve) {
         const defaultValue = {
             systemTitlebar: false
         };
@@ -17,7 +22,7 @@ function loadWinControls() {
                 }
             });
         } catch (e) {
-            saveFileToJsonFolder(null, "wincontrols", JSON.stringify(defaultValue)).then((bool) => {
+            saveFileToJsonFolder(null, "wincontrols", JSON.stringify(defaultValue)).then(() => {
                 resolve(defaultValue);
             });
         }

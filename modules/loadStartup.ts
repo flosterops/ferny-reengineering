@@ -3,8 +3,8 @@ const fs = require("fs");
 
 const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 
-function loadStartup() {
-    return new Promise((resolve, reject) => {
+function loadStartup(): Promise<string> {
+    return new Promise((resolve) => {
         const defaultValue = "overlay";
         const possibleValues = ["overlay", "new-tab"];
         try {
@@ -21,7 +21,7 @@ function loadStartup() {
                 }
             });
         } catch (e) {
-            saveFileToJsonFolder(null, "startup", defaultValue).then((bool) => {
+            saveFileToJsonFolder(null, "startup", defaultValue).then(() => {
                 resolve(defaultValue);
             })
         }

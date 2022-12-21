@@ -3,8 +3,8 @@ const ppath = require("persist-path")("Ferny");
 
 const checkFileExists = require(__dirname + "/checkFileExists.js");
 
-function checkDirExists(path) {
-    return new Promise((resolve, reject) => {
+function checkDirExists(path: string): Promise<boolean> {
+    return new Promise((resolve) => {
         fs.exists(path, (exists) => {
             if(exists) {
                 resolve(true);
@@ -19,8 +19,8 @@ function checkDirExists(path) {
     });
 }
 
-function loadFileFromJsonFolder(subfolder, fileName) {
-    return new Promise((resolve, reject) => {
+function loadFileFromJsonFolder(subfolder: string | null, fileName: string): Promise<any> {
+    return new Promise((resolve) => {
         checkDirExists(ppath).then(() => {
             checkDirExists(ppath + "/json").then(() => {
                 if(subfolder == null) {

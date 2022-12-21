@@ -1,7 +1,16 @@
 const loadFileFromJsonFolder = require("../modules/loadFileFromJsonFolder.js");
 
-function loadBounds() {
-    return new Promise(function(resolve, reject) {
+interface ILoadBounds {
+    x: null | number;
+    y: null | number;
+    width: number;
+    height: number;
+    maximize: boolean;
+    [key: string]: any;
+}
+
+function loadBounds(): Promise<ILoadBounds> {
+    return new Promise(function(resolve) {
         let Data = {
             x: null,
             y: null,
