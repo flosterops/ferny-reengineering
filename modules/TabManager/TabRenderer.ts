@@ -29,26 +29,21 @@ class TabRenderer extends EventEmitter {
   constructor() {
     super();
 
-    this.tabContainer = document.getElementById('tabman-tabs');
-    this.backButton = document.getElementById('back-btn');
-    this.forwardButton = document.getElementById('forward-btn');
-    this.reloadButton = document.getElementById('reload-btn');
-    this.stopButton = document.getElementById('stop-btn');
-    this.addressBar = document.getElementById('search-input');
-    this.targetURL = document.getElementById('target-url');
-    this.bookmarkButton = document.getElementById('bookmark-btn');
-    this.bookmarkedButton = document.getElementById('bookmarked-btn');
+    this.tabContainer = document.querySelector<HTMLElement>('#tabman-tabs');
+    this.backButton = document.querySelector<HTMLElement>('#back-btn');
+    this.forwardButton = document.querySelector<HTMLElement>('#forward-btn');
+    this.reloadButton = document.querySelector<HTMLElement>('#reload-btn');
+    this.stopButton = document.querySelector<HTMLElement>('#stop-btn');
+    this.addressBar = document.querySelector<HTMLElement>('#search-input');
+    this.targetURL = document.querySelector<HTMLElement>('#target-url');
+    this.bookmarkButton = document.querySelector<HTMLElement>('#bookmark-btn');
+    this.bookmarkedButton = document.querySelector<HTMLElement>('#bookmarked-btn');
 
     ipcRenderer.send('tabManager-init');
   }
 
-  addTab(id, url, active) {
-    let title = null;
-    if (active) {
-      title = 'New tab';
-    } else {
-      title = 'New background tab';
-    }
+  addTab(id: string, url: string, active: boolean): void {
+    const title = active ? 'New tab' : 'New background tab'
 
     const tab = document.createElement('button');
     tab.classList.add('tabman-tab');
@@ -85,13 +80,13 @@ class TabRenderer extends EventEmitter {
         ipcRenderer.send('tabManager-navigate', 'file://' + (event.dataTransfer.files[0] as any).path);
       }
     };
-    tab.onmouseenter = (event) => {
+    tab.onmouseenter = () => {
       ipcRenderer.send('tabManager-requestTabPreview', id);
     };
-    tab.onmouseleave = (event) => {
-      document.getElementById('tab-preview').classList.remove('show');
+    tab.onmouseleave = () => {
+      document.querySelector('#tab-preview').classList.remove('show');
     };
-    tab.oncontextmenu = (event) => {
+    tab.oncontextmenu = () => {
       ipcRenderer.send('tabManager-showTabMenu', id);
     };
 
@@ -110,21 +105,17 @@ class TabRenderer extends EventEmitter {
     }
 
     this.updateTabsPositions();
-
-    return null;
   }
 
-  unactivateAllTabs() {
+  unactivateAllTabs(): void {
     const tabs = this.tabContainer.childNodes;
     for (let i = 0; i < tabs.length; i++) {
       tabs[i].classList.remove('active');
       this.updateTabColor(tabs[i]);
     }
-
-    return null;
   }
 
-  activateTab(id) {
+  activateTab(id: string): void {
     const tabs = this.tabContainer.childNodes;
     for (let i = 0; i < tabs.length; i++) {
       if (tabs[i].id == 'tab-' + id) {
@@ -134,46 +125,36 @@ class TabRenderer extends EventEmitter {
       }
       this.updateTabColor(tabs[i]);
     }
-
-    return null;
   }
 
-  closeTab(id) {
+  closeTab(id: string): void {
     this.tabContainer.removeChild(this.getTabById(id));
     this.hideTabPreview();
 
     this.updateTabsPositions();
-
-    return null;
   }
 
-  getTabById(id) {
+  getTabById(id: string): HTMLElement {
     const tabs = this.tabContainer.childNodes;
-    for (let i = 0; i < tabs.length; i++) {
-      if (tabs[i].id == 'tab-' + id) {
-        return tabs[i];
-      }
-    }
+    return tabs.find((tab: HTMLElement) => tab.id === 'tab-' + id);
   }
 
-  setTabTitle(id, title) {
+  setTabTitle(id: string, title: string) {
     const tab = this.getTabById(id);
     tab.getElementsByClassName('tabman-tab-title')[0].innerHTML = title;
 
     return null;
   }
 
-  setTabIcon(id, icon) {
+  setTabIcon(id: string, icon: string): void {
     const tab = this.getTabById(id);
-    const img = tab.getElementsByClassName('tabman-tab-icon')[0];
+    const img = tab.querySelector<HTMLImageElement>('.tabman-tab-icon');
     img.src = icon;
 
     this.updateTabColor(tab);
-
-    return null;
   }
 
-  updateTabColor(tab) {
+  updateTabColor(tab: HTMLElement): void {
     if (tab.classList.contains('active')) {
       tab.style.backgroundColor = '';
     } else {
@@ -188,13 +169,12 @@ class TabRenderer extends EventEmitter {
         }
       });
     }
-
-    return null;
   }
 
-  updateNavigationButtons(canGoBack, canGoForward, isLoading) {
+  updateNavigationButtons(canGoBack: boolean, canGoForward: boolean, isLoading: boolean): void {
     this.backButton.disabled = !canGoBack;
     this.forwardButton.disabled = !canGoForward;
+
     if (isLoading) {
       this.reloadButton.style.display = 'none';
       this.stopButton.style.display = '';
@@ -204,20 +184,20 @@ class TabRenderer extends EventEmitter {
     }
   }
 
-  updateAddressBar(url) {
+  updateAddressBar(url?: string): void {
     if (url) {
       this.addressBar.value = url;
       if (parseUrl(url).protocol == 'https') {
-        document.getElementById('secure-icon').style.display = '';
-        document.getElementById('not-secure-icon').style.display = 'none';
+        document.querySelector<HTMLElement>('#secure-icon').style.display = '';
+        document.querySelector<HTMLElement>('#not-secure-icon').style.display = 'none';
       } else {
-        document.getElementById('secure-icon').style.display = 'none';
-        document.getElementById('not-secure-icon').style.display = '';
+        document.querySelector<HTMLElement>('#secure-icon').style.display = 'none';
+        document.querySelector<HTMLElement>('#not-secure-icon').style.display = '';
       }
     }
   }
 
-  updateBookmarkedButton(exists, id) {
+  updateBookmarkedButton(exists: boolean, id: string): void {
     if (exists) {
       this.bookmarkedButton.onclick = () => {
         ipcRenderer.send('overlay-showBookmarkOptions', id);
@@ -230,23 +210,23 @@ class TabRenderer extends EventEmitter {
     }
   }
 
-  getTabContainer() {
+  getTabContainer(): HTMLElement | null {
     return this.tabContainer;
   }
 
-  hideTabPreview() {
-    document.getElementById('tab-preview').classList.remove('show');
+  hideTabPreview(): void {
+    document.querySelector<HTMLElement>('#tab-preview').classList.remove('show');
   }
 
-  scrollLeft() {
+  scrollLeft(): void {
     this.tabContainer.scrollLeft -= 16;
   }
 
-  scrollRight() {
+  scrollRight(): void {
     this.tabContainer.scrollLeft += 16;
   }
 
-  updateTabsPositions() {
+  updateTabsPositions(): void {
     const tabs = this.tabContainer.getElementsByClassName('tabman-tab');
     const arr = [];
     for (let i = 0; i < tabs.length; i++) {
@@ -259,10 +239,10 @@ class TabRenderer extends EventEmitter {
     }
   }
 
-  showTabList() {
+  showTabList(): void {
     const tabs = this.tabContainer.childNodes;
     const arr = [];
-    tabs.forEach((item, index) => {
+    tabs.forEach((item) => {
       if (!item.classList.contains('invisible')) {
         arr.push({ 
           id: item.name, 
@@ -274,8 +254,8 @@ class TabRenderer extends EventEmitter {
     ipcRenderer.send('tabManager-showTabList', arr);
   }
 
-  updateTargetURL(url) {
-    if (url.length > 0) {
+  updateTargetURL(url: string): void {
+    if (url) {
       this.targetURL.innerHTML = url;
       this.targetURL.classList.add('show');
       this.addressBar.classList.add('show-target');
@@ -285,27 +265,22 @@ class TabRenderer extends EventEmitter {
     }
   }
 
-  moveTabBefore(id, beforeId) {
-    const tab = document.getElementById('tab-' + id);
-    const beforeTab = document.getElementById('tab-' + beforeId);
+  moveTabBefore(id: string, beforeId: string): void {
+    const tab = document.querySelector<HTMLElement>(`#tab-${id}`);
+    const beforeTab = document.querySelector<HTMLElement>(`#tab-${beforeId}`);
 
     this.tabContainer.insertBefore(tab, beforeTab);
-
     this.updateTabsPositions();
-
-    return null;
   }
 
-  moveTabToEnd(id) {
-    this.tabContainer.appendChild(document.getElementById('tab-' + id));
-
+  moveTabToEnd(id: string): void {
+    this.tabContainer.appendChild(document.querySelector(`#tab-${id}`));
     this.updateTabsPositions();
-
-    return null;
   }
 
-  setTabVisibility(id, bool) {
+  setTabVisibility(id: string, bool: boolean): void {
     const tab = this.getTabById(id);
+
     if (bool) {
       tab.classList.remove('invisible');
     } else {
@@ -313,14 +288,16 @@ class TabRenderer extends EventEmitter {
     }
   }
 
-  showTabPreview(id, title, url) {
+  showTabPreview(id: string, title: string, url: string): void {
     const tab = this.getTabById(id);
-        
-    document.getElementById('tab-preview').classList.add('show');
-    document.getElementById('tab-preview').style.left = tab.offsetLeft - this.tabContainer.scrollLeft + 4 + 'px';
 
-    document.getElementById('tab-preview-title').innerHTML = title;
-    document.getElementById('tab-preview-url').innerHTML = url;
+    const tabPreviewElement = document.querySelector<HTMLElement>('#tab-preview');
+
+    tabPreviewElement.classList.add('show');
+    tabPreviewElement.style.left = tab.offsetLeft - this.tabContainer.scrollLeft + 4 + 'px';
+
+    document.querySelector<HTMLElement>('#tab-preview-title').innerHTML = title;
+    document.querySelector<HTMLElement>('#tab-preview-url').innerHTML = url;
   }
 }
 

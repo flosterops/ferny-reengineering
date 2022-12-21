@@ -12,12 +12,11 @@ class Tab extends EventEmitter {
     id = null;
     view = null;
     window = null;
-    previewTimeout = null;
     position = null;
     group = null;
     incognito = false;
 
-    constructor(window, id, appPath, group, theme) {
+    constructor(window: Window, id: number, appPath: string, group: string, theme: any) {
         super();
 
         this.id = id;
@@ -39,24 +38,20 @@ class Tab extends EventEmitter {
             height: true
         });
 
-        this.view.webContents.on("page-title-updated", (event, title, explicitSet) => {
+        this.view.webContents.on("page-title-updated", (event, title: string): void => {
             this.window.webContents.send("tabRenderer-setTabTitle", { id: this.id, title });
         });
 
-        this.view.webContents.on("page-favicon-updated", (event, favicons) => {
+        this.view.webContents.on("page-favicon-updated", (event, favicons: any[]): void => {
             this.window.webContents.send("tabRenderer-setTabIcon", { id: this.id, icon: favicons[0] });
         });
         
-        this.view.webContents.on("new-window", (event, url, frameName, disposition, options, additionalFeatures, reffer) => {
+        this.view.webContents.on("new-window", (event, url: string, frameName, disposition: string): void => {
             event.preventDefault();
-            if(disposition === "background-tab") {
-                this.emit("add-tab", url, false);
-            } else {
-                this.emit("add-tab", url, true);
-            }
+            this.emit("add-tab", url, disposition !== "background-tab");
         });
 
-        this.view.webContents.on("did-navigate", (event, url, httpResponseCode, httpStatusText) => {
+        this.view.webContents.on("did-navigate", (event, url: string): void => {
             this.window.webContents.send("tabRenderer-setTabIcon", { id: this.id, icon: __dirname + "/../../assets/imgs/gifs/page-loading.gif" });
             this.window.webContents.send("tabRenderer-updateNavigationButtons", {
                 canGoBack: this.view.webContents.canGoBack(),
@@ -74,7 +69,7 @@ class Tab extends EventEmitter {
             this.emit("add-history-item", url);
         });
 
-        this.view.webContents.on("did-navigate-in-page", (event, url, isMainFrame, frameProcessId, frameRoutingId) => {
+        this.view.webContents.on("did-navigate-in-page", (event, url: string, isMainFrame: boolean): void => {
             if(isMainFrame) {
                 this.window.webContents.send("tabRenderer-updateNavigationButtons", {
                     canGoBack: this.view.webContents.canGoBack(),
@@ -85,7 +80,7 @@ class Tab extends EventEmitter {
             }
         });
 
-        this.view.webContents.on("did-fail-load", (event, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId) => {
+        this.view.webContents.on("did-fail-load", (event, errorCode: number | string, errorDescription: string): void => {
             this.window.webContents.send("tabRenderer-updateNavigationButtons", {
                 canGoBack: this.view.webContents.canGoBack(),
                 canGoForward: this.view.webContents.canGoForward(),
@@ -95,11 +90,11 @@ class Tab extends EventEmitter {
             this.emit("add-status-notif", "Connection failed: " + errorDescription + " (" + errorCode + ")", "error");
         });
 
-        this.view.webContents.on("certificate-error", (event, url, error, certificate, callback) => {
+        this.view.webContents.on("certificate-error", (event, url: string, error: string | number) => {
             this.emit("add-status-notif", "Certificate error: " + url + " (" + error + ")", "warning");
         });
 
-        this.view.webContents.on("dom-ready", (event) => {
+        this.view.webContents.on("dom-ready", (): void => {
             this.view.webContents.insertCSS(`
                 html, body { 
                     background-color: white; 
@@ -125,7 +120,7 @@ class Tab extends EventEmitter {
             `);
         });
 
-        this.view.webContents.on("did-start-loading", () => {
+        this.view.webContents.on("did-start-loading", (): void => {
             this.window.webContents.send("tabRenderer-updateNavigationButtons", {
                 canGoBack: this.view.webContents.canGoBack(),
                 canGoForward: this.view.webContents.canGoForward(),
@@ -133,7 +128,7 @@ class Tab extends EventEmitter {
             });
         });
 
-        this.view.webContents.on("did-stop-loading", () => {
+        this.view.webContents.on("did-stop-loading", (): void => {
             this.window.webContents.send("tabRenderer-updateNavigationButtons", {
                 canGoBack: this.view.webContents.canGoBack(),
                 canGoForward: this.view.webContents.canGoForward(),
@@ -141,20 +136,20 @@ class Tab extends EventEmitter {
             });
         });
 
-        this.view.webContents.on("enter-html-full-screen", () => {
+        this.view.webContents.on("enter-html-full-screen", (): void => {
             this.emit("add-status-notif", "Press F11 to exit full screen", "info");
             this.emit("fullscreen", true);
         });
 
-        this.view.webContents.on("leave-html-full-screen", () => {
+        this.view.webContents.on("leave-html-full-screen", (): void => {
             this.emit("fullscreen", false);
         });
 
-        this.view.webContents.on("update-target-url", (event, url) => {
+        this.view.webContents.on("update-target-url", (event, url: string): void => {
             this.window.webContents.send("tabRenderer-updateTargetURL", url);
         });
 
-        this.view.webContents.on("context-menu", (event, params) => {
+        this.view.webContents.on("context-menu", (event, params: Record<string, any>): void => {
             let rmbMenuItems = [];
 
             if(params.isEditable) {
@@ -194,19 +189,19 @@ class Tab extends EventEmitter {
                         text = text.substring(0, 30) + "...";
                     }
                     const linkItems = [{
-                        label: "Open link in new tab", icon: this.appPath + "/assets/imgs/icons16/tab.png", click: () => {
+                        label: "Open link in new tab", icon: this.appPath + "/assets/imgs/icons16/tab.png", click: (): void => {
                             this.emit("add-tab", params.linkURL, false);
                         } }, { type: "separator" }, { 
-                        label: "Copy link text", icon: this.appPath + "/assets/imgs/icons16/text.png", enabled: (params.linkText > 0), click: () => {
+                        label: "Copy link text", icon: this.appPath + "/assets/imgs/icons16/text.png", enabled: (params.linkText > 0), click: (): void => {
                             clipboard.writeText(params.linkText); 
                         } }, { 
-                        label: "Copy link address", icon: this.appPath + "/assets/imgs/icons16/link.png", click: () => {
+                        label: "Copy link address", icon: this.appPath + "/assets/imgs/icons16/link.png", click: (): void => {
                             clipboard.writeText(params.linkURL); 
                         } }, {
-                        label: "Bookmark link", icon: this.appPath + "/assets/imgs/icons16/add-bookmark.png", click: () => {
+                        label: "Bookmark link", icon: this.appPath + "/assets/imgs/icons16/add-bookmark.png", click: (): void => {
                             this.emit("bookmark-tab", params.linkText, params.linkURL);
                         } }, {
-                        label: `Search for "${text}"`, icon: this.appPath + "/assets/imgs/icons16/zoom.png", enabled: (text.length > 0), click: () => {
+                        label: `Search for "${text}"`, icon: this.appPath + "/assets/imgs/icons16/zoom.png", enabled: (text.length > 0), click: (): void => {
                             this.emit("search-for", params.linkText);
                         } }, { type: "separator" }
                     ];
@@ -216,16 +211,16 @@ class Tab extends EventEmitter {
                 if(params.hasImageContents) {
                     pageBool = false;
                     const imageItems = [{
-                        label: "Open image in new tab", icon: this.appPath + "/assets/imgs/icons16/image.png", click: () => {
+                        label: "Open image in new tab", icon: this.appPath + "/assets/imgs/icons16/image.png", click: (): void => {
                             this.emit("add-tab", params.srcURL, true);
                         } }, { type: "separator" }, { 
-                        label: "Download image", icon: this.appPath + "/assets/imgs/icons16/download.png", click: () => {
+                        label: "Download image", icon: this.appPath + "/assets/imgs/icons16/download.png", click: (): void => {
                             this.view.webContents.downloadURL(params.srcURL);
                         } }, { 
-                        label: "Copy image", icon: this.appPath + "/assets/imgs/icons16/copy.png", click: () => {
+                        label: "Copy image", icon: this.appPath + "/assets/imgs/icons16/copy.png", click: (): void => {
                             this.view.webContents.copyImageAt(params.x, params.y);
                         } }, { 
-                        label: "Copy image address", icon: this.appPath + "/assets/imgs/icons16/link.png", click: () => {
+                        label: "Copy image address", icon: this.appPath + "/assets/imgs/icons16/link.png", click: (): void => {
                             clipboard.writeText(params.srcURL);
                         } }, { type: "separator" }
                     ];
@@ -239,10 +234,10 @@ class Tab extends EventEmitter {
                         text = text.substring(0, 30) + "...";
                     }
                     const textItems = [{
-                        label: "Copy", icon: this.appPath + "/assets/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => {
+                        label: "Copy", icon: this.appPath + "/assets/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: (): void => {
                             this.copy();
                         } }, {
-                        label: `Search for "${text}"`, icon: this.appPath + "/assets/imgs/icons16/zoom.png", enabled: params.editFlags.canCopy, click: () => {
+                        label: `Search for "${text}"`, icon: this.appPath + "/assets/imgs/icons16/zoom.png", enabled: params.editFlags.canCopy, click: (): void => {
                             this.emit("search-for", params.selectionText);
                         } }, { type: "separator" }
                     ];
@@ -251,25 +246,25 @@ class Tab extends EventEmitter {
 
                 if(pageBool) {
                     const pageItems = [{
-                        label: "Back", icon: this.appPath + "/assets/imgs/icons16/back.png", accelerator: "Alt+Left", enabled: this.view.webContents.canGoBack(), click: () => {
+                        label: "Back", icon: this.appPath + "/assets/imgs/icons16/back.png", accelerator: "Alt+Left", enabled: this.view.webContents.canGoBack(), click: (): void => {
                             this.goBack();
                         } }, { 
-                        label: "Forward", icon: this.appPath + "/assets/imgs/icons16/forward.png", accelerator: "Alt+Right", enabled: this.view.webContents.canGoForward(), click: () => {
+                        label: "Forward", icon: this.appPath + "/assets/imgs/icons16/forward.png", accelerator: "Alt+Right", enabled: this.view.webContents.canGoForward(), click: (): void => {
                             this.goForward();
                         } }, { 
-                        label: "Reload", icon: this.appPath + "/assets/imgs/icons16/reload.png", accelerator: "F5", click: () => {
+                        label: "Reload", icon: this.appPath + "/assets/imgs/icons16/reload.png", accelerator: "F5", click: (): void => {
                             this.reload();
                         } }, { type: "separator" }, {
-                        label: "Download page", icon: this.appPath + "/assets/imgs/icons16/download.png", accelerator: "CmdOrCtrl+Shift+S", click: () => {
+                        label: "Download page", icon: this.appPath + "/assets/imgs/icons16/download.png", accelerator: "CmdOrCtrl+Shift+S", click: (): void => {
                             this.downloadPage();
                         } }, {
-                        label: "Bookmark page", icon: this.appPath + "/assets/imgs/icons16/add-bookmark.png", click: () => {
+                        label: "Bookmark page", icon: this.appPath + "/assets/imgs/icons16/add-bookmark.png", click: (): void => {
                             this.emit("bookmark-tab", this.getTitle(), this.getURL());
                         } }, { type: "separator" }, {
-                        label: "Select all", icon: this.appPath + "/assets/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", click: () => {
+                        label: "Select all", icon: this.appPath + "/assets/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", click: (): void => {
                             this.selectAll();
                         } }, { type: "separator" }, {
-                        label: "View page source", icon: this.appPath + "/assets/imgs/icons16/code.png", click: () => {
+                        label: "View page source", icon: this.appPath + "/assets/imgs/icons16/code.png", click: (): void => {
                             this.viewPageSource();
                         } }
                     ];
@@ -278,7 +273,7 @@ class Tab extends EventEmitter {
             }
 
             rmbMenuItems.push({
-                label: "Inspect element", icon: this.appPath + "/assets/imgs/icons16/inspect.png", click: () => {
+                label: "Inspect element", icon: this.appPath + "/assets/imgs/icons16/inspect.png", click: (): void => {
                     this.inspectElement(params.x, params.y);
                 } }
             );
@@ -288,23 +283,23 @@ class Tab extends EventEmitter {
         });
     }
 
-    getId() {
+    getId(): number {
         return this.id;
     }
 
-    setBounds(x, y, width, height) {
+    setBounds(x: number | null, y: number | null, width: number, height: number): void {
         this.view.setBounds({ x, y, width, height });
     }
 
-    inspectElement(x, y) {
+    inspectElement(x: number | null, y: number | null): void {
         this.view.webContents.inspectElement(x, y);
     }
 
-    viewPageSource() {
+    viewPageSource(): void {
         this.emit("add-tab", "view-source:" + this.getURL(), true);
     }
 
-    navigate(url) {
+    navigate(url: string): void {
         if(this.incognito) {
             this.view.webContents.loadURL(url, {
                 extraHeaders: 'pragma: no-cache\n'
@@ -314,15 +309,14 @@ class Tab extends EventEmitter {
         }
     }
 
-    close() {
+    close(): void {
         this.view.destroy();
         this.window.webContents.send("tabRenderer-closeTab", this.id);
 
         this.emit("close", this);
-        return null;
     }
 
-    activate() {
+    activate(): void {
         this.window.setBrowserView(this.view);
         this.window.webContents.send("tabRenderer-activateTab", this.id);
         this.window.webContents.send("tabRenderer-updateNavigationButtons", {
@@ -337,11 +331,9 @@ class Tab extends EventEmitter {
         this.window.webContents.send("findInPage-updateFindInPage");
 
         this.emit("activate", this);
-
-        return null;
     }
 
-    isActive() {
+    isActive(): boolean {
         let active = false;
         if(this.window.getBrowserView() === this.view) {
             active = true;
@@ -349,105 +341,105 @@ class Tab extends EventEmitter {
         return active;
     }
 
-    goBack() {
+    goBack(): void {
         this.view.webContents.goBack();
     }
 
-    goForward() {
+    goForward(): void {
         this.view.webContents.goForward();
     }
 
-    canGoBack() {
+    canGoBack(): boolean {
         return this.view.webContents.canGoBack();
     }
 
-    reload() {
+    reload(): void {
         this.view.webContents.reload();
     }
 
-    stop() {
+    stop(): void {
         this.view.webContents.stop();
     }
 
-    getURL() {
+    getURL(): string {
         return this.view.webContents.getURL();
     }
 
-    getTitle() {
+    getTitle(): string {
         return this.view.webContents.getTitle();
     }
 
-    closeOthers() {
+    closeOthers(): void {
         this.emit("close-others", this.id);
     }
 
-    closeToTheRight() {
+    closeToTheRight(): void {
         this.emit("close-to-the-right", this.position);
     }
 
-    reloadIgnoringCache() {
+    reloadIgnoringCache(): void {
         this.view.webContents.reloadIgnoringCache();
     }
 
-    goHome() {
+    goHome(): void {
         this.emit("go-home", this);
     }
 
-    copyURL() {
+    copyURL(): void {
         clipboard.writeText(this.getURL());
     }
 
-    duplicate() {
+    duplicate(): void {
         this.emit("add-tab", this.getURL(), true);
     }
 
-    showMenu() {
+    showMenu(): void {
         const tabMenu = Menu.buildFromTemplate([{ 
-            label: "Back", icon: this.appPath + "/assets/imgs/icons16/back.png", accelerator: "Alt+Left", enabled: this.view.webContents.canGoBack(), click: () => {
+            label: "Back", icon: this.appPath + "/assets/imgs/icons16/back.png", accelerator: "Alt+Left", enabled: this.view.webContents.canGoBack(), click: (): void => {
                 this.goBack(); 
             } }, { 
-            label: "Forward", icon: this.appPath + "/assets/imgs/icons16/forward.png", accelerator: "Alt+Right", enabled: this.view.webContents.canGoForward(), click: () => {
+            label: "Forward", icon: this.appPath + "/assets/imgs/icons16/forward.png", accelerator: "Alt+Right", enabled: this.view.webContents.canGoForward(), click: (): void => {
                 this.goForward(); 
             } }, { 
-            label: "Reload", icon: this.appPath + "/assets/imgs/icons16/reload.png", accelerator: "F5", click: () => {
+            label: "Reload", icon: this.appPath + "/assets/imgs/icons16/reload.png", accelerator: "F5", click: (): void => {
                 this.reload(); 
             } }, {
-            label: "Reload ignoring cache", icon: this.appPath + "/assets/imgs/icons16/db-reload.png", accelerator: "CmdOrCtrl+Shift+F5", click: () => {
+            label: "Reload ignoring cache", icon: this.appPath + "/assets/imgs/icons16/db-reload.png", accelerator: "CmdOrCtrl+Shift+F5", click: (): void => {
                 this.reloadIgnoringCache(); 
             } }, { type: "separator" }, { 
-            label: "Duplicate", icon: this.appPath + "/assets/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+Shift+D", click: () => {
+            label: "Duplicate", icon: this.appPath + "/assets/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+Shift+D", click: (): void => {
                 this.duplicate(); 
             } }, { 
-            label: "Copy URL", icon: this.appPath + "/assets/imgs/icons16/link.png", accelerator: "CmdOrCtrl+Shift+C", click: () => {
+            label: "Copy URL", icon: this.appPath + "/assets/imgs/icons16/link.png", accelerator: "CmdOrCtrl+Shift+C", click: (): void => {
                 this.copyURL(); 
             } }, { 
-            label: "Go home", icon: this.appPath + "/assets/imgs/icons16/home.png", accelerator: "CmdOrCtrl+Shift+H", click: () => {
+            label: "Go home", icon: this.appPath + "/assets/imgs/icons16/home.png", accelerator: "CmdOrCtrl+Shift+H", click: (): void => {
                 this.goHome(); 
             } }, { 
-            label: "Bookmark tab", icon: this.appPath + "/assets/imgs/icons16/add-bookmark.png", accelerator: "CmdOrCtrl+Shift+B", click: () => {
+            label: "Bookmark tab", icon: this.appPath + "/assets/imgs/icons16/add-bookmark.png", accelerator: "CmdOrCtrl+Shift+B", click: (): void => {
                 this.emit("bookmark-tab", this.getTitle(), this.getURL());
             } }, { type: "separator" }, { 
             label: "Move tab", icon: this.appPath + "/assets/imgs/icons16/move-horizontal.png", submenu: [{
-                label: "Move left", accelerator: "CmdOrCtrl+Shift+PageUp", icon: this.appPath + "/assets/imgs/icons16/prev.png", click: () => {
+                label: "Move left", accelerator: "CmdOrCtrl+Shift+PageUp", icon: this.appPath + "/assets/imgs/icons16/prev.png", click: (): void => {
                     this.moveLeft();
                 } }, {
-                label: "Move right", accelerator: "CmdOrCtrl+Shift+PageDown", icon: this.appPath + "/assets/imgs/icons16/next.png", click: () => {
+                label: "Move right", accelerator: "CmdOrCtrl+Shift+PageDown", icon: this.appPath + "/assets/imgs/icons16/next.png", click: (): void => {
                     this.moveRight();
                 } }, { type: "separator" }, {
-                label: "Move to start", accelerator: "CmdOrCtrl+Shift+Home", icon: this.appPath + "/assets/imgs/icons16/to-start.png", click: () => {
+                label: "Move to start", accelerator: "CmdOrCtrl+Shift+Home", icon: this.appPath + "/assets/imgs/icons16/to-start.png", click: (): void => {
                     this.moveToStart();
                 } }, {
-                label: "Move to end", accelerator: "CmdOrCtrl+Shift+End", icon: this.appPath + "/assets/imgs/icons16/to-end.png", click: () => {
+                label: "Move to end", accelerator: "CmdOrCtrl+Shift+End", icon: this.appPath + "/assets/imgs/icons16/to-end.png", click: (): void => {
                     this.moveToEnd();
                 } } 
             ] }, { type: "separator" }, { 
-            label: "Close to the right", icon: this.appPath + "/assets/imgs/icons16/swipe-right.png", click: () => {
+            label: "Close to the right", icon: this.appPath + "/assets/imgs/icons16/swipe-right.png", click: (): void => {
                 this.closeToTheRight(); 
             } }, { 
-            label: "Close others", icon: this.appPath + "/assets/imgs/icons16/swipe-both.png", accelerator: "CmdOrCtrl+Shift+W", click: () => {
+            label: "Close others", icon: this.appPath + "/assets/imgs/icons16/swipe-both.png", accelerator: "CmdOrCtrl+Shift+W", click: (): void => {
                 this.closeOthers(); 
             } }, { 
-            label: "Close tab", icon: this.appPath + "/assets/imgs/icons16/close.png", accelerator: "CmdOrCtrl+W", click: () => {
+            label: "Close tab", icon: this.appPath + "/assets/imgs/icons16/close.png", accelerator: "CmdOrCtrl+W", click: (): void => {
                 this.close(); 
             } }
         ]);
@@ -458,7 +450,7 @@ class Tab extends EventEmitter {
             submenu: []
         });
 
-        this.view.webContents.history.forEach((value, index) => {
+        this.view.webContents.history.forEach((value): void => {
             let subtext = value;
             if(subtext.length > 30) {
                 subtext = subtext.substring(0, 30) + "...";
@@ -486,107 +478,102 @@ class Tab extends EventEmitter {
         tabMenu.popup(this.window);
     }
 
-    cut() {
+    cut(): void {
         this.view.webContents.cut();
     }
 
-    copy() {
+    copy(): void {
         this.view.webContents.copy();
     }
 
-    paste() {
+    paste(): void {
         this.view.webContents.paste();
     }
 
-    pasteAndMatchStyle() {
+    pasteAndMatchStyle(): void {
         this.view.webContents.pasteAndMatchStyle();
     }
 
-    undo() {
+    undo(): void {
         this.view.webContents.undo();
     }
 
-    redo() {
+    redo(): void {
         this.view.webContents.redo();
     }
 
-    selectAll() {
+    selectAll(): void {
         this.view.webContents.selectAll();
     }
 
-    delete() {
+    delete(): void {
         this.view.webContents.delete();
     }
 
-    getPosition() {
+    getPosition(): string {
         return this.position;
     }
 
-    setPosition(position) {
+    setPosition(position: string) {
         this.position = position;
     }
 
-    nextTab() {
+    nextTab(): void {
         this.emit("next-tab", this.position);
     }
 
-    prevTab() {
+    prevTab(): void {
         this.emit("prev-tab", this.position);
     }
 
-    openDevTools() {
+    openDevTools(): void {
         this.view.webContents.openDevTools();
     }
 
-    zoomIn() {
+    zoomIn(): void {
         const zoomFactor = this.view.webContents.getZoomFactor();
         if(zoomFactor < 2.5) {
           this.view.webContents.setZoomFactor(zoomFactor + 0.1);
           this.emit("refresh-zoom-notif", Math.round((zoomFactor + 0.1) * 100));
         }
-
-        return null;
     }
 
-    zoomOut() {
+    zoomOut(): void {
         const zoomFactor = this.view.webContents.getZoomFactor();
         if(zoomFactor > 0.3) {
           this.view.webContents.setZoomFactor(zoomFactor - 0.1);
           this.emit("refresh-zoom-notif", Math.round((zoomFactor - 0.1) * 100));
         }
-        return null;
     }
 
-    zoomToActualSize() {
+    zoomToActualSize(): void {
         const zoomFactor = this.view.webContents.getZoomFactor();
         if(zoomFactor !== 1) {
             this.view.webContents.setZoomFactor(1);
             this.emit("refresh-zoom-notif", 100);
         }
-
-        return null;
     }
 
-    moveLeft() {
+    moveLeft(): void {
         this.emit("move-left", this.id, this.position);
     }
 
-    moveRight() {
+    moveRight(): void {
         this.emit("move-right", this.id, this.position);
     }
 
-    moveToStart() {
+    moveToStart(): void {
         this.emit("move-to-start", this.id, this.position);
     }
 
-    moveToEnd() {
+    moveToEnd(): void {
         this.window.webContents.send("tabRenderer-moveTabToEnd", this.id);
     }
 
-    popupTabHistory() {
+    popupTabHistory(): void {
         const tabHistory = Menu.buildFromTemplate([]);
 
-        this.view.webContents.history.forEach((value, index) => {
+        this.view.webContents.history.forEach((value) => {
             let subtext = value;
             if(subtext.length > 30) {
                 subtext = subtext.substring(0, 30) + "...";
@@ -625,32 +612,31 @@ class Tab extends EventEmitter {
         tabHistory.popup(this.window);
     }
 
-    downloadPage() {
+    downloadPage(): void {
         this.view.webContents.downloadURL(this.getURL());
-        return null;
     }
 
-    setGroup(group) {
+    setGroup(group: string): void {
         this.group = group;
         this.emit("group-changed");
     }
 
-    getGroup() {
+    getGroup(): string {
         return this.group;
     }
 
-    setVisibility(bool) {
+    setVisibility(bool: boolean): void {
         if(!bool) {
             this.position = "-1";
         }
         this.window.webContents.send("tabRenderer-setTabVisibility", this.id, bool);
     }
 
-    findInPage(text, forward) {
+    findInPage(text: string, forward: any): void {
         this.view.webContents.findInPage(text, { forward });
     }
 
-    stopFindInPage(keepSelection) {
+    stopFindInPage(keepSelection: boolean | string): void {
         if(keepSelection) {
             this.view.webContents.stopFindInPage("keepSelection");
         } else {
@@ -658,7 +644,7 @@ class Tab extends EventEmitter {
         }
     }
 
-    requestTabPreview() {
+    requestTabPreview(): void {
         if(this.getTitle().length > 0 && this.getURL().length > 0) {
             this.window.webContents.send("tabRenderer-showTabPreview", this.id, this.getTitle(), this.getURL());
         }

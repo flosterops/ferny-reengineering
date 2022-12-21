@@ -21,9 +21,9 @@ class TabManager extends EventEmitter {
     homePage = "https://google.com";
     tabClosedAction = "overlay";
 
-    tabGroup = 0;
+    tabGroup: number | string = 0;
 
-    constructor(window, appPath, theme) {
+    constructor(window: Window, appPath: string, theme: any) {
         super();
 
         this.window = window;
@@ -40,24 +40,20 @@ class TabManager extends EventEmitter {
         });
     }
 
-    newTab() {
+    newTab(): void {
         this.addTab(this.homePage, true);
-
-        return null;
     }
 
-    newBackgroundTab() {
+    newBackgroundTab(): void {
         this.addTab(this.homePage, false);
-
-        return null;
     }
 
-    addTab(url, active) {
+    addTab(url: string, active: boolean): void {
         const id = this.tabCounter++;
 
         const tab = new Tab(this.window, id, this.appPath, this.tabGroup, this.theme);
 
-        tab.on("close", (closedTab) => {
+        tab.on("close", (closedTab): void => {
             const pos = closedTab.getPosition();
             this.destroyTabById(id);
 
@@ -70,7 +66,7 @@ class TabManager extends EventEmitter {
             }
         });
 
-        tab.on("activate", (activatedTab) => {
+        tab.on("activate", (activatedTab): void => {
             setTimeout(() => {
                 if(this.window.isMaximized() && process.platform == "win32") {
                     activatedTab.setBounds(this.left - 16, this.top, this.getWidth(), this.getHeight() - 16);
@@ -81,27 +77,27 @@ class TabManager extends EventEmitter {
             this.emit("tab-activated");
         });
 
-        tab.on("add-tab", (url, active) => {
+        tab.on("add-tab", (url: string, active: boolean): void => {
             this.addTab(url, active);
         });
 
-        tab.on("add-status-notif", (text, type) => {
+        tab.on("add-status-notif", (text: string, type: string): void => {
             this.emit("add-status-notif", text, type);
         });
 
-        tab.on("refresh-zoom-notif", (zoomFactor) => {
+        tab.on("refresh-zoom-notif", (zoomFactor: any): void => {
             this.emit("refresh-zoom-notif", zoomFactor);
         });
 
-        tab.on("fullscreen", (bool) => {
+        tab.on("fullscreen", (bool: boolean): void => {
             this.setFullscreen(bool);
         });
 
-        tab.on("go-home", (tab) => {
+        tab.on("go-home", (tab): void => {
             tab.navigate(this.homePage);
         });
 
-        tab.on("close-to-the-right", (position) => {
+        tab.on("close-to-the-right", (position: number): void => {
             const closableTabs = [];
             for(let i = this.tabs.length - 1; i >= 0; i--) {
                 if(this.tabs[i].getGroup() == this.tabGroup && this.tabs[i].getPosition() > position) {
@@ -111,7 +107,7 @@ class TabManager extends EventEmitter {
             this.closeMultipleTabs(closableTabs);
         });
 
-        tab.on("close-others", (id) => {
+        tab.on("close-others", (id: number): void => {
             const closableTabs = [];
             for(let i = this.tabs.length - 1; i >= 0; i--) {
                 if(this.tabs[i].getGroup() == this.tabGroup && this.tabs[i].getId() != id) {
@@ -121,34 +117,34 @@ class TabManager extends EventEmitter {
             this.closeMultipleTabs(closableTabs);
         });
 
-        tab.on("next-tab", (position) => {
-            this.tabs.forEach((item, index) => {
+        tab.on("next-tab", (position: number): void => {
+            this.tabs.forEach((item) => {
                 if(item.getPosition() == position + 1) {
                     item.activate();
                 }
             });
         });
 
-        tab.on("prev-tab", (position) => {
-            this.tabs.forEach((item, index) => {
+        tab.on("prev-tab", (position: number): void => {
+            this.tabs.forEach((item) => {
                 if(item.getPosition() == position - 1) {
                     item.activate();
                 }
             });
         });
 
-        tab.on("move-left", (id, position) => {
-            this.tabs.forEach((item, index) => {
+        tab.on("move-left", (id: number, position: number): void => {
+            this.tabs.forEach((item) => {
                 if(item.getPosition() == position - 1) {
                     this.window.webContents.send("tabRenderer-moveTabBefore", id, item.getId());
                 }
             });
         });
 
-        tab.on("move-right", (id, position) => {
+        tab.on("move-right", (id: number, position: number): void => {
             let rightTab = null;
 
-            this.tabs.forEach((item, index) => {
+            this.tabs.forEach((item) => {
                 if(item.getPosition() == position + 2) {
                     rightTab = item;
                 }
@@ -161,31 +157,31 @@ class TabManager extends EventEmitter {
             }
         });
 
-        tab.on("move-to-start", (id, position) => {
-            this.tabs.forEach((item, index) => {
+        tab.on("move-to-start", (id: number, position: number): void => {
+            this.tabs.forEach((item) => {
                 if(item.getPosition() == 0 && position != 0) {
                     this.window.webContents.send("tabRenderer-moveTabBefore", id, item.getId());
                 }
             });
         });
 
-        tab.on("add-history-item", (url) => {
+        tab.on("add-history-item", (url: string): void => {
             this.emit("add-history-item", url);
         });
 
-        tab.on("bookmark-tab", (title, url) => {
+        tab.on("bookmark-tab", (title: string, url: string): void => {
             this.emit("bookmark-tab", title, url);
         });
 
-        tab.on("search-for", (text) => {
+        tab.on("search-for", (text: string): void => {
             this.emit("search-for", text);
         });
 
-        tab.on("open-history", () => {
+        tab.on("open-history", (): void => {
             this.emit("open-history");
         });
 
-        tab.on("group-changed", () => {
+        tab.on("group-changed", (): void => {
             this.updateTabGroups();
         });
 
@@ -199,11 +195,9 @@ class TabManager extends EventEmitter {
             tab.activate();
             tab.setBounds(this.left, this.top, this.getWidth(), this.getHeight());
         }
-
-        return null;
     }
 
-    setFullscreen(bool) {
+    setFullscreen(bool: boolean): void {
         if(bool) {
             this.top = 0;
         } else {
@@ -212,43 +206,33 @@ class TabManager extends EventEmitter {
         if(this.hasActiveTab()) {
             this.getActiveTab().activate();
         }
-
-        return null;
     }
 
-    getWidth() {
+    getWidth(): number {
         return this.window.getSize()[0] - this.left - this.right;
     }
 
-    getHeight() {
+    getHeight(): number {
         return this.window.getSize()[1] - this.top - this.bottom;
     }
 
-    setLeft(left) {
+    setLeft(left: number): void {
         this.left = left;
-
-        return null;
     }
 
-    setRight(right) {
+    setRight(right: number): void {
         this.right = right;
-
-        return null;
     }
 
-    setTop(top) {
+    setTop(top: number): void {
         this.top = top;
-
-        return null;
     }
 
-    setBottom(bottom) {
+    setBottom(bottom: number): void {
         this.bottom = bottom;
-
-        return null;
     }
 
-    hasTabs() {
+    hasTabs(): boolean {
         if(this.tabs.length > 0) {
             let groupHasTabs = false;
             for(let i = 0; i < this.tabs.length; i++) {
@@ -263,7 +247,7 @@ class TabManager extends EventEmitter {
         }
     }
 
-    hasActiveTab() {
+    hasActiveTab(): boolean {
         let bool = false;
         for(let i = 0; i < this.tabs.length; i++) {
             if(this.tabs[i].isActive()) {
@@ -274,78 +258,64 @@ class TabManager extends EventEmitter {
         return bool;
     }
 
-    getActiveTab() {
+    getActiveTab(): any {
         for(let i = 0; i < this.tabs.length; i++) {
             if(this.tabs[i].isActive()) {
                 return this.tabs[i];
             }
         }
-
-        return null;
     }
 
-    getTabById(id) {
+    getTabById(id: number): any {
         for(let i = 0; i < this.tabs.length; i++) {
             if(this.tabs[i].getId() == id) {
                 return this.tabs[i];
             }
         }
-
-        return null;
     }
 
-    getTabByPosition(pos) {
+    getTabByPosition(pos: number): any {
         for(let i = 0; i < this.tabs.length; i++) {
             if(this.tabs[i].getPosition() === pos) {
                 return this.tabs[i];
             }
         }
-
-        return null;
     }
 
-    destroyTabById(id) {
+    destroyTabById(id: number): void {
         for(let i = 0; i < this.tabs.length; i++) {
             if(this.tabs[i].getId() == id) {
                 this.tabs.splice(i, 1);
             }
         }
-
-        return null;
     }
 
-    getTabs() {
+    getTabs(): any[] {
         return this.tabs;
     }
 
-    setHomePage(homePage) {
+    setHomePage(homePage: any) {
         this.homePage = homePage.url;
         this.window.webContents.send("tabRenderer-setHomePage", homePage);
-
-        return null;
     }
 
-    getHomePage() {
+    getHomePage(): any {
         return this.homePage;
     }
 
-    setTabClosedAction(tabClosed) {
+    setTabClosedAction(tabClosed: string): void {
         this.tabClosedAction = tabClosed;
-
-        return null;
     }
 
-    unactivateAllTabs() {
+    unactivateAllTabs(): void {
         this.window.webContents.send("tabRenderer-unactivateAllTabs");
-
-        return null;
     }
 
-    showTabList(arr) {
+    showTabList(arr: any[]): void {
         const m = new Menu();
 
         if(arr.length > 0) {
-            arr.forEach((item, index) => {
+            arr.forEach((item, index): void => {
                 const num = index + 1;
                 let text = item.title;
                 if(text.length > 30) {
@@ -375,7 +345,7 @@ class TabManager extends EventEmitter {
                 label: "New Tab", 
                 icon: this.appPath + "/assets/imgs/icons16/create.png",
                 accelerator: "CmdOrCtrl+T", 
-                click: () => { this.newTab(); } 
+                click: (): void => { this.newTab(); }
             }));
         }  
         
@@ -385,7 +355,7 @@ class TabManager extends EventEmitter {
             icon: this.appPath + "/assets/imgs/icons16/next.png",
             accelerator: "CmdOrCtrl+Tab", 
             enabled: this.hasTabs(),
-            click: () => { 
+            click: (): void => {
                 if(this.hasActiveTab()) {
                     if(this.getActiveTab().getPosition() == this.getMaxPosition()) {
                         this.emit("show-overlay");
@@ -402,7 +372,7 @@ class TabManager extends EventEmitter {
             icon: this.appPath + "/assets/imgs/icons16/prev.png",
             accelerator: "CmdOrCtrl+Shift+Tab", 
             enabled: this.hasTabs(),
-            click: () => {
+            click: (): void => {
                 if(this.hasActiveTab()) {
                     if(this.getActiveTab().getPosition() == 0) {
                         this.emit("show-overlay");
@@ -420,38 +390,32 @@ class TabManager extends EventEmitter {
             accelerator: "CmdOrCtrl+Q",
             icon: this.appPath + "/assets/imgs/icons16/close.png",
             enabled: this.hasTabs(),
-            click: () => { 
+            click: (): void => {
                 this.closeAllTabs();
             } 
         }));
 
         m.popup(this.window);
-
-        return null;
     }
 
-    updateTabsPositions(arr) {
+    updateTabsPositions(arr: any[]): void {
         for(let i = 0; i < arr.length; i++) {
             const tab = this.getTabById(arr[i]);
             if (tab) {
                 this.getTabById(arr[i]).setPosition(i);
             }
         }
-
-        return null;
     }
 
-    switchTab(number) {
-        this.tabs.forEach((item, index) => {
+    switchTab(number: number): void {
+        this.tabs.forEach((item) => {
             if(item.getPosition() == number - 1) {
                 item.activate();
             }
         });
-
-        return null;
     }
 
-    closeAllTabs() {
+    closeAllTabs(): void {
         const closableTabs = [];
 
         for(let i = this.tabs.length - 1; i >= 0; i--) {
@@ -461,34 +425,29 @@ class TabManager extends EventEmitter {
         }
 
         this.closeMultipleTabs(closableTabs);
-
-        return null;
     }
 
-    closeMultipleTabs(closableTabs) {
+    closeMultipleTabs(closableTabs: any[]): void {
         for(let i = closableTabs.length - 1; i >= 0; i--) {
             closableTabs[i].close();
         }
     }
 
-    updateTabGroups() {
+    updateTabGroups(): void {
         this.tabs.forEach((tab) => {
             tab.setVisibility(tab.getGroup() == this.tabGroup);
         });
         this.window.webContents.send("tabRenderer-updateTabsPositions");
-
-        return null;
     }
 
-    switchTabGroup(tabGroupId) {
+    switchTabGroup(tabGroupId: string): void {
         this.tabGroup = tabGroupId;
         this.updateTabGroups();
 
         this.emit("tab-group-switched", this.tabGroup);
-        return null;
     }
 
-    getMaxPosition() {
+    getMaxPosition(): number {
         let maxPosition = -1;
         for(let i = 0; i < this.tabs.length; i++) {
             if(this.tabs[i].getPosition() > maxPosition) {
