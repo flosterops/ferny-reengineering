@@ -24,11 +24,9 @@ class Overlay extends EventEmitter {
             width: true,
             height: true
         });
-        // this.view.setBackgroundColor("#66CD00");
         this.view.webContents.loadFile(this.appPath + "/html/overlay.html");
 
         this.view.webContents.on("context-menu", (event, params) => {
-            // console.log(params);
             if(params.isEditable) {
                 const editMenu = Menu.buildFromTemplate([{ 
                     label: "Cut", icon: this.appPath + "/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => { 
