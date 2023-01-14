@@ -1,13 +1,6 @@
 "use strict";
 
-/*
- #####  ######  ####  #    # # #####  ######
- #    # #      #    # #    # # #    # #
- #    # #####  #    # #    # # #    # #####
- #####  #      #  # # #    # # #####  #
- #   #  #      #   #  #    # # #   #  #
- #    # ######  ### #  ####  # #    # ######
-*/
+// Require
 
 const { ipcRenderer } = require("electron");
 const dragula = require("dragula");
@@ -20,14 +13,7 @@ const loadWinControlsModule = require("../modules/loadWinControls.js");
 const NotificationManager = require("../modules/NotificationManager/NotificationManager.js");
 const TabRenderer = require("../modules/TabManager/TabRenderer.js");
 
-/*
- ###### #    # #    #  ####              ##### #    # ###### #    # ######  ####
- #      #    # ##   # #    #               #   #    # #      ##  ## #      #
- #####  #    # # #  # #         #####      #   ###### #####  # ## # #####   ####
- #      #    # #  # # #                    #   #    # #      #    # #           #
- #      #    # #   ## #    #               #   #    # #      #    # #      #    #
- #       ####  #    #  ####                #   #    # ###### #    # ######  ####
-*/
+// Functions themes
 
 function updateTheme() {
   loadTheme().then(({theme, dark}) => {
@@ -35,14 +21,7 @@ function updateTheme() {
   });
 }
 
-/*
- #    #  ####  ##### # ###### #  ####    ##   ##### #  ####  #    #  ####
- ##   # #    #   #   # #      # #    #  #  #    #   # #    # ##   # #
- # #  # #    #   #   # #####  # #      #    #   #   # #    # # #  #  ####
- #  # # #    #   #   # #      # #      ######   #   # #    # #  # #      #
- #   ## #    #   #   # #      # #    # #    #   #   # #    # #   ## #    #
- #    #  ####    #   # #      #  ####  #    #   #   #  ####  #    #  ####
-*/
+// Notifications
 
 let notificationManager = new NotificationManager(document.getElementById("notif-panel"));
 
@@ -50,14 +29,7 @@ notificationManager.on("notif-added", (notif) => {
   updateTheme();
 });
 
-/*
- #####   ##   #####   ####
-   #    #  #  #    # #
-   #   #    # #####   ####
-   #   ###### #    #      #
-   #   #    # #    # #    #
-   #   #    # #####   ####
-*/
+// Tabs
 
 let tabRenderer = new TabRenderer();
 
@@ -76,15 +48,7 @@ tabDrag.on("drop", function(el, target, source, sibling) {
   tabRenderer.updateTabsPositions();
 });
 
-/*
-.########.##.....##.##....##..######..########.####..#######..##....##..######.
-.##.......##.....##.###...##.##....##....##.....##..##.....##.###...##.##....##
-.##.......##.....##.####..##.##..........##.....##..##.....##.####..##.##......
-.######...##.....##.##.##.##.##..........##.....##..##.....##.##.##.##..######.
-.##.......##.....##.##..####.##..........##.....##..##.....##.##..####.......##
-.##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
-.##........#######..##....##..######.....##....####..#######..##....##..######.
-*/
+// Functions
 
 function prevDef(event) {
   event.preventDefault();
@@ -177,14 +141,7 @@ function popupHomePageOptions() {
   ipcRenderer.send("main-popupHomePageOptions");
 }
 
-/*
- ###### #    # #    #  ####               ####  #    # ###### #####  #        ##   #   #
- #      #    # ##   # #    #             #    # #    # #      #    # #       #  #   # #
- #####  #    # # #  # #         #####    #    # #    # #####  #    # #      #    #   #
- #      #    # #  # # #                  #    # #    # #      #####  #      ######   #
- #      #    # #   ## #    #             #    #  #  #  #      #   #  #      #    #   #
- #       ####  #    #  ####               ####    ##   ###### #    # ###### #    #   #
-*/
+// Functions overlay
 
 function showOverlay() {
   ipcRenderer.send("overlay-show");
@@ -206,14 +163,7 @@ function showOverlayMenu() {
   ipcRenderer.send("overlay-showMenu");
 }
 
-/*
- ###### #    # #    #  ####              #####   ##   #####     #    #   ##   #    #   ##    ####  ###### #####
- #      #    # ##   # #    #               #    #  #  #    #    ##  ##  #  #  ##   #  #  #  #    # #      #    #
- #####  #    # # #  # #         #####      #   #    # #####     # ## # #    # # #  # #    # #      #####  #    #
- #      #    # #  # # #                    #   ###### #    #    #    # ###### #  # # ###### #  ### #      #####
- #      #    # #   ## #    #               #   #    # #    #    #    # #    # #   ## #    # #    # #      #   #
- #       ####  #    #  ####                #   #    # #####     #    # #    # #    # #    #  ####  ###### #    #
-*/
+// Functions tab manager
 
 function newTab() {
   ipcRenderer.send("tabManager-newTab");
@@ -275,14 +225,7 @@ function goHome() {
   ipcRenderer.send("tabManager-goHome");
 }
 
-/*                                                                                                     
-  ###### #    # #    #  ####              ###### # #    # #####     # #    #    #####    ##    ####  ###### 
-  #      #    # ##   # #    #             #      # ##   # #    #    # ##   #    #    #  #  #  #    # #      
-  #####  #    # # #  # #         #####    #####  # # #  # #    #    # # #  #    #    # #    # #      #####  
-  #      #    # #  # # #                  #      # #  # # #    #    # #  # #    #####  ###### #  ### #      
-  #      #    # #   ## #    #             #      # #   ## #    #    # #   ##    #      #    # #    # #      
-  #       ####  #    #  ####              #      # #    # #####     # #    #    #      #    #  ####  ###### 
-*/
+// Functions find in page
 
 function findNext() {
   document.getElementById("find-container").classList.add("show");
@@ -314,14 +257,7 @@ function closeFindPanel() {
   ipcRenderer.send("tabManager-stopFindInPage", true);
 }
 
-/*                                                          
-  # #####   ####              ###### # #    # #####     # #    #    #####    ##    ####  ###### 
-  # #    # #    #             #      # ##   # #    #    # ##   #    #    #  #  #  #    # #      
-  # #    # #         #####    #####  # # #  # #    #    # # #  #    #    # #    # #      #####  
-  # #####  #                  #      # #  # # #    #    # #  # #    #####  ###### #  ### #      
-  # #      #    #             #      # #   ## #    #    # #   ##    #      #    # #    # #      
-  # #       ####              #      # #    # #####     # #    #    #      #    #  ####  ###### 
-*/
+// IPS Find in page
 
 ipcRenderer.on("findInPage-findNext", (event) => {
   findNext();
@@ -340,14 +276,7 @@ ipcRenderer.on("findInPage-updateFindInPage", (event) => {
   }
 });
 
-/*
- # #####   ####              #    #  ####  ##### # ######
- # #    # #    #             ##   # #    #   #   # #
- # #    # #         #####    # #  # #    #   #   # #####
- # #####  #                  #  # # #    #   #   # #
- # #      #    #             #   ## #    #   #   # #
- # #       ####              #    #  ####    #   # #
-*/
+// IPS notifications
 
 ipcRenderer.on("notificationManager-addStatusNotif", (event, arg) => {
   notificationManager.addStatusNotif(arg.text, arg.type);
@@ -361,27 +290,13 @@ ipcRenderer.on("notificationManager-refreshZoomNotif", (event, zoomFactor) => {
   notificationManager.refreshZoomNotif(zoomFactor);
 });
 
-/*                                                            
-  # #####   ####               ####   ####  #    #  ####   ####  #      ###### 
-  # #    # #    #             #    # #    # ##   # #      #    # #      #      
-  # #    # #         #####    #      #    # # #  #  ####  #    # #      #####  
-  # #####  #                  #      #    # #  # #      # #    # #      #      
-  # #      #    #             #    # #    # #   ## #    # #    # #      #      
-  # #       ####               ####   ####  #    #  ####   ####  ###### ###### 
-*/
+// IPC console
 
 ipcRenderer.on("console-log", (event, text) => {
   console.log(text);
 });
 
-/*
- # #####   ####              #    # # #    # #####   ####  #    #
- # #    # #    #             #    # # ##   # #    # #    # #    #
- # #    # #         #####    #    # # # #  # #    # #    # #    #
- # #####  #                  # ## # # #  # # #    # #    # # ## #
- # #      #    #             ##  ## # #   ## #    # #    # ##  ##
- # #       ####              #    # # #    # #####   ####  #    #
-*/
+// IPS window
 
 ipcRenderer.on("action-page-focussearch", (event, arg) => {
   focusSearch();
@@ -411,14 +326,7 @@ ipcRenderer.on("window-unmaximize", (event) => {
   document.getElementById("restore-btn").style.display = "none";
 });
 
-/*
- # #####   ####               ####  #    # ###### #####  #        ##   #   #
- # #    # #    #             #    # #    # #      #    # #       #  #   # #
- # #    # #         #####    #    # #    # #####  #    # #      #    #   #
- # #####  #                  #    # #    # #      #####  #      ######   #
- # #      #    #             #    #  #  #  #      #   #  #      #    #   #
- # #       ####               ####    ##   ###### #    # ###### #    #   #
-*/
+// IPC overlay
 
 ipcRenderer.on('overlay-toggleButton', (event, bool) => {
   if(bool) {
@@ -430,14 +338,7 @@ ipcRenderer.on('overlay-toggleButton', (event, bool) => {
   }
 });
 
-/*
- # #####   ####              #####   ##   #####     #####  ###### #    # #####  ###### #####  ###### #####
- # #    # #    #               #    #  #  #    #    #    # #      ##   # #    # #      #    # #      #    #
- # #    # #         #####      #   #    # #####     #    # #####  # #  # #    # #####  #    # #####  #    #
- # #####  #                    #   ###### #    #    #####  #      #  # # #    # #      #####  #      #####
- # #      #    #               #   #    # #    #    #   #  #      #   ## #    # #      #   #  #      #   #
- # #       ####                #   #    # #####     #    # ###### #    # #####  ###### #    # ###### #    #
-*/
+// IPC tab render
 
 ipcRenderer.on("tabRenderer-addTab", (event, arg) => {
   tabRenderer.addTab(arg.id, arg.url, arg.active)
@@ -513,15 +414,7 @@ ipcRenderer.on("tabRenderer-showTabPreview", (event, id, title, url) => {
   tabRenderer.showTabPreview(id, title, url);
 });
 
-/*
-.####.##....##.####.########
-..##..###...##..##.....##...
-..##..####..##..##.....##...
-..##..##.##.##..##.....##...
-..##..##..####..##.....##...
-..##..##...###..##.....##...
-.####.##....##.####....##...
-*/
+// Init
 
 function init() {
   loadWinControlsModule().then((winControls) => {
@@ -559,15 +452,5 @@ document.onreadystatechange = () => {
       init();
   }
 }
-
-/*
-.########.##.....##.########....########.##....##.########.
-....##....##.....##.##..........##.......###...##.##.....##
-....##....##.....##.##..........##.......####..##.##.....##
-....##....#########.######......######...##.##.##.##.....##
-....##....##.....##.##..........##.......##..####.##.....##
-....##....##.....##.##..........##.......##...###.##.....##
-....##....##.....##.########....########.##....##.########.
-*/
 
 export {}

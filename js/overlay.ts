@@ -1,13 +1,6 @@
 "use strict";
 
-/*
-  ####   ####  #    #  ####  #####
- #    # #    # ##   # #        #
- #      #    # # #  #  ####    #
- #      #    # #  # #      #   #
- #    # #    # #   ## #    #   #
-  ####   ####  #    #  ####    #
-*/
+// Constants
 
 const { ipcRenderer, shell } = require("electron");
 
@@ -19,14 +12,7 @@ const SearchManager = require("../modules/SearchManager/SearchManager.js");
 const HistoryManager = require("../modules/HistoryManager/HistoryManager.js");
 const DownloadManager = require("../modules/DownloadManager/DownloadManager.js");
 
-/*
-  ####  ######   ##   #####   ####  #    #
- #      #       #  #  #    # #    # #    #
-  ####  #####  #    # #    # #      ######
-      # #      ###### #####  #      #    #
- #    # #      #    # #   #  #    # #    #
-  ####  ###### #    # #    #  ####  #    #
-*/
+// Search
 
 let searchManager = new SearchManager(
   document.getElementById('search-input'), 
@@ -36,14 +22,7 @@ let searchManager = new SearchManager(
   document.getElementById('clear-search-btn')
 );
 
-/*
- #####   ####   ####  #    # #    #   ##   #####  #    #  ####
- #    # #    # #    # #   #  ##  ##  #  #  #    # #   #  #
- #####  #    # #    # ####   # ## # #    # #    # ####    ####
- #    # #    # #    # #  #   #    # ###### #####  #  #        #
- #    # #    # #    # #   #  #    # #    # #   #  #   #  #    #
- #####   ####   ####  #    # #    # #    # #    # #    #  ####
-*/
+// Bookmarks
 
 let bookmarkManager = new BookmarkManager(document.getElementById("bookmarks-container"));
 
@@ -100,14 +79,7 @@ bookmarkManager.on("update-bookmarked", (exists, id) => {
   ipcRenderer.send("main-updateBookmarkedButton", exists, id);
 });
 
-/*
- #    # #  ####  #####  ####  #####  #   #
- #    # # #        #   #    # #    #  # #
- ###### #  ####    #   #    # #    #   #
- #    # #      #   #   #    # #####    #
- #    # # #    #   #   #    # #   #    #
- #    # #  ####    #    ####  #    #   #
-*/
+// History
 
 let historyManager = new HistoryManager(document.getElementById("history-container"));
 
@@ -132,14 +104,7 @@ historyManager.on("history-already-cleared", () => {
   ipcRenderer.send("main-addStatusNotif", { text: "History already cleared", type: "info" });
 });
 
-/*
- #####   ####  #    # #    # #       ####    ##   #####   ####
- #    # #    # #    # ##   # #      #    #  #  #  #    # #
- #    # #    # #    # # #  # #      #    # #    # #    #  ####
- #    # #    # # ## # #  # # #      #    # ###### #    #      #
- #    # #    # ##  ## #   ## #      #    # #    # #    # #    #
- #####   ####  #    # #    # ######  ####  #    # #####   ####
-*/
+// Downloads
 
 let downloadManager = new DownloadManager(document.getElementById("downloads-container"));
 
@@ -164,14 +129,7 @@ downloadManager.on("downloads-already-cleared", () => {
   ipcRenderer.send("main-addStatusNotif", { text: "Downloads already cleared", type: "info" });
 });
 
-/*
- ###### #    # #    #  ####               ####  ######   ##   #####   ####  #    #
- #      #    # ##   # #    #             #      #       #  #  #    # #    # #    #
- #####  #    # # #  # #         #####     ####  #####  #    # #    # #      ######
- #      #    # #  # # #                       # #      ###### #####  #      #    #
- #      #    # #   ## #    #             #    # #      #    # #   #  #    # #    #
- #       ####  #    #  ####               ####  ###### #    # #    #  ####  #    #
-*/
+// Functions search
 
 function goSearch() {
   searchManager.navigateSuggest((document.getElementById("search-input") as any).value);
@@ -181,14 +139,7 @@ function clearSearch() {
   searchManager.clearSearch();
 }
 
-/*
- ###### #    # #    #  ####              #####   ####   ####  #    # #    #   ##   #####  #    #  ####
- #      #    # ##   # #    #             #    # #    # #    # #   #  ##  ##  #  #  #    # #   #  #
- #####  #    # # #  # #         #####    #####  #    # #    # ####   # ## # #    # #    # ####    ####
- #      #    # #  # # #                  #    # #    # #    # #  #   #    # ###### #####  #  #        #
- #      #    # #   ## #    #             #    # #    # #    # #   #  #    # #    # #   #  #   #  #    #
- #       ####  #    #  ####              #####   ####   ####  #    # #    # #    # #    # #    #  ####
-*/
+// Functions bookmarks
 
 function newFolder() {
   bookmarkManager.newFolder();
@@ -202,14 +153,7 @@ function toggleArrange() {
   bookmarkManager.toggleArrange();
 }
 
-/*
- ###### #    # #    #  ####              ##### #    # ###### #    # ######  ####
- #      #    # ##   # #    #               #   #    # #      ##  ## #      #
- #####  #    # # #  # #         #####      #   ###### #####  # ## # #####   ####
- #      #    # #  # # #                    #   #    # #      #    # #           #
- #      #    # #   ## #    #               #   #    # #      #    # #      #    #
- #       ####  #    #  ####                #   #    # ###### #    # ######  ####
-*/
+// Functions themes
 
 function updateTheme() {
   loadTheme().then(({ theme, dark }) => {
@@ -217,14 +161,7 @@ function updateTheme() {
   });
 }
 
-/*
- ###### #    # #    #  ####              #    # #  ####  #####  ####  #####  #   #
- #      #    # ##   # #    #             #    # # #        #   #    # #    #  # #
- #####  #    # # #  # #         #####    ###### #  ####    #   #    # #    #   #
- #      #    # #  # # #                  #    # #      #   #   #    # #####    #
- #      #    # #   ## #    #             #    # # #    #   #   #    # #   #    #
- #       ####  #    #  ####              #    # #  ####    #    ####  #    #   #
-*/
+// Functions history
 
 function clearHistory() {
   historyManager.askClearHistory();
@@ -242,14 +179,7 @@ function collapseHistory() {
   historyManager.setLimiter(true);
 }
 
-/*
- ###### #    # #    #  ####              #####   ####  #    # #    # #       ####    ##   #####   ####
- #      #    # ##   # #    #             #    # #    # #    # ##   # #      #    #  #  #  #    # #
- #####  #    # # #  # #         #####    #    # #    # #    # # #  # #      #    # #    # #    #  ####
- #      #    # #  # # #                  #    # #    # # ## # #  # # #      #    # ###### #    #      #
- #      #    # #   ## #    #             #    # #    # ##  ## #   ## #      #    # #    # #    # #    #
- #       ####  #    #  ####              #####   ####  #    # #    # ######  ####  #    # #####   ####
-*/
+// Functions downloads
 
 function showItemInFolder(path) {
   shell.showItemInFolder(path);
@@ -287,27 +217,13 @@ function collapseDownloads() {
   downloadManager.setLimiter(true);
 }
 
-/*                                                                                           
-  ###### #    # #    #  ####              #####   ##   #####      ####  #####   ####  #    # #####   ####  
-  #      #    # ##   # #    #               #    #  #  #    #    #    # #    # #    # #    # #    # #      
-  #####  #    # # #  # #         #####      #   #    # #####     #      #    # #    # #    # #    #  ####  
-  #      #    # #  # # #                    #   ###### #    #    #  ### #####  #    # #    # #####       # 
-  #      #    # #   ## #    #               #   #    # #    #    #    # #   #  #    # #    # #      #    # 
-  #       ####  #    #  ####                #   #    # #####      ####  #    #  ####   ####  #       ####  
-*/
+// Functions tab groups
 
 function switchTabGroup(number) {
   ipcRenderer.send("tabManager-switchTabGroup", number);
 }
 
-/*
- # #####   ####               ####  ######   ##   #####   ####  #    #
- # #    # #    #             #      #       #  #  #    # #    # #    #
- # #    # #         #####     ####  #####  #    # #    # #      ######
- # #####  #                       # #      ###### #####  #      #    #
- # #      #    #             #    # #      #    # #   #  #    # #    #
- # #       ####               ####  ###### #    # #    #  ####  #    #
-*/
+// IPS search
 
 ipcRenderer.on("searchManager-goToSearch", (event, text, cursorPos) => {
   searchManager.goToSearch(text, cursorPos);
@@ -321,14 +237,7 @@ ipcRenderer.on("searchManager-setSearchEngine", (event, engine) => {
   searchManager.setSearchEngine(engine);
 });
 
-/*
- # #####   ####               ####  #    # ###### #####  #        ##   #   #
- # #    # #    #             #    # #    # #      #    # #       #  #   # #
- # #    # #         #####    #    # #    # #####  #    # #      #    #   #
- # #####  #                  #    # #    # #      #####  #      ######   #
- # #      #    #             #    #  #  #  #      #   #  #      #    #   #
- # #       ####               ####    ##   ###### #    # ###### #    #   #
-*/
+// IPS overlay
 
 ipcRenderer.on("overlay-scrollToId", (event, id) => {
   document.getElementById(id).scrollIntoView({
@@ -336,14 +245,7 @@ ipcRenderer.on("overlay-scrollToId", (event, id) => {
   });
 });
 
-/*
- # #####   ####              #####   ####   ####  #    # #    #   ##   #####  #    #  ####
- # #    # #    #             #    # #    # #    # #   #  ##  ##  #  #  #    # #   #  #
- # #    # #         #####    #####  #    # #    # ####   # ## # #    # #    # ####    ####
- # #####  #                  #    # #    # #    # #  #   #    # ###### #####  #  #        #
- # #      #    #             #    # #    # #    # #   #  #    # #    # #   #  #   #  #    #
- # #       ####              #####   ####   ####  #    # #    # #    # #    # #    #  ####
-*/
+// IPS bookmarks
 
 ipcRenderer.on("bookmarkManager-addBookmark", (event, name, url) => {
   bookmarkManager.getDefaultFolder().addBookmark(name, url);
@@ -365,14 +267,7 @@ ipcRenderer.on("bookmarkManager-showBookmarkOptions", (event, id) => {
   bookmarkManager.showBookmarkOptions(id);
 });
 
-/*
- # #####   ####              #    # #  ####  #####  ####  #####  #   #
- # #    # #    #             #    # # #        #   #    # #    #  # #
- # #    # #         #####    ###### #  ####    #   #    # #    #   #
- # #####  #                  #    # #      #   #   #    # #####    #
- # #      #    #             #    # # #    #   #   #    # #   #    #
- # #       ####              #    # #  ####    #    ####  #    #   #
-*/
+// IPS history
 
 ipcRenderer.on("historyManager-insertBeforeHistoryItem", (event, url) => {
   historyManager.insertBeforeHistoryItem(url);
@@ -382,27 +277,13 @@ ipcRenderer.on("historyManager-clearHistory", (event, text) => {
   historyManager.clearHistory();
 });
 
-/*
- # #####   ####              ##### #    # ###### #    # ######  ####
- # #    # #    #               #   #    # #      ##  ## #      #
- # #    # #         #####      #   ###### #####  # ## # #####   ####
- # #####  #                    #   #    # #      #    # #           #
- # #      #    #               #   #    # #      #    # #      #    #
- # #       ####                #   #    # ###### #    # ######  ####
-*/
+// IPS themes
 
 ipcRenderer.on("overlay-updateTheme", (event) => {
   updateTheme();
 });
 
-/*
- # #####   ####              #####   ####  #    # #    # #       ####    ##   #####   ####
- # #    # #    #             #    # #    # #    # ##   # #      #    #  #  #  #    # #
- # #    # #         #####    #    # #    # #    # # #  # #      #    # #    # #    #  ####
- # #####  #                  #    # #    # # ## # #  # # #      #    # ###### #    #      #
- # #      #    #             #    # #    # ##  ## #   ## #      #    # #    # #    # #    #
- # #       ####              #####   ####  #    # #    # ######  ####  #    # #####   ####
-*/
+// IPS downloads
 
 ipcRenderer.on("downloadManager-createDownload", (event, download) => {
   downloadManager.appendDownload(true, download.id, download.name, download.url, download.time);
@@ -432,14 +313,7 @@ ipcRenderer.on("downloadManager-clearDownloads", (event, text) => {
   downloadManager.clearDownloads();
 });
 
-/*                                                             
-  # #####   ####              #####   ##   #####      ####  #####   ####  #    # #####   ####  
-  # #    # #    #               #    #  #  #    #    #    # #    # #    # #    # #    # #      
-  # #    # #         #####      #   #    # #####     #      #    # #    # #    # #    #  ####  
-  # #####  #                    #   ###### #    #    #  ### #####  #    # #    # #####       # 
-  # #      #    #               #   #    # #    #    #    # #   #  #    # #    # #      #    # 
-  # #       ####                #   #    # #####      ####  #    #  ####   ####  #       ####  
-*/
+// IPS tab groups
 
 ipcRenderer.on("overlay-switchTabGroup", (event, tabGroupId) => {
   let groups = [
@@ -460,14 +334,7 @@ ipcRenderer.on("overlay-switchTabGroup", (event, tabGroupId) => {
   }
 });
 
-/*
- # #    # # #####
- # ##   # #   #
- # # #  # #   #
- # #  # # #   #
- # #   ## #   #
- # #    # #   #
-*/
+// Init
 
 function init() {
   updateTheme();
@@ -486,14 +353,5 @@ document.onreadystatechange = () => {
       init();
   }
 }
-
-/*
- ##### #    # ######    ###### #    # #####
-   #   #    # #         #      ##   # #    #
-   #   ###### #####     #####  # #  # #    #
-   #   #    # #         #      #  # # #    #
-   #   #    # #         #      #   ## #    #
-   #   #    # ######    ###### #    # #####
-*/
 
 export {}

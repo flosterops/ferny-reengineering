@@ -1,13 +1,6 @@
 "use strict";
 
-/*
- #####  ######  ####  #    # # #####  ######
- #    # #      #    # #    # # #    # #
- #    # #####  #    # #    # # #    # #####
- #####  #      #  # # #    # # #####  #
- #   #  #      #   #  #    # # #   #  #
- #    # ######  ### #  ####  # #    # ######
-*/
+// Require
 
 const { ipcRenderer } = require("electron");
 const fs = require("fs");
@@ -25,14 +18,7 @@ const loadStartupModule = require("../modules/loadStartup.js");
 const loadTabClosedModule = require("../modules/loadTabClosed.js");
 const loadWinControlsModule = require("../modules/loadWinControls.js");
 
-/*
- ###### #    # #    #  ####              ##### #    # ###### #    # ######  ####
- #      #    # ##   # #    #               #   #    # #      ##  ## #      #
- #####  #    # # #  # #         #####      #   ###### #####  # ## # #####   ####
- #      #    # #  # # #                    #   #    # #      #    # #           #
- #      #    # #   ## #    #               #   #    # #      #    # #      #    #
- #       ####  #    #  ####                #   #    # ###### #    # ######  ####
-*/
+// Functions themes
 
 function updateTheme() {
   loadTheme().then(({ theme, dark }) => {
@@ -116,27 +102,13 @@ function requestTheme(theme, dark) {
   });
 }
 
-/*
- ###### #    # #    #  ####              #    # # #    # #####   ####  #    #
- #      #    # ##   # #    #             #    # # ##   # #    # #    # #    #
- #####  #    # # #  # #         #####    #    # # # #  # #    # #    # #    #
- #      #    # #  # # #                  # ## # # #  # # #    # #    # # ## #
- #      #    # #   ## #    #             ##  ## # #   ## #    # #    # ##  ##
- #       ####  #    #  ####              #    # # #    # #####   ####  #    #
-*/
+// Functions windows
 
 function closeWindow() {
   ipcRenderer.send("settings-closeWindow");
 }
 
-/*
- ###### #    # #    #  ####               ####  ######   ##   #####   ####  #    #    ###### #    #  ####  # #    # ######
- #      #    # ##   # #    #             #      #       #  #  #    # #    # #    #    #      ##   # #    # # ##   # #
- #####  #    # # #  # #         #####     ####  #####  #    # #    # #      ######    #####  # #  # #      # # #  # #####
- #      #    # #  # # #                       # #      ###### #####  #      #    #    #      #  # # #  ### # #  # # #
- #      #    # #   ## #    #             #    # #      #    # #   #  #    # #    #    #      #   ## #    # # #   ## #
- #       ####  #    #  ####               ####  ###### #    # #    #  ####  #    #    ###### #    #  ####  # #    # ######
-*/
+// Functions search engine
 
 function requestSearchEngine(engine) {
   saveFileToJsonFolder(null, "search-engine", engine).then(function(bool) {
@@ -157,14 +129,7 @@ function loadSearchEngine() {
   });
 }
 
-/*
- ###### #    # #    #  ####              #####   ####  #    # #    # #       ####    ##   #####   ####
- #      #    # ##   # #    #             #    # #    # #    # ##   # #      #    #  #  #  #    # #
- #####  #    # # #  # #         #####    #    # #    # #    # # #  # #      #    # #    # #    #  ####
- #      #    # #  # # #                  #    # #    # # ## # #  # # #      #    # ###### #    #      #
- #      #    # #   ## #    #             #    # #    # ##  ## #   ## #      #    # #    # #    # #    #
- #       ####  #    #  ####              #####   ####  #    # #    # ######  ####  #    # #####   ####
-*/
+// Functions downloads
 
 function requestDownloadsFolder(folder) {
   if(folder === "?custom-folder?") {
@@ -203,14 +168,7 @@ function openDownloadsFolder() {
   ipcRenderer.send("main-openDownloadsFolder");
 }
 
-/*
- ###### #    # #    #  ####              #####   ##   #####      ####  #       ####   ####  ###### #####
- #      #    # ##   # #    #               #    #  #  #    #    #    # #      #    # #      #      #    #
- #####  #    # # #  # #         #####      #   #    # #####     #      #      #    #  ####  #####  #    #
- #      #    # #  # # #                    #   ###### #    #    #      #      #    #      # #      #    #
- #      #    # #   ## #    #               #   #    # #    #    #    # #      #    # #    # #      #    #
- #       ####  #    #  ####                #   #    # #####      ####  ######  ####   ####  ###### #####
-*/
+// Functions tab closed
 
 function requestTabClosed(tabClosed) {
   saveFileToJsonFolder(null, "tabclosed", tabClosed).then(function(bool) {
@@ -231,14 +189,7 @@ function loadTabClosed() {
   });
 }
 
-/*
- ###### #    # #    #  ####              #        ##    ####  #####    #####   ##   #####
- #      #    # ##   # #    #             #       #  #  #        #        #    #  #  #    #
- #####  #    # # #  # #         #####    #      #    #  ####    #        #   #    # #####
- #      #    # #  # # #                  #      ######      #   #        #   ###### #    #
- #      #    # #   ## #    #             #      #    # #    #   #        #   #    # #    #
- #       ####  #    #  ####              ###### #    #  ####    #        #   #    # #####
-*/
+// Functions last tab
 
 function requestLastTab(lastTab) {
   saveFileToJsonFolder(null, "lasttab", lastTab).then(function(bool) {
@@ -258,14 +209,7 @@ function loadLastTab() {
   });
 }
 
-/*
- ###### #    # #    #  ####               ####  #####   ##   #####  ##### #    # #####
- #      #    # ##   # #    #             #        #    #  #  #    #   #   #    # #    #
- #####  #    # # #  # #         #####     ####    #   #    # #    #   #   #    # #    #
- #      #    # #  # # #                       #   #   ###### #####    #   #    # #####
- #      #    # #   ## #    #             #    #   #   #    # #   #    #   #    # #
- #       ####  #    #  ####               ####    #   #    # #    #   #    ####  #
-*/
+// Functions startup
 
 function requestStartup(startup) {
   saveFileToJsonFolder(null, "startup", startup).then(() => {
@@ -285,14 +229,7 @@ function loadStartup() {
   });
 }
 
-/*
- ###### #    # #    #  ####              #    #  ####  #    # ######    #####    ##    ####  ######
- #      #    # ##   # #    #             #    # #    # ##  ## #         #    #  #  #  #    # #
- #####  #    # # #  # #         #####    ###### #    # # ## # #####     #    # #    # #      #####
- #      #    # #  # # #                  #    # #    # #    # #         #####  ###### #  ### #
- #      #    # #   ## #    #             #    # #    # #    # #         #      #    # #    # #
- #       ####  #    #  ####              #    #  ####  #    # ######    #      #    #  ####  ######
-*/
+// Functions home page
 
 function loadHomePage() {
   loadFileFromJsonFolder(null, "home").then((data) => {
@@ -329,14 +266,7 @@ function useHomePage(url) {
   saveHomePage();
 }
 
-/*
- ###### #    # #    #  ####               ####  #      ######   ##   #####     #####    ##   #####   ##
- #      #    # ##   # #    #             #    # #      #       #  #  #    #    #    #  #  #    #    #  #
- #####  #    # # #  # #         #####    #      #      #####  #    # #    #    #    # #    #   #   #    #
- #      #    # #  # # #                  #      #      #      ###### #####     #    # ######   #   ######
- #      #    # #   ## #    #             #    # #      #      #    # #   #     #    # #    #   #   #    #
- #       ####  #    #  ####               ####  ###### ###### #    # #    #    #####  #    #   #   #    #
-*/
+// Functions clear data
 
 function clearBrowsingData() {
   var clearCache = (document.getElementById("clear-cache-checkbox") as any).checked;
@@ -353,14 +283,7 @@ function clearBrowsingData() {
   }
 }
 
-/*
- ###### #    # #    #  ####              #    # # #    #     ####   ####  #    # ##### #####   ####  #       ####
- #      #    # ##   # #    #             #    # # ##   #    #    # #    # ##   #   #   #    # #    # #      #
- #####  #    # # #  # #         #####    #    # # # #  #    #      #    # # #  #   #   #    # #    # #       ####
- #      #    # #  # # #                  # ## # # #  # #    #      #    # #  # #   #   #####  #    # #           #
- #      #    # #   ## #    #             ##  ## # #   ##    #    # #    # #   ##   #   #   #  #    # #      #    #
- #       ####  #    #  ####              #    # # #    #     ####   ####  #    #   #   #    #  ####  ######  ####
-*/
+// Functions win controls
 
 function requestWinControls(bool) {
   saveFileToJsonFolder(null, "wincontrols", JSON.stringify({ systemTitlebar: bool })).then(() => {
@@ -372,14 +295,7 @@ function requestWinControls(bool) {
   });
 }
 
-/*
- ###### #    # #    #  ####               ####    ##   ##### ######  ####   ####  #####  # ######  ####
- #      #    # ##   # #    #             #    #  #  #    #   #      #    # #    # #    # # #      #
- #####  #    # # #  # #         #####    #      #    #   #   #####  #      #    # #    # # #####   ####
- #      #    # #  # # #                  #      ######   #   #      #  ### #    # #####  # #           #
- #      #    # #   ## #    #             #    # #    #   #   #      #    # #    # #   #  # #      #    #
- #       ####  #    #  ####               ####  #    #   #   ######  ####   ####  #    # # ######  ####
-*/
+// Functions categories
 
 function showCategory(id) {
   let containers = document.getElementsByClassName("container");
@@ -395,27 +311,13 @@ function showCategory(id) {
   }
 }
 
-/*
- # #####   ####               ####    ##    ####  #    # ######
- # #    # #    #             #    #  #  #  #    # #    # #
- # #    # #         #####    #      #    # #      ###### #####
- # #####  #                  #      ###### #      #    # #
- # #      #    #             #    # #    # #    # #    # #
- # #       ####               ####  #    #  ####  #    # ######
-*/
+// IPS cache
 
 ipcRenderer.on("action-set-cache-size", (event, arg) => {
   document.getElementById("cache-size-label").innerHTML = "Cache size: " + bytesToSize(arg.cacheSize);
 });
 
-/*
- # #####   ####              #    # # #    # #####   ####  #    #
- # #    # #    #             #    # # ##   # #    # #    # #    #
- # #    # #         #####    #    # # # #  # #    # #    # #    #
- # #####  #                  # ## # # #  # # #    # #    # # ## #
- # #      #    #             ##  ## # #   ## #    # #    # ##  ##
- # #       ####              #    # # #    # #####   ####  #    #
-*/
+// IPS window
 
 ipcRenderer.on("window-blur", (event) => {
   document.getElementById("titlebar").classList.add("blur");
@@ -425,14 +327,7 @@ ipcRenderer.on("window-focus", (event) => {
   document.getElementById("titlebar").classList.remove("blur");
 });
 
-/*
- # #####   ####               ####  ###### ##### ##### # #    #  ####   ####
- # #    # #    #             #      #        #     #   # ##   # #    # #
- # #    # #         #####     ####  #####    #     #   # # #  # #       ####
- # #####  #                       # #        #     #   # #  # # #  ###      #
- # #      #    #             #    # #        #     #   # #   ## #    # #    #
- # #       ####               ####  ######   #     #   # #    #  ####   ####
-*/
+// IPS settings
 
 ipcRenderer.on("settings-setDownloadsFolder", (event, path) => {
   document.getElementById("downloads-folder").innerHTML = path;
@@ -447,14 +342,7 @@ ipcRenderer.on("settings-showCategory", (event, categoryId) => {
   }
 });
 
-/*
- # #    # # #####
- # ##   # #   #
- # # #  # #   #
- # #  # # #   #
- # #   ## #   #
- # #    # #   #
-*/
+// Init
 
 function init() {
   loadWinControlsModule().then((winControls) => {
@@ -487,14 +375,5 @@ document.onreadystatechange = () => {
       init();
   }
 };
-
-/*
- ##### #    # ######    ###### #    # #####
-   #   #    # #         #      ##   # #    #
-   #   ###### #####     #####  # #  # #    #
-   #   #    # #         #      #  # # #    #
-   #   #    # #         #      #   ## #    #
-   #   #    # ######    ###### #    # #####
-*/
 
 export {}
