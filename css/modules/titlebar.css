@@ -39,17 +39,12 @@
     right: 0;
     left: 0;
     height: 33px;
-    border-bottom: 1px solid var(--color-border);
     background-color: var(--color-titlebar);
     border-bottom: 1px solid var(--color-border);
 }
 
 body.system-titlebar #titlebar {
     display: none;
-}
-
-#titlebar-icon {
-    padding: 8px;
 }
 
 #window-controls #close-btn:hover {
@@ -87,7 +82,7 @@ body.system-titlebar #titlebar {
   }
   
   #window-controls span {
-    font-family: SegMDL2;
+    font-family: SegMDL2, serif;
     font-size: 10px;
   }
   

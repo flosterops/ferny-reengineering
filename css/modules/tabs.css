@@ -213,7 +213,6 @@ body.system-titlebar .tabman-tabs {
     display: inline-block;
     color: var(--color-top);
     background: none;
-    border: none;
     width: 22px;
     height: 22px;
     border-radius: var(--px-radius);
@@ -275,7 +274,6 @@ body.system-titlebar .tabman-tabs {
     top: 37px;
     height: 32px;
     background-color: var(--color-element);
-    text-align: center;
     border: 1px solid var(--color-border);
     animation: append-center;
     animation-duration: 0.25s;

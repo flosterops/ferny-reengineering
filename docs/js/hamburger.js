@@ -1,6 +1,6 @@
 function toggleMenu() {
-  var menuIcon = document.getElementById('hamburger').getElementsByTagName('img')[0];
-  var header = document.getElementById('header');
+  let menuIcon = document.getElementById('hamburger').getElementsByTagName('img')[0];
+  let header = document.getElementById('header');
 
   if(header.classList.contains('show')) {
     header.classList.remove('show');
@@ -25,8 +25,8 @@ function toggleUpdate(div) {
 
 function moreUpdates() {
   document.getElementById('more-updates').style.display = "none";
-  var updates = document.getElementsByClassName('update');
-  for(var i = 0; i < updates.length; i++) {
+  let updates = document.getElementsByClassName('update');
+  for(let i = 0; i < updates.length; i++) {
     if(!updates[i].classList.contains('show')) {
       updates[i].classList.add('show');
     }

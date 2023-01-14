@@ -50,7 +50,7 @@
 	box-sizing: border-box;
   -webkit-user-drag: none;
 
-  font-family: OpenSans;
+  font-family: OpenSans, serif;
   font-size: var(--px-font);
 }
 
@@ -180,7 +180,6 @@
   outline: none;
   border: none;
   text-align: center;
-  margin: 0;
   height: 30px;
   transition: font-size 0.25s, height 0.25s;
   padding: 8px;
@@ -262,7 +261,6 @@
   opacity: 0;
   transition: opacity 0.25s;
   transition-delay: 0.5s;
-  text-align: center;
 }
 
 #target-url.show {
@@ -288,7 +286,7 @@
 }
 
 #window-controls span {
-  font-family: SegMDL2;
+  font-family: SegMDL2, serif;
   font-size: 10px;
 }
 

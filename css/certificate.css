@@ -43,7 +43,7 @@
 	box-sizing: border-box;
   -webkit-user-drag: none;
 
-  font-family: OpenSans;
+  font-family: OpenSans, serif;
   font-size: var(--px-font);
 }
 
@@ -80,7 +80,6 @@
 
 body {
   margin: 0;
-  padding: 0;
   overflow-x: hidden;
   background-color: var(--color-back);
   padding: 64px;

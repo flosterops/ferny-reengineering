@@ -43,7 +43,7 @@
 	box-sizing: border-box;
   -webkit-user-drag: none;
 
-  font-family: OpenSans;
+  font-family: OpenSans, serif;
   font-size: var(--px-font);
 }
 

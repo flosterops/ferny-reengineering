@@ -48,7 +48,7 @@
     box-sizing: border-box;
   -webkit-user-drag: none;
 
-  font-family: OpenSans;
+  font-family: OpenSans, serif;
   font-size: var(--px-font);
 }
 
@@ -188,7 +188,7 @@
 }
 
 #titlebar #window-controls span {
-  font-family: SegMDL2;
+  font-family: SegMDL2, serif;
   font-size: 10px;
 }
 

@@ -41,8 +41,8 @@
     user-select: none;
       box-sizing: border-box;
     -webkit-user-drag: none;
-  
-    font-family: OpenSans;
+
+    font-family: OpenSans, serif;
     font-size: var(--px-font);
 }
 
@@ -175,7 +175,6 @@ main {
     display: inline-block;
     color: var(--color-top);
     background: none;
-    border: none;
     width: 22px;
     height: 22px;
     border-radius: var(--px-radius);
@@ -426,14 +425,12 @@ main {
 }
 
 .folder-editor {
-    margin-bottom: -1px;
     border: 1px solid var(--color-border);
     background-color: var(--color-titlebar);
     padding: 2px;
     border-radius: calc(var(--px-radius) + 4px);
     text-align: center;
-    margin: 4px;
-    margin-top: 12px;
+    margin: 12px 4px 4px;
 }
 
 .folder.gu-mirror {
@@ -623,7 +620,7 @@ main {
     height: 16px;
     content: "";
     top: 4px;
-    left: 4px;;
+    left: 4px;
     border: 1px solid var(--color-border);
     background-color: var(--color-element);
     border-radius: var(--px-radius);
