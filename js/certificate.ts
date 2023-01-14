@@ -39,7 +39,7 @@ function getActiveURL() {
 }
 
 function getCertificateAtURL() {
-  var url = (document.getElementById('link-input') as any).value;
+  let url = (document.getElementById('link-input') as any).value;
   ipcRenderer.send('request-load-certificate', url);
 }
 
@@ -57,7 +57,7 @@ ipcRenderer.on('action-load-certificate', (event, arg) => {
   (document.getElementById('link-input') as any).value = arg;
   console.log(arg);
 
-  var hostname = arg.split('/')[2];
+  let hostname = arg.split('/')[2];
   sslCertificate.get(hostname).then(function (certificate) {
     console.log(certificate);
 

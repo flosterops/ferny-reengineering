@@ -53,10 +53,10 @@ function requestTheme(theme) {
 }
 
 function chooseSlide(i) {
-  var dots = document.getElementsByClassName('dot');
-  var tabs = document.getElementsByClassName('tab');
+  let dots = document.getElementsByClassName('dot');
+  let tabs = document.getElementsByClassName('tab');
 
-  for(var j = 0; j < dots.length; j++) {
+  for(let j = 0; j < dots.length; j++) {
     dots[j].classList.remove('active');
     tabs[j].classList.remove('active');
   }
@@ -79,8 +79,8 @@ function chooseSlide(i) {
 }
 
 function nextSlide() {
-  var dots = document.getElementsByClassName('dot');
-  for(var i = 0; i < dots.length - 1; i++) {
+  let dots = document.getElementsByClassName('dot');
+  for(let i = 0; i < dots.length - 1; i++) {
     if(dots[i].classList.contains('active')) {
       chooseSlide(i + 1);
       break;
@@ -89,8 +89,8 @@ function nextSlide() {
 }
 
 function prevSlide() {
-  var dots = document.getElementsByClassName('dot');
-  for(var i = 1; i < dots.length; i++) {
+  let dots = document.getElementsByClassName('dot');
+  for(let i = 1; i < dots.length; i++) {
     if(dots[i].classList.contains('active')) {
       chooseSlide(i - 1);
       break;
@@ -100,10 +100,10 @@ function prevSlide() {
 
 function loadSearchEngine() {
   try {
-    var searchEngine = fs.readFileSync(ppath + "/json/searchengine.json");
+    let searchEngine = fs.readFileSync(ppath + "/json/searchengine.json");
 
-    var radios = document.getElementsByName("search-engine");
-    for(var i = 0; i < radios.length; i++) {
+    let radios = document.getElementsByName("search-engine");
+    for(let i = 0; i < radios.length; i++) {
       if((radios[i] as any).value == searchEngine) {
         (radios[i] as any).checked = true;
         break;
@@ -149,7 +149,7 @@ function openDeveloperPage() {
 
 function loadStartPage() {
   try {
-    var startPage = fs.readFileSync(ppath + "/json/startpage.json");
+    let startPage = fs.readFileSync(ppath + "/json/startpage.json");
     (document.getElementById('start-page-input') as any).value = startPage;
   } catch (e) {
 
@@ -158,7 +158,7 @@ function loadStartPage() {
 
 function setStartPageLikeHomePage() {
   try {
-    var jsonstr = fs.readFileSync(ppath + "/json/home.json");
+    let jsonstr = fs.readFileSync(ppath + "/json/home.json");
     const Data = JSON.parse(jsonstr);
     (document.getElementById('start-page-input') as any).value = Data.url;
   } catch (e) {
@@ -167,7 +167,7 @@ function setStartPageLikeHomePage() {
 }
 
 function saveStartPage() {
-  var startPage = (document.getElementById('start-page-input') as any).value;
+  let startPage = (document.getElementById('start-page-input') as any).value;
 
   saveFileToJsonFolder('startpage', startPage).then(function() {
     notif("Start page saved: " + startPage, "success");
@@ -178,15 +178,15 @@ function saveStartPage() {
 
 function loadBookmarksBar() {
   try {
-    var jsonstr = fs.readFileSync(ppath + "/json/bookmarksbar.json");
+    let jsonstr = fs.readFileSync(ppath + "/json/bookmarksbar.json");
     let Data = JSON.parse(jsonstr);
 
     if(Data.on) {
       (document.getElementById('bookmarks-bar-checkbox') as any).checked = true;
     }
 
-    var radios = document.getElementsByName("bbar-layout");
-    for(var i = 0; i < radios.length; i++) {
+    let radios = document.getElementsByName("bbar-layout");
+    for(let i = 0; i < radios.length; i++) {
       if((radios[i] as any).value == Data.layout) {
         (radios[i] as any).checked = true;
         break;
@@ -199,7 +199,7 @@ function loadBookmarksBar() {
 
 function loadHomePage() {
   try {
-    var jsonstr = fs.readFileSync(ppath + "/json/home.json");
+    let jsonstr = fs.readFileSync(ppath + "/json/home.json");
     const Data = JSON.parse(jsonstr);
     (document.getElementById('home-page-input') as any).value = Data.url;
     if(Data.on == 1) {
@@ -239,7 +239,7 @@ function keyDown(e) {
 
 function loadWelcome() {
   try {
-    var welcomeOn = fs.readFileSync(ppath + "/json/welcome.json");
+    let welcomeOn = fs.readFileSync(ppath + "/json/welcome.json");
     if(welcomeOn == 1) {
       (document.getElementById('welcome-checkbox') as any).checked = true;
     } else {
@@ -251,8 +251,8 @@ function loadWelcome() {
 }
 
 function saveHomePage() {
-  var url = (document.getElementById('home-page-input') as any).value;
-  var on = (document.getElementById('home-page-checkbox') as any).checked;
+  let url = (document.getElementById('home-page-input') as any).value;
+  let on = (document.getElementById('home-page-checkbox') as any).checked;
 
   if(url.length <= 0) {
     notif("First enter the home page URL", "warning");

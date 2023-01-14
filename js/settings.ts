@@ -305,8 +305,8 @@ function loadHomePage() {
 }
 
 function saveHomePage() {
-  var url = (document.getElementById("home-page-input") as any).value;
-  var on = (document.getElementById("home-page-checkbox") as any).checked;
+  let url = (document.getElementById("home-page-input") as any).value;
+  let on = (document.getElementById("home-page-checkbox") as any).checked;
 
   if(url.length <= 0) {
     ipcRenderer.send("main-addStatusNotif", { text: "First enter the home page URL", type: "warning" });
@@ -339,8 +339,8 @@ function useHomePage(url) {
 */
 
 function clearBrowsingData() {
-  var clearCache = (document.getElementById("clear-cache-checkbox") as any).checked;
-  var clearStorage = (document.getElementById("clear-storage-checkbox") as any).checked;
+  let clearCache = (document.getElementById("clear-cache-checkbox") as any).checked;
+  let clearStorage = (document.getElementById("clear-storage-checkbox") as any).checked;
   if(!clearCache && !clearStorage) {
     ipcRenderer.send("main-addStatusNotif", { text: "First check something", type: "error" });
   } else {

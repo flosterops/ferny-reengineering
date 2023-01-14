@@ -47,7 +47,7 @@ class SearchManager extends EventEmitter {
         };
         this.searchInput.onkeydown = (event) => {
             if (event.keyCode === 40) {
-                var suggestions = this.searchSuggestContainer.childNodes;
+                let suggestions = this.searchSuggestContainer.childNodes;
                 let i = 0;
                 while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
                     i++;    
@@ -58,7 +58,7 @@ class SearchManager extends EventEmitter {
                     suggestions[i].nextSibling.classList.add("active");
                 }
             } else if (event.keyCode === 38) {
-                var suggestions = this.searchSuggestContainer.childNodes;
+                let suggestions = this.searchSuggestContainer.childNodes;
                 let i = 0;
                 while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
                     i++;
