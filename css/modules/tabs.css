@@ -1,11 +1,4 @@
-/*
- #####   ##   #####  #    #   ##   #    #
-   #    #  #  #    # ##  ##  #  #  ##   #
-   #   #    # #####  # ## # #    # # #  #
-   #   ###### #    # #    # ###### #  # #
-   #   #    # #    # #    # #    # #   ##
-   #   #    # #####  #    # #    # #    #
-*/
+/* Tabman */
 
 .tabman {
     position: absolute;
@@ -19,14 +12,7 @@
     border-bottom: 1px solid var(--color-border);
 }
 
-/*
- #####   ##   #####   ####
-   #    #  #  #    # #
-   #   #    # #####   ####
-   #   ###### #    #      #
-   #   #    # #    # #    #
-   #   #    # #####   ####
-*/
+/* Tabs */
 
 .tabman-tabs {
     max-width: calc(100% - 256px);
@@ -44,14 +30,7 @@ body.system-titlebar .tabman-tabs {
     max-width: calc(100% - 95px);
 }
 
-/*
- #####  #    # ##### #####  ####  #    #  ####
- #    # #    #   #     #   #    # ##   # #
- #####  #    #   #     #   #    # # #  #  ####
- #    # #    #   #     #   #    # #  # #      #
- #    # #    #   #     #   #    # #   ## #    #
- #####   ####    #     #    ####  #    #  ####
-*/
+/* Buttons */
 
 .tabman-buttons {
     float: left;
@@ -89,14 +68,7 @@ body.system-titlebar .tabman-tabs {
     background-color: var(--color-border);
 }
 
-/*
- #####   ##   #####
-   #    #  #  #    #
-   #   #    # #####
-   #   ###### #    #
-   #   #    # #    #
-   #   #    # #####
-*/
+/* Tab */
 
 .tabman-tab {
     position: relative;
@@ -142,14 +114,7 @@ body.system-titlebar .tabman-tabs {
     border-bottom: 1px solid var(--color-border);
 }
 
-/*
- #####   ##   #####     #  ####   ####  #    #
-   #    #  #  #    #    # #    # #    # ##   #
-   #   #    # #####     # #      #    # # #  #
-   #   ###### #    #    # #      #    # #  # #
-   #   #    # #    #    # #    # #    # #   ##
-   #   #    # #####     #  ####   ####  #    #
-*/
+/* Tab icon */
 
 .tabman-tab-icon {
     display: inline-block;
@@ -165,14 +130,7 @@ body.system-titlebar .tabman-tabs {
     opacity: 1;
 }
 
-/*
- #####   ##   #####     ##### # ##### #      ######
-   #    #  #  #    #      #   #   #   #      #
-   #   #    # #####       #   #   #   #      #####
-   #   ###### #    #      #   #   #   #      #
-   #   #    # #    #      #   #   #   #      #
-   #   #    # #####       #   #   #   ###### ######
-*/
+/* Tab title */
 
 .tabman-tab-title {
     overflow: hidden;
@@ -189,14 +147,7 @@ body.system-titlebar .tabman-tabs {
     opacity: 1
 }
 
-/*
- #####   ##   #####     #####  #    # ##### #####  ####  #    #  ####
-   #    #  #  #    #    #    # #    #   #     #   #    # ##   # #
-   #   #    # #####     #####  #    #   #     #   #    # # #  #  ####
-   #   ###### #    #    #    # #    #   #     #   #    # #  # #      #
-   #   #    # #    #    #    # #    #   #     #   #    # #   ## #    #
-   #   #    # #####     #####   ####    #     #    ####  #    #  ####
-*/
+/* Tab buttons */
 
 .tabman-tab:hover .tabman-tab-buttons button, .tabman-tab.active .tabman-tab-buttons button {
     transform: scale(1);
@@ -257,14 +208,7 @@ body.system-titlebar .tabman-tabs {
     background-color: var(--color-border);
 }
 
-/*
- #####   ##   #####     #####  #####  ###### #    # # ###### #    #
-   #    #  #  #    #    #    # #    # #      #    # # #      #    #
-   #   #    # #####     #    # #    # #####  #    # # #####  #    #
-   #   ###### #    #    #####  #####  #      #    # # #      # ## #
-   #   #    # #    #    #      #   #  #       #  #  # #      ##  ##
-   #   #    # #####     #      #    # ######   ##   # ###### #    #
-*/
+/* Tab preview */
 
 #tab-preview {
     z-index: 1000;
@@ -307,12 +251,3 @@ body.system-titlebar .tabman-tabs {
     top: 14px;
     opacity: var(--opacity-over);
 }
-
-/*
- ##### #    # ######    ###### #    # #####
-   #   #    # #         #      ##   # #    #
-   #   ###### #####     #####  # #  # #    #
-   #   #    # #         #      #  # # #    #
-   #   #    # #         #      #   ## #    #
-   #   #    # ######    ###### #    # #####
-*/

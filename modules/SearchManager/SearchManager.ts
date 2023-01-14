@@ -1,13 +1,6 @@
 "use strict";
 
-/*
-  ####   ####  #    #  ####  #####
- #    # #    # ##   # #        #
- #      #    # # #  #  ####    #
- #      #    # #  # #      #   #
- #    # #    # #   ## #    #   #
-  ####   ####  #    #  ####    #
-*/
+// Constants
 
 const EventEmitter = require("events");
 const { ipcRenderer } = require("electron");

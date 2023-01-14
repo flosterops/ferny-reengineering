@@ -1,13 +1,6 @@
 "use strict";
 
-/*
-#####  ######  ####  #    # # #####  ###### 
-#    # #      #    # #    # # #    # #      
-#    # #####  #    # #    # # #    # #####  
-#####  #      #  # # #    # # #####  #      
-#   #  #      #   #  #    # # #   #  #      
-#    # ######  ### #  ####  # #    # ###### 
-*/
+// Require
 
 const { ipcRenderer } = require("electron");
 
@@ -16,15 +9,7 @@ const applyTheme = require("../modules/applyTheme.js");
 const applyWinControls = require("../modules/applyWinControls.js");
 const loadWinControlsModule = require("../modules/loadWinControls.js");
 
-/*
-.########.##.....##.##....##..######..########.####..#######..##....##..######.
-.##.......##.....##.###...##.##....##....##.....##..##.....##.###...##.##....##
-.##.......##.....##.####..##.##..........##.....##..##.....##.####..##.##......
-.######...##.....##.##.##.##.##..........##.....##..##.....##.##.##.##..######.
-.##.......##.....##.##..####.##..........##.....##..##.....##.##..####.......##
-.##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
-.##........#######..##....##..######.....##....####..#######..##....##..######.
-*/
+// Functions
 
 function openLicenseFile() {
   ipcRenderer.send("tabManager-addTab", "file://" + __dirname + "/../LICENSE", true);
@@ -90,14 +75,7 @@ function checkForUpdates() {
   ipcRenderer.send("main-checkForUpdates");
 }
 
-/*
- ###### #    # #    #  ####              ##### #    # ###### #    # ######  ####
- #      #    # ##   # #    #               #   #    # #      ##  ## #      #
- #####  #    # # #  # #         #####      #   ###### #####  # ## # #####   ####
- #      #    # #  # # #                    #   #    # #      #    # #           #
- #      #    # #   ## #    #               #   #    # #      #    # #      #    #
- #       ####  #    #  ####                #   #    # ###### #    # ######  ####
-*/
+// Functions themes
 
 function updateTheme() {
   loadTheme().then(({ theme, dark }) => {
@@ -106,40 +84,19 @@ function updateTheme() {
   });
 }
 
-/*
- ###### #    # #    #  ####              #    # # #    # #####   ####  #    #
- #      #    # ##   # #    #             #    # # ##   # #    # #    # #    #
- #####  #    # # #  # #         #####    #    # # # #  # #    # #    # #    #
- #      #    # #  # # #                  # ## # # #  # # #    # #    # # ## #
- #      #    # #   ## #    #             ##  ## # #   ## #    # #    # ##  ##
- #       ####  #    #  ####              #    # # #    # #####   ####  #    #
-*/
+// Functions window
 
 function closeWindow() {
   ipcRenderer.send("about-closeWindow");
 }
 
-/*
-# #####   ####                ##   #####   ####  #    # ##### 
-# #    # #    #              #  #  #    # #    # #    #   #   
-# #    # #         #####    #    # #####  #    # #    #   #   
-# #####  #                  ###### #    # #    # #    #   #   
-# #      #    #             #    # #    # #    # #    #   #   
-# #       ####              #    # #####   ####   ####    #   
-*/
+// IPC about
 
 ipcRenderer.on("action-set-about", (event, arg) => {
   document.getElementById("about-app").innerHTML = "Beta v" + arg.version + "<br>" + arg.platform + " / " + arg.arch;
 });
 
-/*
- # #####   ####              #    # # #    # #####   ####  #    #
- # #    # #    #             #    # # ##   # #    # #    # #    #
- # #    # #         #####    #    # # # #  # #    # #    # #    #
- # #####  #                  # ## # # #  # # #    # #    # # ## #
- # #      #    #             ##  ## # #   ## #    # #    # ##  ##
- # #       ####              #    # # #    # #####   ####  #    #
-*/
+// IPC window
 
 ipcRenderer.on("window-blur", (event) => {
   document.getElementById("titlebar").classList.add("blur");
@@ -149,14 +106,7 @@ ipcRenderer.on("window-focus", (event) => {
   document.getElementById("titlebar").classList.remove("blur");
 });
 
-/*
- # #    # # #####
- # ##   # #   #
- # # #  # #   #
- # #  # # #   #
- # #   ## #   #
- # #    # #   #
-*/
+// Init
 
 function init() {
   loadWinControlsModule().then((winControls) => {
@@ -179,14 +129,5 @@ document.onreadystatechange = () => {
       init();
   }
 };
-
-/*
-##### #    # ######    ###### #    # #####  
-  #   #    # #         #      ##   # #    # 
-  #   ###### #####     #####  # #  # #    # 
-  #   #    # #         #      #  # # #    # 
-  #   #    # #         #      #   ## #    # 
-  #   #    # ######    ###### #    # #####  
-*/
 
 export {}
