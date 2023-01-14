@@ -195,7 +195,6 @@ app.on("ready", () => {
   loadDownloadCounter();
   loadDownloadsFolder();
   showMainWindow();
-  // loadWelcome();
 });
 ipcMain.on("main-openDownloadsFolder", (event) => {
   openDownloadsFolder();
@@ -1013,8 +1012,7 @@ function sideMenuConstructor(hasActiveTab: boolean, hasTabs: boolean) {
           mainWindow.webContents.send("findInPage-findPrev"); 
         } }
       ] }, { type: "separator" }, { 
-      enabled: false, label: "Certificate info", icon: app.getAppPath() + "/imgs/icons16/license.png", click: () => { 
-        // mainWindow.webContents.send('action-page-certificate'); 
+      enabled: false, label: "Certificate info", icon: app.getAppPath() + "/imgs/icons16/license.png", click: () => {
       } }, { type: "separator" }, { 
       label: "Download page", icon: app.getAppPath() + "/imgs/icons16/download.png", accelerator: "CmdOrCtrl+Shift+S", click: () => { 
         if(tabManager.hasActiveTab()) {
@@ -1041,9 +1039,6 @@ function sideMenuConstructor(hasActiveTab: boolean, hasTabs: boolean) {
       } }, { type: "separator" }, { 
       label: "About", icon: app.getAppPath() + "/imgs/icons16/info.png", accelerator: "CmdOrCtrl+Shift+F1", click: () => { 
         showAboutWindow();
-      // } }, { 
-      // enabled: false, label: "Welcome", icon: app.getAppPath() + "/imgs/old-icons16/startup.png", accelerator: "F7", click: () => { 
-      //   showWelcomeWindow(); 
       } }, { type: "separator" }, { 
       label: "Report an issue", icon: app.getAppPath() + "/imgs/icons16/bug-report.png", accelerator: "CmdOrCtrl+Shift+I", click: () => { 
         tabManager.addTab("https://github.com/ModuleArt/ferny/issues", true);
@@ -1169,7 +1164,6 @@ function showAboutWindow() {
   
         aboutWindow.once("ready-to-show", () => {
           aboutWindow.show();
-          // aboutWindow.webContents.openDevTools();
         });
       });
     });
@@ -1216,7 +1210,6 @@ function showSettingsWindow(categoryId: string = '') {
   
         settingsWindow.once("ready-to-show", () => {
           settingsWindow.show();
-          // settingsWindow.webContents.openDevTools();
         });
       });
     });
@@ -1248,7 +1241,6 @@ function showMainWindow() {
           width: Data.width, height: Data.height,
           minWidth: 400, minHeight: 240,
           frame: winControls.systemTitlebar,
-          // show: false,
           icon: app.getAppPath() + "/imgs/icon.ico",
           webPreferences: {
             nodeIntegration: true
@@ -1482,7 +1474,6 @@ function showWelcomeWindow() {
     welcomeWindow.loadFile(app.getAppPath() + '/html/welcome.html');
   
     welcomeWindow.once('ready-to-show', () => {
-      // welcomeWindow.webContents.openDevTools();
       welcomeWindow.show();
     });
   });
