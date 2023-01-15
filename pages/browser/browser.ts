@@ -16,6 +16,7 @@ function updateTheme() {
 }
 
 const notificationManager = new NotificationManager(
+  //@ts-ignore
   document.querySelector<HTMLElement>("#notif-panel")
 );
 
@@ -110,9 +111,9 @@ function zoomToActualSize() {
 }
 
 function focusSearch() {
-  const s = document.getElementById("search-input");
+  const s: any = document.getElementById("search-input");
   s.focus();
-  (s as any).select();
+  s.select();
 }
 
 function createBookmark() {
@@ -155,7 +156,7 @@ function newTab() {
   ipcRenderer.send("tabManager-newTab");
 }
 
-function newBackgroundTab() {
+function newBackgroundTab(event) {
   event.preventDefault();
   if ((event as any).which === 2) {
     ipcRenderer.send("tabManager-newBackgroundTab");
@@ -216,8 +217,9 @@ function goHome() {
 }
 
 function findNext() {
+  //@ts-ignore
   document.getElementById("find-container").classList.add("show");
-  const findInput = document.getElementById("find-input");
+  const findInput: any = document.getElementById("find-input");
   findInput.focus();
   if ((findInput as any).value.length > 0) {
     ipcRenderer.send("tabManager-findInPage", (findInput as any).value, true);
@@ -225,8 +227,9 @@ function findNext() {
 }
 
 function findPrev() {
+  //@ts-ignore
   document.getElementById("find-container").classList.add("show");
-  const findInput = document.getElementById("find-input");
+  const findInput: any = document.getElementById("find-input");
   findInput.focus();
   if ((findInput as any).value.length > 0) {
     ipcRenderer.send("tabManager-findInPage", (findInput as any).value, false);
@@ -241,6 +244,7 @@ function findInputKeyUp() {
 }
 
 function closeFindPanel() {
+  //@ts-ignore
   document.getElementById("find-container").classList.remove("show");
   ipcRenderer.send("tabManager-stopFindInPage", true);
 }
@@ -254,6 +258,7 @@ ipcRenderer.on("findInPage-findPrev", (event) => {
 });
 
 ipcRenderer.on("findInPage-updateFindInPage", (event) => {
+  //@ts-ignore
   if (document.getElementById("find-container").classList.contains("show")) {
     const findInput = document.getElementById("find-input");
     if ((findInput as any).value.length > 0) {
@@ -295,23 +300,33 @@ ipcRenderer.on("window-focus", () => {
 });
 
 ipcRenderer.on("window-maximize", () => {
+  //@ts-ignore
   document.getElementById("drag-zone").classList.add("maximize");
+  //@ts-ignore
   document.getElementById("max-btn").style.display = "none";
+  //@ts-ignore
   document.getElementById("restore-btn").style.display = "";
 });
 
 ipcRenderer.on("window-unmaximize", () => {
+  //@ts-ignore
   document.getElementById("drag-zone").classList.remove("maximize");
+  //@ts-ignore
   document.getElementById("max-btn").style.display = "";
+  //@ts-ignore
   document.getElementById("restore-btn").style.display = "none";
 });
 
 ipcRenderer.on("overlay-toggleButton", (event, bool) => {
   if (bool) {
+    //@ts-ignore
     document.getElementById("overlay-btn").classList.add("active");
+    //@ts-ignore
     document.getElementById("titlebar").style.display = "none";
   } else {
+    //@ts-ignore
     document.getElementById("overlay-btn").classList.remove("active");
+    //@ts-ignore
     document.getElementById("titlebar").style.display = "";
   }
 });
@@ -370,7 +385,7 @@ ipcRenderer.on("tabRenderer-moveTabToEnd", (event, id) => {
 });
 
 ipcRenderer.on("tabRenderer-setHomePage", (event, homePage) => {
-  const btn = document.getElementById("home-btn");
+  const btn: any = document.getElementById("home-btn");
   if (homePage.on == 1) {
     btn.style.display = "";
     btn.onclick = () => {

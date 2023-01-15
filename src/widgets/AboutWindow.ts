@@ -3,7 +3,11 @@ import { IWindowControls } from "../modules/loadWinControls";
 import { appController } from "./App";
 
 class AboutWindowController {
-  aboutWindow: BrowserWindow;
+  aboutWindow: BrowserWindow = {} as BrowserWindow;
+
+  constructor() {
+    this.aboutWindow = {} as BrowserWindow;
+  }
 
   init(
     mainWindow: BrowserWindow,

@@ -1,5 +1,7 @@
-const fs = require("fs");
-const ppath = require("persist-path")("Ferny");
+import fs from "fs";
+import pp from "persist-path";
+
+const ppath = pp("Ferny");
 
 class SaveFileUtility {
   static saveFileToJsonFolder(

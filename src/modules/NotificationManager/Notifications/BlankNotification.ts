@@ -1,11 +1,9 @@
-"use strict";
-
-const EventEmitter = require("events");
+import { EventEmitter } from "events";
 
 class BlankNotification extends EventEmitter {
-  id: number | null = null;
-  node: HTMLDivElement | null = null;
-  timeout: NodeJS.Timeout | null = null;
+  id: number;
+  node: HTMLDivElement;
+  timeout: NodeJS.Timeout;
   autoClose = false;
 
   constructor(id: number, autoClose: boolean) {
@@ -66,5 +64,5 @@ class BlankNotification extends EventEmitter {
   }
 }
 
-export {};
-module.exports = BlankNotification;
+export { BlankNotification };
+module.exports = { BlankNotification };

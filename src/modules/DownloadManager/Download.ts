@@ -1,24 +1,22 @@
-"use strict";
+import EventEmitter from "events";
+import fileExtension from "file-extension";
+import GetAvColor from "color.js";
 
-const EventEmitter = require("events");
-const fileExtension = require("file-extension");
-const GetAvColor = require("color.js");
-
-const extToImagePath = require("../extToImagePath");
-const bytesToSize = require("../bytesToSize");
-const percent = require("../percent");
-const epochToDate = require("../epochToDate");
-const epochToTime = require("../epochToTime");
-const rgbToRgbaString = require("../rgbToRgbaString");
+import { ImagePathUtility } from "../extToImagePath";
+import { BytesUtility } from "../bytesToSize";
+import { PercentUtility } from "../percent";
+import { DateUtility } from "../epochToDate";
+import { TimeUtility } from "../epochToTime";
+import { ColorsUtility } from "../rgbToRgbaString";
 
 class Download extends EventEmitter {
-  id: number | null = null;
-  name: string | null = null;
-  url: string | null = null;
-  time: number | null = null;
-  path: string | null = null;
+  id: number;
+  name: string;
+  url: string;
+  time: number;
+  path: string;
   status = "started";
-  node = null;
+  node;
   constructor(id: number, name: string, url: string, time: number) {
     super();
 
@@ -33,16 +31,16 @@ class Download extends EventEmitter {
     this.node.id = `download-${id}`;
     this.node.innerHTML = `
             <div class="download-body">
-                <img class="download-icon" src="${extToImagePath(
+                <img class="download-icon" src="${ImagePathUtility.extToImagePath(
                   fileExtension(name)
                 )}">
                 </label><label class="download-name">${name}</label><br>
                 <label class="download-url">${url}</label><br>
                 <hr>
                 <label class="download-status">Started</label>
-                <label class="download-time">${epochToDate(
+                <label class="download-time">${DateUtility.epochToDate(
                   time
-                )} / ${epochToTime(time)}</label>
+                )} / ${TimeUtility.epochToTime(time)}</label>
             </div>
             <div class="download-buttons"></div>
         `;
@@ -52,9 +50,11 @@ class Download extends EventEmitter {
     );
     color.mostUsed((result): void => {
       if (Array.isArray(result)) {
-        this.node.style.backgroundColor = rgbToRgbaString(result[0]);
+        this.node.style.backgroundColor = ColorsUtility.rgbToRgbaString(
+          result[0]
+        );
       } else {
-        this.node.style.backgroundColor = rgbToRgbaString(result);
+        this.node.style.backgroundColor = ColorsUtility.rgbToRgbaString(result);
       }
     });
   }
@@ -137,9 +137,12 @@ class Download extends EventEmitter {
   setStatusPause(bytes: number, total: number): void {
     this.status = "pause";
     this.node.getElementsByClassName("download-status")[0].innerHTML = `
-            Paused - ${percent(bytes, total)}%<br>(${bytesToSize(
+            Paused - ${PercentUtility.percent(
+              bytes,
+              total
+            )}%<br>(${BytesUtility.bytesToSize(
       bytes
-    )} / ${bytesToSize(total)})
+    )} / ${BytesUtility.bytesToSize(total)})
         `;
 
     this.node.getElementsByClassName("download-buttons")[0].innerHTML = `
@@ -157,9 +160,12 @@ class Download extends EventEmitter {
 
   setProcess(bytes: number, total: number): void {
     this.node.getElementsByClassName("download-status")[0].innerHTML = `
-            Downloading - ${percent(bytes, total)}%<br>(${bytesToSize(
+            Downloading - ${PercentUtility.percent(
+              bytes,
+              total
+            )}%<br>(${BytesUtility.bytesToSize(
       bytes
-    )} / ${bytesToSize(total)})
+    )} / ${BytesUtility.bytesToSize(total)})
         `;
 
     if (this.status !== "processing") {
@@ -180,5 +186,5 @@ class Download extends EventEmitter {
   }
 }
 
-export {};
-module.exports = Download;
+export { Download };
+module.exports = { Download };

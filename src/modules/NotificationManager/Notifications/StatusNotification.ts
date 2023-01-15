@@ -1,8 +1,5 @@
-"use strict";
-
-const rgbToRgbaString = require("/../../rgbToRgbaString");
-
-const TextNotification = require("./TextNotification");
+import { ColorsUtility } from "../../rgbToRgbaString";
+import { TextNotification } from "./TextNotification";
 
 class StatusNotification extends TextNotification {
   constructor(id: number, autoClose: boolean, text: string, type: string) {
@@ -17,37 +14,41 @@ class StatusNotification extends TextNotification {
         img.name = "check-16";
         super
           .getNode()
+          //@ts-ignore
           .getElementsByClassName("notif-container")[0].style.backgroundColor =
-          rgbToRgbaString("rgb(11, 232, 129)");
+          ColorsUtility.rgbToRgbaString("rgb(11, 232, 129)");
         break;
       case "info":
         super.getNode().title = "Info notification";
         img.name = "info-16";
         super
           .getNode()
+          //@ts-ignore
           .getElementsByClassName("notif-container")[0].style.backgroundColor =
-          rgbToRgbaString("rgb(15, 188, 249)");
+          ColorsUtility.rgbToRgbaString("rgb(15, 188, 249)");
         break;
       case "warning":
         super.getNode().title = "Warning notification";
         img.name = "warning-16";
         super
           .getNode()
+          //@ts-ignore
           .getElementsByClassName("notif-container")[0].style.backgroundColor =
-          rgbToRgbaString("rgb(255, 168, 1)");
+          ColorsUtility.rgbToRgbaString("rgb(255, 168, 1)");
         break;
       case "error":
         super.getNode().title = "Error notification";
         img.name = "fire-16";
         super
           .getNode()
+          //@ts-ignore
           .getElementsByClassName("notif-container")[0].style.backgroundColor =
-          rgbToRgbaString("rgb(255, 63, 52)");
+          ColorsUtility.rgbToRgbaString("rgb(255, 63, 52)");
     }
 
     super.getNode().appendChild(img);
   }
 }
 
-export {};
-module.exports = StatusNotification;
+export { StatusNotification };
+module.exports = { StatusNotification };

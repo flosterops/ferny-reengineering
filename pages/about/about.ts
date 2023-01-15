@@ -15,11 +15,15 @@ function openLicenseFile() {
 }
 
 function loadAbout() {
-  document.getElementById("about-electron").innerHTML =
+  // @ts-ignore
+  document.querySelector<HTMLElement>("#about-electron").innerHTML =
     "Electron: v" + process.versions.electron;
-  document.getElementById("about-chrome").innerHTML =
+  // @ts-ignore
+  document.querySelector<HTMLElement>("#about-chrome").innerHTML =
     "Chrome: v" + process.versions.chrome;
-  document.getElementById("about-node").innerHTML = "Node: " + process.version;
+  // @ts-ignore
+  document.querySelector<HTMLElement>("#about-node").innerHTML =
+    "Node: " + process.version;
 
   ipcRenderer.send("request-set-about");
 }
@@ -123,15 +127,18 @@ function closeWindow() {
 }
 
 ipcRenderer.on("action-set-about", (event, arg) => {
+  // @ts-ignore
   document.getElementById("about-app").innerHTML =
     "Beta v" + arg.version + "<br>" + arg.platform + " / " + arg.arch;
 });
 
 ipcRenderer.on("window-blur", (event) => {
+  // @ts-ignore
   document.getElementById("titlebar").classList.add("blur");
 });
 
 ipcRenderer.on("window-focus", (event) => {
+  // @ts-ignore
   document.getElementById("titlebar").classList.remove("blur");
 });
 

@@ -28,7 +28,7 @@ class ThemeUtility {
 
   static loadThemesFromFolder() {
     const themesFolder = path.join(__dirname, "..", "assets/themes");
-    const themeManager = document.getElementById("theme-manager");
+    const themeManager: any = document.getElementById("theme-manager");
 
     fs.readdir(themesFolder, (err, files) => {
       LoadFileUtility.loadFileFromJsonFolder(null, "theme").then((data) => {
@@ -151,6 +151,7 @@ class FoldersUtility {
 
   static requestDownloadsFolder(folder) {
     if (folder === "?custom-folder?") {
+      //@ts-ignore
       folder = document.getElementById("downloads-folder").innerHTML;
     }
 
@@ -170,6 +171,7 @@ class FoldersUtility {
   static chooseDownloadsFolder() {
     ipcRenderer.send(
       "main-chooseDownloadsFolder",
+      //@ts-ignore
       document.getElementById("downloads-folder").innerHTML
     );
   }
@@ -187,6 +189,7 @@ class FoldersUtility {
         folder != "?desktop?" &&
         folder.length > 0
       ) {
+        //@ts-ignore
         document.getElementById("downloads-folder").innerHTML = folder;
         folder = "?custom-folder?";
       }
@@ -385,6 +388,7 @@ class WinControlsUtility {
 class CategoryUtility {
   static showCategory(id: string) {
     const containers = document.getElementsByClassName("container");
+    //@ts-ignore
     const buttons = document
       .getElementById("sidebar")
       .getElementsByClassName("nav-btn");
@@ -410,6 +414,7 @@ class IpcRendererUtility {
 
   static setCacheSize() {
     ipcRenderer.on("action-set-cache-size", (event, arg) => {
+      //@ts-ignore
       document.getElementById("cache-size-label").innerHTML =
         "Cache size: " + BytesUtility.bytesToSize(arg.cacheSize);
     });
@@ -417,18 +422,21 @@ class IpcRendererUtility {
 
   static windowBlur() {
     ipcRenderer.on("window-blur", () => {
+      //@ts-ignore
       document.getElementById("titlebar").classList.add("blur");
     });
   }
 
   static windowFocus() {
     ipcRenderer.on("window-focus", () => {
+      //@ts-ignore
       document.getElementById("titlebar").classList.remove("blur");
     });
   }
 
   static setDownloadsFolder() {
     ipcRenderer.on("settings-setDownloadsFolder", (event, path) => {
+      //@ts-ignore
       document.getElementById("downloads-folder").innerHTML = path;
       if ((document.getElementById("custom-folder-radio") as any).checked) {
         FoldersUtility.requestDownloadsFolder("?custom-folder?");

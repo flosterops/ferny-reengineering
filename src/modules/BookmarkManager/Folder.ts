@@ -1,15 +1,13 @@
-"use strict";
-
-const EventEmitter = require("events");
+import { EventEmitter } from "events";
 
 class Folder extends EventEmitter {
-  bookmarks = [];
-  name: string | null = null;
-  id: number | null = null;
-  node = null;
-  position = null;
+  bookmarks: any[] = [];
+  name: string;
+  id: number;
+  node;
+  position;
 
-  constructor(id: number, name: string, editable: boolean, position: string) {
+  constructor(id: number, name: string, editable: boolean, position = "") {
     super();
 
     this.id = id;
@@ -268,5 +266,5 @@ class Folder extends EventEmitter {
   }
 }
 
-export {};
-module.exports = Folder;
+export { Folder };
+module.exports = { Folder };

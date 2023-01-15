@@ -37,15 +37,21 @@ function chooseSlide(i) {
   tabs[i].classList.add("active");
 
   if (i == 0) {
+    //@ts-ignore
     document.getElementById("prev-btn").classList.add("disable");
   } else {
+    //@ts-ignore
     document.getElementById("prev-btn").classList.remove("disable");
   }
   if (i == dots.length - 1) {
+    //@ts-ignore
     document.getElementById("next-btn").classList.add("disable");
+    //@ts-ignore
     document.getElementById("skip-btn").classList.add("disable");
   } else {
+    //@ts-ignore
     document.getElementById("next-btn").classList.remove("disable");
+    //@ts-ignore
     document.getElementById("skip-btn").classList.remove("disable");
   }
 }
@@ -257,15 +263,18 @@ function requestBookmarksBar(on, layout) {
 }
 
 ipcRenderer.on("action-set-about", (event, arg) => {
+  //@ts-ignore
   document.getElementById("version").innerHTML =
     "v" + arg.version + " / " + arg.arch + " / " + arg.platform;
 });
 
 ipcRenderer.on("action-blur-window", () => {
+  //@ts-ignore
   document.getElementById("titlebar").classList.add("blur");
 });
 
 ipcRenderer.on("action-focus-window", () => {
+  //@ts-ignore
   document.getElementById("titlebar").classList.remove("blur");
 });
 

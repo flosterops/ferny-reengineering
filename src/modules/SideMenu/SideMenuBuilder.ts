@@ -18,6 +18,7 @@ import { SettingsSideMenuBuilder } from "./SettingsSideMenuBuilder";
 import { HelpSideMenuBuilder } from "./HelpSideMenuBuilder";
 import { MoreSideMenuBuilder } from "./MoreSideMenuBuilder";
 import { QuitSideMenuBuilder } from "./QuitSideMenuBuilder";
+import { SwitchTabsSubmenuBuilder } from "./SwitchTabsSubmenuBuilder";
 
 class SideMenuBuilder {
   list: SideMenuItem[] & ISeparator[] = [];

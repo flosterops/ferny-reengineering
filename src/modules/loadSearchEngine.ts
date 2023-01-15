@@ -1,5 +1,7 @@
-const ppath = require("persist-path")("Ferny");
-const fs = require("fs");
+import pp from "persist-path";
+import fs from "fs";
+
+const ppath = pp("Ferny");
 
 import { SaveFileUtility } from "./saveFileToJsonFolder";
 
@@ -29,7 +31,7 @@ class LoadSearchEngineUtility {
         "ebay",
       ];
       try {
-        fs.readFile(ppath + "/json/search-engine.json", (err, data) => {
+        fs.readFile(ppath + "/json/search-engine.json", (err, data: any) => {
           if (err) {
             resolve(defaultValue);
           } else {
