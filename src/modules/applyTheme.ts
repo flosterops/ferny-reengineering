@@ -5,6 +5,10 @@ import {
 } from "../types/applyTheme";
 
 class ApplyThemeUtility {
+  constructor() {
+    console.log("qwe");
+  }
+
   static themeProperties: IThemeProperty[] = [
     {
       key: EApplyThemeCssKeys.colorBack,
@@ -71,4 +75,4 @@ class ApplyThemeUtility {
 }
 
 export { ApplyThemeUtility };
-module.exports = ApplyThemeUtility;
+module.exports = { ApplyThemeUtility };

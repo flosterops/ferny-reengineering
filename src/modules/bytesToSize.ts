@@ -13,4 +13,4 @@ class BytesUtility {
 }
 
 export { BytesUtility };
-module.exports = BytesUtility;
+module.exports = { BytesUtility };

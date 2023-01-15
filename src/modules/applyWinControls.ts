@@ -80,4 +80,4 @@ class ApplyWinControlsUtility {
 }
 
 export { ApplyWinControlsUtility };
-module.exports = ApplyWinControlsUtility;
+module.exports = { ApplyWinControlsUtility };
