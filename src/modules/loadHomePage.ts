@@ -1,6 +1,8 @@
-const saveFileToJsonFolder = require("./saveFileToJsonFolder");
-const ppath = require("persist-path")("Ferny");
-const fs = require("fs");
+import { SaveFileUtility } from "./saveFileToJsonFolder";
+import pp from "persist-path";
+import fs from "fs";
+
+const ppath = pp("Ferny");
 
 class LoadHomePageUtility {
   static loadHomePage(): Promise<any> {
@@ -11,10 +13,14 @@ class LoadHomePageUtility {
       };
 
       try {
-        const jsonstr = fs.readFileSync(ppath + "/json/home.json");
+        const jsonstr: any = fs.readFileSync(ppath + "/json/home.json");
         Data = JSON.parse(jsonstr);
       } catch (e) {
-        saveFileToJsonFolder(null, "home", JSON.stringify(Data));
+        SaveFileUtility.saveFileToJsonFolder(
+          null,
+          "home",
+          JSON.stringify(Data)
+        );
       }
 
       resolve(Data);

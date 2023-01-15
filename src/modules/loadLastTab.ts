@@ -1,7 +1,8 @@
-const ppath = require("persist-path")("Ferny");
-const fs = require("fs");
-
+import pp from "persist-path";
+import fs from "fs";
 import { SaveFileUtility } from "./saveFileToJsonFolder";
+
+const ppath = pp("Ferny");
 
 class LoadLastTabUtility {
   static loadLastTab(): Promise<string> {
@@ -9,7 +10,7 @@ class LoadLastTabUtility {
       const defaultValue = "overlay";
       const possibleValues = ["overlay", "new-tab", "new-tab-overlay", "quit"];
       try {
-        fs.readFile(ppath + "/json/lasttab.json", (err, data) => {
+        fs.readFile(ppath + "/json/lasttab.json", (err, data: any) => {
           if (err) {
             resolve(defaultValue);
           } else {

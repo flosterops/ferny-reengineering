@@ -1,8 +1,5 @@
-"use strict";
-
-const rgbToRgbaString = require("../../rgbToRgbaString");
-
-const TextNotification = require("./TextNotification");
+import { ColorsUtility } from "../../rgbToRgbaString";
+import { TextNotification } from "./TextNotification";
 
 class QuestNotification extends TextNotification {
   constructor(id: number, autoClose: boolean, text: string, buttons: any[]) {
@@ -13,8 +10,9 @@ class QuestNotification extends TextNotification {
     img.name = "about-16";
     super
       .getNode()
+      //@ts-ignore
       .getElementsByClassName("notif-container")[0].style.backgroundColor =
-      rgbToRgbaString("rgb(255, 168, 1)");
+      ColorsUtility.rgbToRgbaString("rgb(255, 168, 1)");
 
     super.getNode().appendChild(img);
 
@@ -35,5 +33,5 @@ class QuestNotification extends TextNotification {
   }
 }
 
-export {};
-module.exports = QuestNotification;
+export { QuestNotification };
+module.exports = { QuestNotification };

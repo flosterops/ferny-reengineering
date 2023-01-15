@@ -1,5 +1,5 @@
 import { EAppEventTypes } from "./types/app";
-import { appController } from "./widgets/app";
+import { appController } from "./widgets/App";
 
 import { app } from "electron";
 
@@ -31,5 +31,3 @@ appController.app.on(EAppEventTypes.windowAllClosed, () => {
 appController.initOnReadyListeners(downloadsController);
 
 ipcMainController.initIpcListeners();
-
-export {};

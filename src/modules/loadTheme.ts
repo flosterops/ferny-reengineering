@@ -1,5 +1,5 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
 import { LoadFileUtility } from "./loadFileFromJsonFolder";
 
@@ -27,7 +27,7 @@ class LoadThemeUtility {
         }
         fs.readFile(
           path.join(__dirname, "/../assets/themes/", theme.name + ".json"),
-          (err, objStr) => {
+          (err, objStr: any) => {
             resolve({ theme: JSON.parse(objStr), dark: theme.dark });
           }
         );

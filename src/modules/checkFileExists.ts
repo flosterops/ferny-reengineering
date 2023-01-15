@@ -1,4 +1,4 @@
-const fs = require("fs");
+import fs from "fs";
 
 class FSUtility {
   static checkFileExists(path): Promise<boolean> {
@@ -17,4 +17,4 @@ class FSUtility {
 }
 
 export { FSUtility };
-module.exports = FSUtility;
+module.exports = { FSUtility };

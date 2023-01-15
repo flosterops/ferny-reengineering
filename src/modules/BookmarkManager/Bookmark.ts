@@ -1,19 +1,17 @@
-"use strict";
+import { EventEmitter } from "events";
+import { ipcRenderer, clipboard } from "electron";
+import GetAvColor from "color.js";
 
-const EventEmitter = require("events");
-const { ipcRenderer, clipboard } = require("electron");
-const GetAvColor = require("color.js");
-
-const rgbToRgbaString = require("../rgbToRgbaString");
+import { ColorsUtility } from "../rgbToRgbaString";
 
 class Bookmark extends EventEmitter {
-  id: number | null = null;
-  name: string | null = null;
-  url: string | null = null;
-  node = null;
-  position: string | null = null;
+  id: number;
+  name: string;
+  url: string;
+  node;
+  position;
 
-  constructor(id: number, name: string, url: string, position: string) {
+  constructor(id: number, name: string, url: string, position = "") {
     super();
 
     this.id = id;
@@ -114,9 +112,12 @@ class Bookmark extends EventEmitter {
     const color = new GetAvColor(icon);
     color.mostUsed((result) => {
       if (Array.isArray(result)) {
-        icon.parentNode.style.backgroundColor = rgbToRgbaString(result[0]);
+        icon.parentNode.style.backgroundColor = ColorsUtility.rgbToRgbaString(
+          result[0]
+        );
       } else {
-        icon.parentNode.style.backgroundColor = rgbToRgbaString(result);
+        icon.parentNode.style.backgroundColor =
+          ColorsUtility.rgbToRgbaString(result);
       }
     });
   }
@@ -160,7 +161,6 @@ class Bookmark extends EventEmitter {
     this.updateBookmarkColor();
 
     this.emit("edit");
-    return null;
   }
 
   setName(name: string): void {
@@ -259,5 +259,5 @@ class Bookmark extends EventEmitter {
   }
 }
 
-export {};
-module.exports = Bookmark;
+export { Bookmark };
+module.exports = { Bookmark };

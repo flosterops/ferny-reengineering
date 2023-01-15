@@ -188,7 +188,7 @@ class IpcMainController {
   initDownloadUpdate() {
     ipcMain.on("main-downloadUpdate", () => {
       autoUpdater
-        .downloadUpdate(autoUpdaterController.updateCancellationToken)
+        .downloadUpdate(autoUpdaterController.updateCancellationToken as any)
         .then(() => {
           this.mainWindowController.sendNotificationManagerAddStatusNotif({
             type: "info",

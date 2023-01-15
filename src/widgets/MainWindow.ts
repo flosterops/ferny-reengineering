@@ -1,5 +1,5 @@
 import { app, BrowserWindow, Menu } from "electron";
-import { appController } from "./app";
+import { appController } from "./App";
 import { overlayController } from "./Overlay";
 import { MainContextMenuBuilder } from "../modules/MainContextMenu/MainContextMenuBuilder";
 import { tabManagerController } from "./TabManager";

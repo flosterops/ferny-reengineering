@@ -1,9 +1,6 @@
-"use strict";
-
 import { BrowserWindow } from "electron";
-
-const EventEmitter = require("events");
-const { BrowserView, Menu, MenuItem, clipboard } = require("electron");
+import EventEmitter from "events";
+import { BrowserView, Menu, MenuItem, clipboard } from "electron";
 
 interface IDownload {
   id: number;
@@ -16,10 +13,10 @@ interface IDownload {
 }
 
 class Overlay extends EventEmitter {
-  window = null;
-  view = null;
+  window;
+  view;
   top = 75;
-  appPath = null;
+  appPath;
 
   constructor(window: BrowserWindow, appPath: string) {
     super();

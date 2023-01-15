@@ -1,8 +1,5 @@
-"use strict";
-
-const rgbToRgbaString = require("../../rgbToRgbaString");
-
-const TextNotification = require("./TextNotification");
+import { ColorsUtility } from "../../rgbToRgbaString";
+import { TextNotification } from "./TextNotification";
 
 class ZoomNotification extends TextNotification {
   constructor(id: number, autoClose: boolean, text: string) {
@@ -15,8 +12,9 @@ class ZoomNotification extends TextNotification {
 
     super
       .getNode()
+      //@ts-ignore
       .getElementsByClassName("notif-container")[0].style.backgroundColor =
-      rgbToRgbaString("rgb(15, 188, 249)");
+      ColorsUtility.rgbToRgbaString("rgb(15, 188, 249)");
 
     const buttonsContainer = document.createElement("div");
     buttonsContainer.classList.add("notif-buttons");
@@ -38,5 +36,5 @@ class ZoomNotification extends TextNotification {
   }
 }
 
-export {};
-module.exports = ZoomNotification;
+export {ZoomNotification};
+module.exports = { ZoomNotification };
