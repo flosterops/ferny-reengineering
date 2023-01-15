@@ -6,30 +6,28 @@ import { mainWindowController } from "../widgets/MainWindow";
 class ShowSettingsWindowUtility {
   static showSettingsWindow(categoryId = "") {
     if (
-      settingsWindowController.settingsWindow ||
-      !settingsWindowController.settingsWindow?.isDestroyed()
+      !settingsWindowController.settingsWindow ||
+      settingsWindowController.settingsWindow.isDestroyed()
     ) {
-      return;
-    }
+      LoadThemeUtility.loadTheme().then(({ theme, dark }) => {
+        const backgroundColor = dark
+          ? theme.dark.colorBack
+          : theme.light.colorBack;
 
-    LoadThemeUtility.loadTheme().then(({ theme, dark }) => {
-      const backgroundColor = dark
-        ? theme.dark.colorBack
-        : theme.light.colorBack;
+        LoadWinControlsUtility.loadWinControls().then((winControls) => {
+          settingsWindowController.init(
+            mainWindowController.mainWindow,
+            winControls,
+            backgroundColor
+          );
 
-      LoadWinControlsUtility.loadWinControls().then((winControls) => {
-        settingsWindowController.init(
-          mainWindowController.mainWindow,
-          winControls,
-          backgroundColor
-        );
-
-        settingsWindowController.loadSettingsPage(categoryId);
-        settingsWindowController.initOnFocusListener();
-        settingsWindowController.initOnBlurListener();
-        settingsWindowController.initReadyToShowListener();
+          settingsWindowController.loadSettingsPage(categoryId);
+          settingsWindowController.initOnFocusListener();
+          settingsWindowController.initOnBlurListener();
+          settingsWindowController.initReadyToShowListener();
+        });
       });
-    });
+    }
   }
 }
 

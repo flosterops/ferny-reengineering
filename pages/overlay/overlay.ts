@@ -9,14 +9,20 @@ import { HistoryManager } from "../../src/modules/HistoryManager/HistoryManager"
 import { DownloadManager } from "../../src/modules/DownloadManager/DownloadManager";
 
 const searchManager = new SearchManager(
+  //@ts-ignore
   document.querySelector<HTMLInputElement>("#search-input"),
+  //@ts-ignore
   document.querySelector<HTMLElement>("#search-suggest"),
+  //@ts-ignore
   document.querySelector<HTMLElement>("#search-suggest-container"),
+  //@ts-ignore
   document.querySelector<HTMLElement>("#search-engines"),
+  //@ts-ignore
   document.querySelector<HTMLButtonElement>("#clear-search-btn")
 );
 
 const bookmarkManager = new BookmarkManager(
+  //@ts-ignore
   document.getElementById("bookmarks-container")
 );
 
@@ -96,6 +102,7 @@ bookmarkManager.on("update-bookmarked", (exists, id) => {
 });
 
 const historyManager = new HistoryManager(
+  //@ts-ignore
   document.querySelector<HTMLElement>("#history-container")
 );
 
@@ -131,6 +138,7 @@ historyManager.on("history-already-cleared", () => {
 });
 
 const downloadManager = new DownloadManager(
+  //@ts-ignore
   document.getElementById("downloads-container")
 );
 
@@ -262,6 +270,7 @@ ipcRenderer.on("searchManager-setSearchEngine", (event, engine) => {
 });
 
 ipcRenderer.on("overlay-scrollToId", (event, id) => {
+  //@ts-ignore
   document.getElementById(id).scrollIntoView({
     behavior: "smooth",
   });
@@ -350,7 +359,7 @@ ipcRenderer.on("downloadManager-clearDownloads", () => {
 });
 
 ipcRenderer.on("overlay-switchTabGroup", (event, tabGroupId) => {
-  const groups = [
+  const groups: any[] = [
     document.getElementById("group-0"),
     document.getElementById("group-1"),
     document.getElementById("group-2"),
@@ -371,6 +380,7 @@ ipcRenderer.on("overlay-switchTabGroup", (event, tabGroupId) => {
 function init() {
   updateTheme();
 
+  //@ts-ignore
   document.getElementById("search-input").focus();
 
   document.body.onmousedown = function (e) {

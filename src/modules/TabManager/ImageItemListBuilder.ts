@@ -32,6 +32,7 @@ class ImageItemListBuilder extends TabItemList {
         label: EImageTabLabels.downloadImage,
         icon: this.getIconPath(EImageTabImages.downloadImage),
         click: (): void =>
+          //@ts-ignore
           this.tab.view.webContents.downloadURL(this.params.srcURL),
       })
     );
@@ -41,6 +42,7 @@ class ImageItemListBuilder extends TabItemList {
         label: EImageTabLabels.copyImage,
         icon: this.getIconPath(EImageTabImages.copyImage),
         click: (): void =>
+          //@ts-ignore
           this.tab.view.webContents.copyImageAt(this.params.x, this.params.y),
       })
     );

@@ -1,7 +1,9 @@
-const fs = require("fs");
-const ppath = require("persist-path")("Ferny");
+import fs from "fs";
+import pp from "persist-path";
 
 import { FSUtility } from "./checkFileExists";
+
+const ppath = pp("Ferny");
 
 class LoadFileUtility {
   static checkDirExists(path: string): Promise<boolean> {

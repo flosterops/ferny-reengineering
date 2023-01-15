@@ -1,6 +1,6 @@
 {
   "name": "ferny",
-  "type": "module",
+  "type": "commonjs",
   "productName": "Ferny",
   "companyName": "Module Art",
   "description": "Your favorite web browser",

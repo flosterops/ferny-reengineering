@@ -1,5 +1,5 @@
-const ppath = require("persist-path")("Ferny");
-const fs = require("fs");
+import pp from "persist-path";
+import fs from "fs";
 
 import { SaveFileUtility } from "./saveFileToJsonFolder";
 
@@ -8,6 +8,8 @@ export interface IWindowControls {
   [key: string]: any;
 }
 
+const ppath = pp("Ferny");
+
 class LoadWinControlsUtility {
   static loadWinControls(): Promise<IWindowControls> {
     return new Promise(function (resolve) {
@@ -15,7 +17,7 @@ class LoadWinControlsUtility {
         systemTitlebar: false,
       };
       try {
-        fs.readFile(ppath + "/json/wincontrols.json", (err, data) => {
+        fs.readFile(ppath + "/json/wincontrols.json", (err, data: any) => {
           if (err) {
             resolve(defaultValue);
           } else {

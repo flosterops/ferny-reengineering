@@ -1,16 +1,13 @@
-"use strict";
-
-const EventEmitter = require("events");
-
-const StatusNotification = require("./Notifications/StatusNotification");
-const QuestNotification = require("./Notifications/QuestNotification");
-const ZoomNotification = require("./Notifications/ZoomNotification");
+import { EventEmitter } from "events";
+import { StatusNotification } from "./Notifications/StatusNotification";
+import { QuestNotification } from "./Notifications/QuestNotification";
+import { ZoomNotification } from "./Notifications/ZoomNotification";
 
 class NotificationManager extends EventEmitter {
   maxNotifCount = 1;
 
-  notifPanel = null;
-  notifArray = [];
+  notifPanel;
+  notifArray: any[] = [];
   notifCounter = 0;
 
   constructor(notifPanel: HTMLElement) {

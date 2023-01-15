@@ -1,13 +1,15 @@
-"use strict";
+import { EventEmitter } from "events";
+import pp from "persist-path";
+import rp from "readline-promise";
+import prependFile from "prepend-file";
+import fs from "fs";
 
-const EventEmitter = require("events");
-const ppath = require("persist-path")("Ferny");
-const readlPromise = require("readline-promise").default;
-const prependFile = require("prepend-file");
-const fs = require("fs");
+const ppath = pp("Ferny");
+const readlPromise = rp.default;
 
-const saveFileToJsonFolder = require("../saveFileToJsonFolder");
-const checkFileExists = require("../checkFileExists");
+import { SaveFileUtility } from "../saveFileToJsonFolder";
+import { FSUtility } from "../checkFileExists";
+import { Download } from "./Download";
 
 interface IDownloadReadline {
   id: number;
@@ -16,11 +18,9 @@ interface IDownloadReadline {
   name: string;
 }
 
-const Download = require("./Download");
-
 class DownloadManager extends EventEmitter {
-  downloads = [];
-  downloadContainer = null;
+  downloads: any[] = [];
+  downloadContainer;
   downloadsLimiter = true;
 
   constructor(downloadContainer: HTMLElement) {
@@ -65,7 +65,7 @@ class DownloadManager extends EventEmitter {
           JSON.stringify(Data) + "\n",
           (err): void => {
             if (err) {
-              saveFileToJsonFolder(
+              SaveFileUtility.saveFileToJsonFolder(
                 "downloads",
                 "downloads",
                 JSON.stringify(Data)
@@ -74,7 +74,7 @@ class DownloadManager extends EventEmitter {
           }
         );
       } catch (error) {
-        saveFileToJsonFolder(
+        SaveFileUtility.saveFileToJsonFolder(
           "downloads",
           "downloads",
           JSON.stringify(Data)
@@ -95,24 +95,26 @@ class DownloadManager extends EventEmitter {
   }
 
   loadDownloads(count: number | null = null): void {
-    checkFileExists(ppath + "/json/downloads/downloads.json").then((): void => {
-      this.downloadContainer.innerHTML = "";
+    FSUtility.checkFileExists(ppath + "/json/downloads/downloads.json").then(
+      (): void => {
+        this.downloadContainer.innerHTML = "";
 
-      const downloadsReadline = readlPromise.createInterface({
-        terminal: false,
-        input: fs.createReadStream(ppath + "/json/downloads/downloads.json"),
-      });
-      downloadsReadline.forEach((line: string, index: number): void => {
-        const obj: IDownloadReadline = JSON.parse(line);
-        if (count == null) {
-          this.appendDownload(false, obj.id, obj.name, obj.url, obj.time);
-        } else {
-          if (index < count) {
+        const downloadsReadline = readlPromise.createInterface({
+          terminal: false,
+          input: fs.createReadStream(ppath + "/json/downloads/downloads.json"),
+        });
+        downloadsReadline.forEach((line: string, index: number): void => {
+          const obj: IDownloadReadline = JSON.parse(line);
+          if (count == null) {
             this.appendDownload(false, obj.id, obj.name, obj.url, obj.time);
+          } else {
+            if (index < count) {
+              this.appendDownload(false, obj.id, obj.name, obj.url, obj.time);
+            }
           }
-        }
-      });
-    });
+        });
+      }
+    );
   }
 
   askClearDownloads(): void {
@@ -124,26 +126,32 @@ class DownloadManager extends EventEmitter {
   }
 
   clearDownloads(): void {
-    saveFileToJsonFolder("downloads", "downloads", "").then((): void => {
-      this.downloads = [];
-      this.downloadContainer.innerHTML = "";
-      this.emit("downloads-cleared");
-    });
+    SaveFileUtility.saveFileToJsonFolder("downloads", "downloads", "").then(
+      (): void => {
+        this.downloads = [];
+        this.downloadContainer.innerHTML = "";
+        this.emit("downloads-cleared");
+      }
+    );
   }
 
   setLimiter(bool: boolean): void {
     this.downloadsLimiter = bool;
     if (bool) {
+      //@ts-ignore
       document.getElementById("more-downloads-btn").style.display = "";
+      //@ts-ignore
       document.getElementById("collapse-downloads-btn").style.display = "none";
       this.loadDownloads(12);
     } else {
+      //@ts-ignore
       document.getElementById("more-downloads-btn").style.display = "none";
+      //@ts-ignore
       document.getElementById("collapse-downloads-btn").style.display = "";
       this.loadDownloads();
     }
   }
 }
 
-export {DownloadManager};
+export { DownloadManager };
 module.exports = { DownloadManager };

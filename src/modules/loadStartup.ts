@@ -1,7 +1,8 @@
-const ppath = require("persist-path")("Ferny");
-const fs = require("fs");
-
+import pp from "persist-path";
+import fs from "fs";
 import { SaveFileUtility } from "./saveFileToJsonFolder";
+
+const ppath = pp("Ferny");
 
 class LoadStartupUtility {
   static loadStartup(): Promise<string> {
@@ -9,7 +10,7 @@ class LoadStartupUtility {
       const defaultValue = "overlay";
       const possibleValues = ["overlay", "new-tab"];
       try {
-        fs.readFile(ppath + "/json/startup.json", (err, data) => {
+        fs.readFile(ppath + "/json/startup.json", (err, data: any) => {
           if (err) {
             resolve(defaultValue);
           } else {

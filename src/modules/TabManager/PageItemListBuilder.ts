@@ -18,6 +18,7 @@ class PageItemListBuilder extends TabItemList {
         label: EPageTabLabels.back,
         icon: this.getIconPath(EPageTabImages.back),
         accelerator: EShortCutTypes.back,
+        //@ts-ignore
         enabled: this.tab.view.webContents.canGoBack(),
         click: (): void => this.tab.goBack(),
       })
@@ -28,6 +29,7 @@ class PageItemListBuilder extends TabItemList {
         label: EPageTabLabels.forward,
         icon: this.getIconPath(EPageTabImages.forward),
         accelerator: EShortCutTypes.forward,
+        //@ts-ignore
         enabled: this.tab.view.webContents.canGoForward(),
         click: (): void => this.tab.goForward(),
       })

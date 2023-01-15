@@ -1,16 +1,17 @@
-"use strict";
+import { EventEmitter } from "events";
+import prependFile from "prepend-file";
+import pp from "persist-path";
+import rp from "readline-promise";
+import fs from "fs";
 
-const EventEmitter = require("events");
-const prependFile = require("prepend-file");
-const ppath = require("persist-path")("Ferny");
-const readlPromise = require("readline-promise").default;
-const fs = require("fs");
+import { SaveFileUtility } from "../saveFileToJsonFolder";
+import { LoadFileUtility } from "../loadFileFromJsonFolder";
+import { FSUtility } from "../checkFileExists";
 
-const saveFileToJsonFolder = require("../saveFileToJsonFolder");
-const loadFileFromJsonFolder = require("../loadFileFromJsonFolder");
-const checkFileExists = require("../checkFileExists");
+import { HistoryItem } from "./HistoryItem";
 
-const HistoryItem = require("./HistoryItem");
+const ppath = pp("Ferny");
+const readlPromise = rp.default;
 
 interface IHistoryReadline {
   id: number;
@@ -20,10 +21,10 @@ interface IHistoryReadline {
 }
 
 class HistoryManager extends EventEmitter {
-  history = [];
-  historyContainer = null;
+  history: any[] = [];
+  historyContainer;
   historyCounter = 0;
-  historyLimiter = true;
+  historyLimiter;
 
   constructor(historyContainer: HTMLElement) {
     super();
@@ -79,7 +80,7 @@ class HistoryManager extends EventEmitter {
           ppath + "/json/history/history.json",
           JSON.stringify(Data) + "\n",
           (): void => {
-            saveFileToJsonFolder(
+            SaveFileUtility.saveFileToJsonFolder(
               "history",
               "history-counter",
               this.historyCounter
@@ -87,15 +88,17 @@ class HistoryManager extends EventEmitter {
           }
         );
       } catch (error: any) {
-        saveFileToJsonFolder("history", "history", JSON.stringify(Data)).then(
-          (): void => {
-            saveFileToJsonFolder(
-              "history",
-              "history-counter",
-              this.historyCounter
-            );
-          }
-        );
+        SaveFileUtility.saveFileToJsonFolder(
+          "history",
+          "history",
+          JSON.stringify(Data)
+        ).then((): void => {
+          SaveFileUtility.saveFileToJsonFolder(
+            "history",
+            "history-counter",
+            this.historyCounter
+          );
+        });
       }
     });
 
@@ -108,30 +111,32 @@ class HistoryManager extends EventEmitter {
   }
 
   loadHistory(count: number | null = null): void {
-    loadFileFromJsonFolder("history", "history-counter").then(
+    LoadFileUtility.loadFileFromJsonFolder("history", "history-counter").then(
       (historyCounter): void => {
         this.historyCounter = historyCounter;
       }
     );
 
-    checkFileExists(ppath + "/json/history/history.json").then((): void => {
-      this.historyContainer.innerHTML = "";
+    FSUtility.checkFileExists(ppath + "/json/history/history.json").then(
+      (): void => {
+        this.historyContainer.innerHTML = "";
 
-      const historyReadline = readlPromise.createInterface({
-        terminal: false,
-        input: fs.createReadStream(ppath + "/json/history/history.json"),
-      });
-      historyReadline.forEach((line: string, index: number): void => {
-        const obj: IHistoryReadline = JSON.parse(line);
-        if (count == null) {
-          this.appendHistoryItem(obj.id, obj.url, obj.time, obj.title);
-        } else {
-          if (index < count) {
+        const historyReadline = readlPromise.createInterface({
+          terminal: false,
+          input: fs.createReadStream(ppath + "/json/history/history.json"),
+        });
+        historyReadline.forEach((line: string, index: number): void => {
+          const obj: IHistoryReadline = JSON.parse(line);
+          if (count == null) {
             this.appendHistoryItem(obj.id, obj.url, obj.time, obj.title);
+          } else {
+            if (index < count) {
+              this.appendHistoryItem(obj.id, obj.url, obj.time, obj.title);
+            }
           }
-        }
-      });
-    });
+        });
+      }
+    );
   }
 
   askClearHistory(): void {
@@ -143,18 +148,22 @@ class HistoryManager extends EventEmitter {
   }
 
   clearHistory(): void {
-    saveFileToJsonFolder("history", "history-counter", 0).then((): void => {
-      this.historyCounter = 0;
-      saveFileToJsonFolder("history", "history", "").then((): void => {
-        this.history = [];
-        this.historyContainer.innerHTML = "";
-        this.emit("history-cleared");
-      });
-    });
+    SaveFileUtility.saveFileToJsonFolder("history", "history-counter", 0).then(
+      (): void => {
+        this.historyCounter = 0;
+        SaveFileUtility.saveFileToJsonFolder("history", "history", "").then(
+          (): void => {
+            this.history = [];
+            this.historyContainer.innerHTML = "";
+            this.emit("history-cleared");
+          }
+        );
+      }
+    );
   }
 
   deleteSelectedHistory(): void {
-    const arr = [];
+    const arr: any[] = [];
 
     for (let i = 0; i < this.history.length; i++) {
       if (this.history[i].isSelected()) {
@@ -166,40 +175,49 @@ class HistoryManager extends EventEmitter {
     }
 
     if (arr.length > 0) {
-      checkFileExists(ppath + "/json/history/history.json").then((): void => {
-        fs.readFile(ppath + "/json/history/history.json", (err, data) => {
-          const text = data.toString();
-          const lines = text.split("\n");
-          saveFileToJsonFolder("history", "history", "").then((): void => {
-            for (let i = 0; i < lines.length - 1; i++) {
-              const obj = JSON.parse(lines[i]);
-              if (arr.includes(obj.id)) {
-                continue;
+      FSUtility.checkFileExists(ppath + "/json/history/history.json").then(
+        (): void => {
+          fs.readFile(ppath + "/json/history/history.json", (err, data) => {
+            const text = data.toString();
+            const lines = text.split("\n");
+            SaveFileUtility.saveFileToJsonFolder("history", "history", "").then(
+              (): void => {
+                for (let i = 0; i < lines.length - 1; i++) {
+                  const obj = JSON.parse(lines[i]);
+                  if (arr.includes(obj.id)) {
+                    continue;
+                  }
+                  fs.appendFile(
+                    ppath + "/json/history/history.json",
+                    lines[i] + "\n",
+                    () => null
+                  );
+                }
               }
-              fs.appendFile(
-                ppath + "/json/history/history.json",
-                lines[i] + "\n"
-              );
-            }
+            );
           });
-        });
-      });
+        }
+      );
     }
   }
 
   setLimiter(bool: boolean): void {
     this.historyLimiter = bool;
     if (bool) {
+      //@ts-ignore
       document.getElementById("more-history-btn").style.display = "";
+      //@ts-ignore
       document.getElementById("collapse-history-btn").style.display = "none";
       this.loadHistory(16);
     } else {
+      //@ts-ignore
       document.getElementById("more-history-btn").style.display = "none";
+      //@ts-ignore
       document.getElementById("collapse-history-btn").style.display = "";
       this.loadHistory();
     }
   }
 }
 
-export {HistoryManager};
+export { HistoryManager };
 module.exports = { HistoryManager };

@@ -1,13 +1,9 @@
-"use strict";
-
 import { BrowserWindow } from "electron";
 
-const EventEmitter = require("events");
-const { Menu, MenuItem } = require("electron");
-
-const loadTabClosedModule = require("../loadTabClosed");
-
-const Tab = require("./Tab");
+import { EventEmitter } from "events";
+import { Menu, MenuItem } from "electron";
+import { LoadTabClosedUtility } from "../loadTabClosed";
+import { Tab } from "./Tab";
 
 class TabManager extends EventEmitter {
   left = 0;
@@ -15,15 +11,16 @@ class TabManager extends EventEmitter {
   top = 0;
   bottom = 0;
 
-  tabs = [];
+  tabs: any[] = [];
   tabCounter = 0;
-  window = null;
-  appPath = null;
+  window;
+  appPath;
 
   homePage = "https://google.com";
   tabClosedAction = "overlay";
 
   tabGroup: number | string = 0;
+  theme: any;
 
   constructor(window: BrowserWindow, appPath: string, theme: any) {
     super();
@@ -37,7 +34,7 @@ class TabManager extends EventEmitter {
     this.top = 75;
     this.bottom = 0;
 
-    loadTabClosedModule().then((tabClosed) => {
+    LoadTabClosedUtility.loadTabClosed().then((tabClosed) => {
       this.setTabClosedAction(tabClosed);
     });
   }
@@ -57,7 +54,7 @@ class TabManager extends EventEmitter {
       this.window,
       id,
       this.appPath,
-      this.tabGroup,
+      String(this.tabGroup),
       this.theme
     );
 
@@ -116,7 +113,7 @@ class TabManager extends EventEmitter {
     });
 
     tab.on("close-to-the-right", (position: number): void => {
-      const closableTabs = [];
+      const closableTabs: any[] = [];
       for (let i = this.tabs.length - 1; i >= 0; i--) {
         if (
           this.tabs[i].getGroup() == this.tabGroup &&
@@ -129,7 +126,7 @@ class TabManager extends EventEmitter {
     });
 
     tab.on("close-others", (id: number): void => {
-      const closableTabs = [];
+      const closableTabs: any[] = [];
       for (let i = this.tabs.length - 1; i >= 0; i--) {
         if (
           this.tabs[i].getGroup() == this.tabGroup &&
@@ -170,7 +167,7 @@ class TabManager extends EventEmitter {
     });
 
     tab.on("move-right", (id: number, position: number): void => {
-      let rightTab = null;
+      let rightTab: any = null;
 
       this.tabs.forEach((item) => {
         if (item.getPosition() == position + 2) {
@@ -466,7 +463,7 @@ class TabManager extends EventEmitter {
   }
 
   closeAllTabs(): void {
-    const closableTabs = [];
+    const closableTabs: any[] = [];
 
     for (let i = this.tabs.length - 1; i >= 0; i--) {
       if (this.tabs[i].getGroup() == this.tabGroup) {

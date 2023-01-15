@@ -9,13 +9,14 @@ import { ImageItemListBuilder } from "./ImageItemListBuilder";
 import { ImagePathUtility } from "../extToImagePath";
 import { TextItemListBuilder } from "./TextItemListBuilder";
 import { PageItemListBuilder } from "./PageItemListBuilder";
+import { ISeparator, TabItem } from "./TabItem";
 
 class Tab extends EventEmitter {
-  id = null;
-  view = null;
-  window = null;
-  position = null;
-  group = null;
+  id;
+  view: BrowserView;
+  window;
+  position;
+  group;
   incognito = false;
   appPath = "";
 
@@ -89,6 +90,7 @@ class Tab extends EventEmitter {
           id: this.id,
           title: fileName,
         });
+        //@ts-ignore
         this.window.webContents.send("tabRenderer-setTabIcon", {
           id: this.id,
           icon: ImagePathUtility.extToImagePath(fileExtension(url)),
@@ -201,7 +203,7 @@ class Tab extends EventEmitter {
     this.view.webContents.on(
       "context-menu",
       (event, params: Record<string, any>): void => {
-        let rmbMenuItems = [];
+        let rmbMenuItems: (TabItem | ISeparator)[] = [];
 
         if (params.isEditable) {
           const editableItemListBuilder = new EditableItemListBuilder(
@@ -252,15 +254,17 @@ class Tab extends EventEmitter {
           }
         }
 
-        rmbMenuItems.push({
-          label: "Inspect element",
-          icon: this.appPath + "/assets/imgs/icons16/inspect.png",
-          click: (): void => {
-            this.inspectElement(params.x, params.y);
-          },
-        });
+        rmbMenuItems.push(
+          new TabItem({
+            label: "Inspect element",
+            icon: this.appPath + "/assets/imgs/icons16/inspect.png",
+            click: (): void => {
+              this.inspectElement(params.x, params.y);
+            },
+          })
+        );
 
-        const rmbMenu = Menu.buildFromTemplate(rmbMenuItems);
+        const rmbMenu = Menu.buildFromTemplate(rmbMenuItems as any);
         rmbMenu.popup(this.window);
       }
     );
@@ -270,16 +274,11 @@ class Tab extends EventEmitter {
     return this.id;
   }
 
-  setBounds(
-    x: number | null,
-    y: number | null,
-    width: number,
-    height: number
-  ): void {
+  setBounds(x: number, y: number, width: number, height: number): void {
     this.view.setBounds({ x, y, width, height });
   }
 
-  inspectElement(x: number | null, y: number | null): void {
+  inspectElement(x: number, y: number): void {
     this.view.webContents.inspectElement(x, y);
   }
 
@@ -298,7 +297,7 @@ class Tab extends EventEmitter {
   }
 
   close(): void {
-    this.view.destroy();
+    (this.view as any).destroy();
     this.window.webContents.send("tabRenderer-closeTab", this.id);
 
     this.emit("close", this);
@@ -522,7 +521,7 @@ class Tab extends EventEmitter {
       submenu: [],
     });
 
-    this.view.webContents.history.forEach((value): void => {
+    (this.view.webContents as any).history.forEach((value): void => {
       let subtext = value;
       if (subtext.length > 30) {
         subtext = subtext.substring(0, 30) + "...";
@@ -542,7 +541,7 @@ class Tab extends EventEmitter {
         },
         icon: this.appPath + "/imgs/icons16/link.png",
       });
-      history.submenu.append(historyItem);
+      history.submenu?.append(historyItem);
     });
 
     tabMenu.insert(10, history);
@@ -645,7 +644,7 @@ class Tab extends EventEmitter {
   popupTabHistory(): void {
     const tabHistory = Menu.buildFromTemplate([]);
 
-    this.view.webContents.history.forEach((value) => {
+    (this.view.webContents as any).history.forEach((value) => {
       let subtext = value;
       if (subtext.length > 30) {
         subtext = subtext.substring(0, 30) + "...";

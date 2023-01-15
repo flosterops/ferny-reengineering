@@ -1,6 +1,4 @@
-"use strict";
-
-const BlankNotification = require("./BlankNotification");
+import { BlankNotification } from "./BlankNotification";
 
 class TextNotification extends BlankNotification {
   text = "";
@@ -23,5 +21,5 @@ class TextNotification extends BlankNotification {
   }
 }
 
-export {};
-module.exports = TextNotification;
+export {TextNotification};
+module.exports = { TextNotification };

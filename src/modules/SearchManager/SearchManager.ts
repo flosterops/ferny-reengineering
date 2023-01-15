@@ -6,11 +6,11 @@ import autoSuggest from "suggestion";
 import { LoadSearchEngineUtility } from "../loadSearchEngine";
 
 class SearchManager extends EventEmitter {
-  searchInput = null;
-  searchSuggest = null;
-  searchSuggestContainer = null;
-  searchEngines = null;
-  clearSearchButton = null;
+  searchInput;
+  searchSuggest;
+  searchSuggestContainer;
+  searchEngines;
+  clearSearchButton;
 
   constructor(
     searchInput: HTMLInputElement,
@@ -31,7 +31,7 @@ class SearchManager extends EventEmitter {
 
     Array.from(engines).forEach((item: any): void => {
       (item as any).onclick = () => {
-        this.searchWith(null, (item as any).name);
+        this.searchWith("", (item as any).name);
       };
     });
 

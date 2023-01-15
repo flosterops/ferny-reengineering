@@ -1,30 +1,21 @@
-const EventEmitter = require("events");
-const { ipcRenderer } = require("electron");
-const GetAvColor = require("color.js");
-const parseUrl = require("parse-url");
+import EventEmitter from "events";
+import { ipcRenderer } from "electron";
+import GetAvColor from "color.js";
+import parseUrl from "parse-url";
 
-const rgbToRgbaString = require("../rgbToRgbaString");
+import { ColorsUtility } from "../rgbToRgbaString";
 
 class TabRenderer extends EventEmitter {
-  tabContainer = null;
-
-  backButton = null;
-
-  forwardButton = null;
-
-  reloadButton = null;
-
-  stopButton = null;
-
-  addressBar = null;
-
-  targetURL = null;
-
-  tabDrag = null;
-
-  bookmarkButton = null;
-
-  bookmarkedButton = null;
+  tabContainer;
+  backButton;
+  forwardButton;
+  reloadButton;
+  stopButton;
+  addressBar;
+  targetURL;
+  tabDrag;
+  bookmarkButton;
+  bookmarkedButton;
 
   constructor() {
     super();
@@ -75,7 +66,7 @@ class TabRenderer extends EventEmitter {
     tab.ondragover = (event) => {
       event.preventDefault();
     };
-    tab.ondrop = (event) => {
+    tab.ondrop = (event: any) => {
       event.preventDefault();
       const textData = event.dataTransfer.getData("Text");
       if (textData) {
@@ -91,6 +82,7 @@ class TabRenderer extends EventEmitter {
       ipcRenderer.send("tabManager-requestTabPreview", id);
     };
     tab.onmouseleave = () => {
+      //@ts-ignore
       document.querySelector("#tab-preview").classList.remove("show");
     };
     tab.oncontextmenu = () => {
@@ -157,7 +149,7 @@ class TabRenderer extends EventEmitter {
 
   setTabIcon(id: string, icon: string): void {
     const tab = this.getTabById(id);
-    const img = tab.querySelector<HTMLImageElement>(".tabman-tab-icon");
+    const img: any = tab.querySelector<HTMLImageElement>(".tabman-tab-icon");
     img.src = icon;
 
     this.updateTabColor(tab);
@@ -172,9 +164,9 @@ class TabRenderer extends EventEmitter {
       const color = new GetAvColor(img);
       color.mostUsed((result) => {
         if (Array.isArray(result)) {
-          tab.style.backgroundColor = rgbToRgbaString(result[0]);
+          tab.style.backgroundColor = ColorsUtility.rgbToRgbaString(result[0]);
         } else {
-          tab.style.backgroundColor = rgbToRgbaString(result);
+          tab.style.backgroundColor = ColorsUtility.rgbToRgbaString(result);
         }
       });
     }
@@ -201,12 +193,16 @@ class TabRenderer extends EventEmitter {
     if (url) {
       this.addressBar.value = url;
       if (parseUrl(url).protocol == "https") {
+        //@ts-ignore
         document.querySelector<HTMLElement>("#secure-icon").style.display = "";
+        //@ts-ignore
         document.querySelector<HTMLElement>("#not-secure-icon").style.display =
           "none";
       } else {
+        //@ts-ignore
         document.querySelector<HTMLElement>("#secure-icon").style.display =
           "none";
+        //@ts-ignore
         document.querySelector<HTMLElement>("#not-secure-icon").style.display =
           "";
       }
@@ -231,6 +227,7 @@ class TabRenderer extends EventEmitter {
   }
 
   hideTabPreview(): void {
+    //@ts-ignore
     document
       .querySelector<HTMLElement>("#tab-preview")
       .classList.remove("show");
@@ -245,8 +242,8 @@ class TabRenderer extends EventEmitter {
   }
 
   updateTabsPositions(): void {
-    const tabs = this.tabContainer.getElementsByClassName("tabman-tab");
-    const arr = [];
+    const tabs: any = this.tabContainer.getElementsByClassName("tabman-tab");
+    const arr: any[] = [];
     for (let i = 0; i < tabs.length; i++) {
       if (!tabs[i].classList.contains("invisible")) {
         arr.push(tabs[i].name);
@@ -259,7 +256,7 @@ class TabRenderer extends EventEmitter {
 
   showTabList(): void {
     const tabs = this.tabContainer.childNodes;
-    const arr = [];
+    const arr: any[] = [];
     tabs.forEach((item) => {
       if (!item.classList.contains("invisible")) {
         arr.push({
@@ -309,14 +306,16 @@ class TabRenderer extends EventEmitter {
   showTabPreview(id: string, title: string, url: string): void {
     const tab = this.getTabById(id);
 
-    const tabPreviewElement =
+    const tabPreviewElement: any =
       document.querySelector<HTMLElement>("#tab-preview");
 
     tabPreviewElement.classList.add("show");
     tabPreviewElement.style.left =
       tab.offsetLeft - this.tabContainer.scrollLeft + 4 + "px";
 
+    //@ts-ignore
     document.querySelector<HTMLElement>("#tab-preview-title").innerHTML = title;
+    //@ts-ignore
     document.querySelector<HTMLElement>("#tab-preview-url").innerHTML = url;
   }
 }

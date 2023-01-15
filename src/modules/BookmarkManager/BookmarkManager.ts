@@ -1,15 +1,16 @@
-"use strict";
+import { EventEmitter } from "events";
+import Dragula from "dragula";
+import fs from "fs";
+import pp from "persist-path";
+import rp from "readline-promise";
+import parseUrl from "parse-url";
 
-const EventEmitter = require("events");
-const Dragula = require("dragula");
-const fs = require("fs");
-const ppath = require("persist-path")("Ferny");
-const readlPromise = require("readline-promise").default;
-const parseUrl = require("parse-url");
+import { SaveFileUtility } from "../saveFileToJsonFolder";
+import { LoadFileUtility } from "../loadFileFromJsonFolder";
+import { FSUtility } from "../checkFileExists";
 
-const saveFileToJsonFolder = require("../saveFileToJsonFolder");
-const loadFileFromJsonFolder = require("../loadFileFromJsonFolder");
-const checkFileExists = require("../checkFileExists");
+const ppath = pp("Ferny");
+const readlPromise = rp.default;
 
 interface IBookmarkReadline {
   id: number;
@@ -19,18 +20,18 @@ interface IBookmarkReadline {
   folder: number;
 }
 
-const Folder = require("./Folder.js");
-const Bookmark = require("./Bookmark.js");
+import { Folder } from "./Folder";
+import { Bookmark } from "./Bookmark";
 
 class BookmarkManager extends EventEmitter {
-  folderContainer = null;
+  folderContainer;
   folderCounter = 0;
-  folders = [];
+  folders: any[] = [];
   bookmarkCounter = 0;
   editMode = false;
-  folderDrag = null;
-  defaultFolder = null;
-  bookmarkDrag = null;
+  folderDrag: any;
+  defaultFolder: any;
+  bookmarkDrag: any;
 
   constructor(folderContainer: HTMLElement) {
     super();
@@ -253,9 +254,11 @@ class BookmarkManager extends EventEmitter {
 
       this.folderContainer.classList.remove("movable");
 
+      //@ts-ignore
       document.querySelector<HTMLButtonElement>(
         "#bookmarks-arrange-btn"
       ).style.display = "none";
+      //@ts-ignore
       document.querySelector<HTMLButtonElement>(
         "#bookmarks-move-btn"
       ).style.display = "";
@@ -280,9 +283,11 @@ class BookmarkManager extends EventEmitter {
 
       this.folderContainer.classList.add("movable");
 
+      //@ts-ignore
       document.querySelector<HTMLButtonElement>(
         "#bookmarks-arrange-btn"
       ).style.display = "";
+      //@ts-ignore
       document.querySelector<HTMLButtonElement>(
         "#bookmarks-move-btn"
       ).style.display = "none";
@@ -292,38 +297,43 @@ class BookmarkManager extends EventEmitter {
   }
 
   loadFromStorage(): void {
-    loadFileFromJsonFolder("bookmarks", "folder-counter").then(
+    LoadFileUtility.loadFileFromJsonFolder("bookmarks", "folder-counter").then(
       (folderCounter: any): void => {
         this.folderCounter = folderCounter;
       }
     );
-    loadFileFromJsonFolder("bookmarks", "bookmark-counter").then(
-      (bookmarkCounter: any): void => {
-        this.bookmarkCounter = bookmarkCounter;
-      }
-    );
+    LoadFileUtility.loadFileFromJsonFolder(
+      "bookmarks",
+      "bookmark-counter"
+    ).then((bookmarkCounter: any): void => {
+      this.bookmarkCounter = bookmarkCounter;
+    });
 
     const foldersPromise = new Promise((resolve): void => {
-      checkFileExists(ppath + "/json/bookmarks/folders.json").then(() => {
-        loadFileFromJsonFolder("bookmarks", "folders").then((data) => {
-          const lines = data.toString().split("\n");
-          for (let i = 0; i < lines.length - 1; i++) {
-            const obj = JSON.parse(lines[i]);
-            if (obj.id != -1) {
-              this.appendFolder(
-                new Folder(obj.id, obj.name, true, obj.position)
-              );
-            } else {
-              this.defaultFolder.setPosition(obj.position);
+      FSUtility.checkFileExists(ppath + "/json/bookmarks/folders.json").then(
+        () => {
+          LoadFileUtility.loadFileFromJsonFolder("bookmarks", "folders").then(
+            (data) => {
+              const lines = data.toString().split("\n");
+              for (let i = 0; i < lines.length - 1; i++) {
+                const obj = JSON.parse(lines[i]);
+                if (obj.id != -1) {
+                  this.appendFolder(
+                    new Folder(obj.id, obj.name, true, obj.position)
+                  );
+                } else {
+                  this.defaultFolder.setPosition(obj.position);
+                }
+              }
+              resolve(true);
             }
-          }
-          resolve(true);
-        });
-      });
+          );
+        }
+      );
     });
 
     foldersPromise.then((): void => {
-      checkFileExists(ppath + "/json/bookmarks/bookmarks.json").then(
+      FSUtility.checkFileExists(ppath + "/json/bookmarks/bookmarks.json").then(
         (): void => {
           const bookmarksReadline = readlPromise.createInterface({
             terminal: false,
@@ -343,33 +353,18 @@ class BookmarkManager extends EventEmitter {
   }
 
   saveFolders(): void {
-    saveFileToJsonFolder("bookmarks", "folder-counter", this.folderCounter);
-    saveFileToJsonFolder("bookmarks", "folders", "").then((): void => {
-      for (let i = 0; i < this.folders.length; i++) {
-        fs.appendFile(
-          ppath + "/json/bookmarks/folders.json",
-          this.folders[i].toString() + "\n",
-          (err): void => {
-            if (err) {
-              throw err;
-            }
-          }
-        );
-      }
-    });
-  }
-
-  saveBookmarks(): void {
-    saveFileToJsonFolder("bookmarks", "bookmark-counter", this.bookmarkCounter);
-    saveFileToJsonFolder("bookmarks", "bookmarks", "").then((): void => {
-      for (let i = 0; i < this.folders.length; i++) {
-        for (let j = 0; j < this.folders[i].getBookmarks().length; j++) {
-          const bookmark = this.folders[i].getBookmarks()[j].getData();
-          bookmark.folder = this.folders[i].getId();
+    SaveFileUtility.saveFileToJsonFolder(
+      "bookmarks",
+      "folder-counter",
+      this.folderCounter
+    );
+    SaveFileUtility.saveFileToJsonFolder("bookmarks", "folders", "").then(
+      (): void => {
+        for (let i = 0; i < this.folders.length; i++) {
           fs.appendFile(
-            ppath + "/json/bookmarks/bookmarks.json",
-            JSON.stringify(bookmark) + "\n",
-            (err) => {
+            ppath + "/json/bookmarks/folders.json",
+            this.folders[i].toString() + "\n",
+            (err): void => {
               if (err) {
                 throw err;
               }
@@ -377,7 +372,34 @@ class BookmarkManager extends EventEmitter {
           );
         }
       }
-    });
+    );
+  }
+
+  saveBookmarks(): void {
+    SaveFileUtility.saveFileToJsonFolder(
+      "bookmarks",
+      "bookmark-counter",
+      this.bookmarkCounter
+    );
+    SaveFileUtility.saveFileToJsonFolder("bookmarks", "bookmarks", "").then(
+      (): void => {
+        for (let i = 0; i < this.folders.length; i++) {
+          for (let j = 0; j < this.folders[i].getBookmarks().length; j++) {
+            const bookmark = this.folders[i].getBookmarks()[j].getData();
+            bookmark.folder = this.folders[i].getId();
+            fs.appendFile(
+              ppath + "/json/bookmarks/bookmarks.json",
+              JSON.stringify(bookmark) + "\n",
+              (err) => {
+                if (err) {
+                  throw err;
+                }
+              }
+            );
+          }
+        }
+      }
+    );
   }
 
   checkIfBookmarked(url: string): void {
@@ -424,5 +446,5 @@ class BookmarkManager extends EventEmitter {
   }
 }
 
-export {BookmarkManager};
+export { BookmarkManager };
 module.exports = { BookmarkManager };

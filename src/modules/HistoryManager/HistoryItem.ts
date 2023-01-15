@@ -1,23 +1,21 @@
-"use strict";
+import EventEmitter from "events";
+import GetAvColor from "color.js";
+import { ipcRenderer, clipboard } from "electron";
+import parsePath from "parse-path";
+import fileExtension from "file-extension";
 
-const EventEmitter = require("events");
-const GetAvColor = require("color.js");
-const { ipcRenderer, clipboard } = require("electron");
-const parsePath = require("parse-path");
-const fileExtension = require("file-extension");
-
-const extToImagePath = require("../extToImagePath");
-const rgbToRgbaString = require("../rgbToRgbaString");
-const epochToDate = require("../epochToDate");
-const epochToTime = require("../epochToTime");
+import { ImagePathUtility } from "../extToImagePath";
+import { ColorsUtility } from "../rgbToRgbaString";
+import { DateUtility } from "../epochToDate";
+import { TimeUtility } from "../epochToTime";
 
 class HistoryItem extends EventEmitter {
-  history = [];
-  node: HTMLButtonElement | null = null;
-  url = null;
-  id = null;
-  time = null;
-  title = null;
+  history: any[] = [];
+  node: HTMLButtonElement;
+  url;
+  id;
+  time;
+  title;
 
   constructor(id: number, url: string, time: number, title: string) {
     super();
@@ -34,9 +32,9 @@ class HistoryItem extends EventEmitter {
     this.node.innerHTML = `
             <label class='history-title'>${title}</label>
             <label class='history-url'>${url}</label>
-            <label class="history-time">${epochToDate(time)} / ${epochToTime(
-      time
-    )}</label>
+            <label class="history-time">${DateUtility.epochToDate(
+              time
+            )} / ${TimeUtility.epochToTime(time)}</label>
         `;
     this.node.onclick = (): void => {
       this.open();
@@ -54,7 +52,7 @@ class HistoryItem extends EventEmitter {
     const historyIcon = document.createElement("img");
     historyIcon.classList.add("history-icon");
     if (parsePath(url).protocol === "file") {
-      historyIcon.src = extToImagePath(fileExtension(url));
+      historyIcon.src = ImagePathUtility.extToImagePath(fileExtension(url));
       const fileName = url.replace(/^.*[\\\/]/, "");
       this.setTitle(fileName);
     } else {
@@ -65,7 +63,7 @@ class HistoryItem extends EventEmitter {
         this.updateHistoryIconColor();
       };
       if (title.substring(0, 4) == "http") {
-        this.loadTitle().then((text: string): void => {
+        this.loadTitle().then((text: any): void => {
           this.setTitle(text);
         });
       }
@@ -93,15 +91,16 @@ class HistoryItem extends EventEmitter {
   }
 
   updateHistoryIconColor(): void {
-    const icon = this.node.querySelector<HTMLButtonElement>(".history-icon");
+    const icon: any =
+      this.node.querySelector<HTMLButtonElement>(".history-icon");
     const color = new GetAvColor(icon);
     color.mostUsed((result) => {
       if (Array.isArray(result)) {
         (icon.parentNode as HTMLElement).style.backgroundColor =
-          rgbToRgbaString(result[0]);
+          ColorsUtility.rgbToRgbaString(result[0]);
       } else {
         (icon.parentNode as HTMLElement).style.backgroundColor =
-          rgbToRgbaString(result);
+          ColorsUtility.rgbToRgbaString(result);
       }
     });
   }
@@ -150,6 +149,7 @@ class HistoryItem extends EventEmitter {
   }
 
   isSelected(): boolean {
+    //@ts-ignore
     return this.node.querySelector<HTMLInputElement>(".history-checkbox")
       .checked;
   }
@@ -159,5 +159,5 @@ class HistoryItem extends EventEmitter {
   }
 }
 
-export {};
-module.exports = HistoryItem;
+export { HistoryItem };
+module.exports = { HistoryItem };
