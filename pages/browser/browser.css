@@ -32,7 +32,7 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-	box-sizing: border-box;
+  box-sizing: border-box;
   -webkit-user-drag: none;
 
   font-family: OpenSans;
@@ -187,12 +187,14 @@
   vertical-align: middle;
 }
 
-#bookmark-btn, #bookmarked-btn {
+#bookmark-btn,
+#bookmarked-btn {
   margin-left: -3px;
-  border-radius:  0 var(--px-radius) var(--px-radius) 0;
+  border-radius: 0 var(--px-radius) var(--px-radius) 0;
 }
 
-#secure-icon, #not-secure-icon {
+#secure-icon,
+#not-secure-icon {
   border: 1px dashed var(--color-border);
   vertical-align: middle;
   display: inline-block;
@@ -202,7 +204,8 @@
   height: 32px;
 }
 
-#secure-icon img, #not-secure-icon img {
+#secure-icon img,
+#not-secure-icon img {
   padding: 7px;
 }
 
@@ -291,7 +294,8 @@
   grid-column: 1;
 }
 
-#window-controls #max-btn, #window-controls #restore-btn {
+#window-controls #max-btn,
+#window-controls #restore-btn {
   grid-column: 2;
 }
 
@@ -300,11 +304,12 @@
 }
 
 #window-controls #close-btn:hover {
-  background-color: #E81022;
+  background-color: #e81022;
   color: white;
 }
 
-body.blur #window-controls .button, body.blur .tabman .theme-icon {
+body.blur #window-controls .button,
+body.blur .tabman .theme-icon {
   opacity: var(--opacity-over);
 }
 

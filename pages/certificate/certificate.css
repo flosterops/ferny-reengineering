@@ -5,7 +5,7 @@
   src: url(../../assets/fonts/OpenSans-Semibold.ttf);
 }
 
-:root{
+:root {
   --color-red: rgb(255, 63, 52);
   --color-green: rgb(11, 232, 129);
   --color-blue: rgb(15, 188, 249);
@@ -32,7 +32,7 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-	box-sizing: border-box;
+  box-sizing: border-box;
   -webkit-user-drag: none;
 
   font-family: OpenSans;
@@ -74,7 +74,7 @@ label {
 
 /* Input */
 
-input[type=text] {
+input[type="text"] {
   width: calc(100% - 4px);
 }
 

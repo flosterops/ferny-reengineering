@@ -1,4 +1,4 @@
-input[type=radio] {
+input[type="radio"] {
   margin-left: 4px;
   margin-top: 0;
   -webkit-appearance: none;
@@ -14,15 +14,15 @@ input[type=radio] {
   float: right;
 }
 
-input[type=radio]:hover {
+input[type="radio"]:hover {
   background-color: var(--color-second);
 }
 
-input[type=radio]:active {
+input[type="radio"]:active {
   background-color: var(--color-titlebar);
 }
 
-input[type=radio]::after {
+input[type="radio"]::after {
   position: absolute;
   left: 4px;
   top: 4px;
@@ -35,14 +35,14 @@ input[type=radio]::after {
   border: 1px solid var(--color-border);
 }
 
-input[type=radio]:active::after {
+input[type="radio"]:active::after {
   background-color: var(--color-back);
 }
 
-input[type=radio]:checked::after {
+input[type="radio"]:checked::after {
   background-color: var(--color-top);
 }
 
-input[type=radio]:focus {
+input[type="radio"]:focus {
   box-shadow: var(--shadow-focus);
 }

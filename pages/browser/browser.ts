@@ -1,54 +1,44 @@
-"use strict";
+import { ipcRenderer } from "electron";
+import dragula from "dragula";
 
-// Require
+import { ApplyThemeUtility } from "../../src/modules/applyTheme";
+import { LoadThemeUtility } from "../../src/modules/loadTheme";
+import { ApplyWinControlsUtility } from "../../src/modules/applyWinControls";
+import { LoadWinControlsUtility } from "../../src/modules/loadWinControls";
 
-const { ipcRenderer } = require("electron");
-const dragula = require("dragula");
-
-const applyTheme = require("../../modules/applyTheme");
-const loadTheme = require("../../modules/loadTheme");
-const applyWinControls = require("../../modules/applyWinControls");
-const loadWinControlsModule = require("../../modules/loadWinControls");
-
-const NotificationManager = require("../../modules/NotificationManager/NotificationManager");
-const TabRenderer = require("../../modules/TabManager/TabRenderer");
-
-// Functions themes
+import { NotificationManager } from "../../src/modules/NotificationManager/NotificationManager";
+import { TabRenderer } from "../../src/modules/TabManager/TabRenderer";
 
 function updateTheme() {
-  loadTheme().then(({theme, dark}) => {
-    applyTheme(theme, dark);
+  LoadThemeUtility.loadTheme().then(({ theme, dark }) => {
+    ApplyThemeUtility.applyTheme(theme, dark);
   });
 }
 
-// Notifications
-
-const notificationManager = new NotificationManager(document.querySelector<HTMLElement>("#notif-panel"));
+const notificationManager = new NotificationManager(
+  document.querySelector<HTMLElement>("#notif-panel")
+);
 
 notificationManager.on("notif-added", () => {
   updateTheme();
 });
 
-// Tabs
-
 const tabRenderer = new TabRenderer();
 
 const tabDrag = dragula([tabRenderer.getTabContainer()], {
-  direction: "horizontal"
+  direction: "horizontal",
 });
 
-tabDrag.on("drag", function(el, source) {
+tabDrag.on("drag", function (el) {
   const div = el.getElementsByClassName("tabman-tab-preview")[0];
-  if(div != null) {
+  if (div != null) {
     div.parentNode.removeChild(div);
   }
 });
 
-tabDrag.on("drop", function(el, target, source, sibling) {
+tabDrag.on("drop", function () {
   tabRenderer.updateTabsPositions();
 });
-
-// Functions
 
 function prevDef(event) {
   event.preventDefault();
@@ -75,7 +65,7 @@ function clearDownloads() {
 }
 
 function clearHistory() {
-  ipcRenderer.send("overlay-clearHistory")
+  ipcRenderer.send("overlay-clearHistory");
 }
 
 function cancelUpdate() {
@@ -88,23 +78,23 @@ function checkForUpdates() {
 }
 
 function exitAppAnyway() {
-  ipcRenderer.send('request-exit-app-anyway');
+  ipcRenderer.send("request-exit-app-anyway");
 }
 
 function maximizeWindow() {
-  ipcRenderer.send('request-maximize-window');
+  ipcRenderer.send("request-maximize-window");
 }
 
 function minimizeWindow() {
-  ipcRenderer.send('request-minimize-window');
+  ipcRenderer.send("request-minimize-window");
 }
 
 function restoreWindow() {
-  ipcRenderer.send('request-unmaximize-window');
+  ipcRenderer.send("request-unmaximize-window");
 }
 
 function closeWindow() {
-  ipcRenderer.send('request-quit-app');
+  ipcRenderer.send("request-quit-app");
 }
 
 function zoomIn() {
@@ -120,7 +110,7 @@ function zoomToActualSize() {
 }
 
 function focusSearch() {
-  const s = document.getElementById('search-input');
+  const s = document.getElementById("search-input");
   s.focus();
   (s as any).select();
 }
@@ -140,8 +130,6 @@ function popupTabHistory() {
 function popupHomePageOptions() {
   ipcRenderer.send("main-popupHomePageOptions");
 }
-
-// Functions overlay
 
 function showOverlay() {
   ipcRenderer.send("overlay-show");
@@ -163,15 +151,13 @@ function showOverlayMenu() {
   ipcRenderer.send("overlay-showMenu");
 }
 
-// Functions tab manager
-
 function newTab() {
   ipcRenderer.send("tabManager-newTab");
 }
 
 function newBackgroundTab() {
   event.preventDefault();
-  if((event as any).which === 2) {
+  if ((event as any).which === 2) {
     ipcRenderer.send("tabManager-newBackgroundTab");
   }
 }
@@ -205,9 +191,13 @@ function newTabDrop(event) {
   const textData = event.dataTransfer.getData("Text");
   if (textData) {
     ipcRenderer.send("tabManager-addTab", "file://" + textData, false);
-  } else if(event.dataTransfer.files.length > 0) {
-    for(let i = 0; i < event.dataTransfer.files.length; i++) {
-      ipcRenderer.send("tabManager-addTab", "file://" + event.dataTransfer.files[i].path, false);
+  } else if (event.dataTransfer.files.length > 0) {
+    for (let i = 0; i < event.dataTransfer.files.length; i++) {
+      ipcRenderer.send(
+        "tabManager-addTab",
+        "file://" + event.dataTransfer.files[i].path,
+        false
+      );
     }
   }
 }
@@ -225,13 +215,11 @@ function goHome() {
   ipcRenderer.send("tabManager-goHome");
 }
 
-// Functions find in page
-
 function findNext() {
   document.getElementById("find-container").classList.add("show");
   const findInput = document.getElementById("find-input");
   findInput.focus();
-  if((findInput as any).value.length > 0) {
+  if ((findInput as any).value.length > 0) {
     ipcRenderer.send("tabManager-findInPage", (findInput as any).value, true);
   }
 }
@@ -240,14 +228,14 @@ function findPrev() {
   document.getElementById("find-container").classList.add("show");
   const findInput = document.getElementById("find-input");
   findInput.focus();
-  if((findInput as any).value.length > 0) {
+  if ((findInput as any).value.length > 0) {
     ipcRenderer.send("tabManager-findInPage", (findInput as any).value, false);
   }
 }
 
 function findInputKeyUp() {
   const findInput = document.getElementById("find-input");
-  if((findInput as any).value.length <= 0) {
+  if ((findInput as any).value.length <= 0) {
     ipcRenderer.send("tabManager-stopFindInPage", false);
   }
 }
@@ -256,8 +244,6 @@ function closeFindPanel() {
   document.getElementById("find-container").classList.remove("show");
   ipcRenderer.send("tabManager-stopFindInPage", true);
 }
-
-// IPS Find in page
 
 ipcRenderer.on("findInPage-findNext", (event) => {
   findNext();
@@ -268,15 +254,13 @@ ipcRenderer.on("findInPage-findPrev", (event) => {
 });
 
 ipcRenderer.on("findInPage-updateFindInPage", (event) => {
-  if(document.getElementById("find-container").classList.contains("show")) {
+  if (document.getElementById("find-container").classList.contains("show")) {
     const findInput = document.getElementById("find-input");
-    if((findInput as any).value.length > 0) {
+    if ((findInput as any).value.length > 0) {
       findNext();
     }
   }
 });
-
-// IPS notifications
 
 ipcRenderer.on("notificationManager-addStatusNotif", (event, arg) => {
   notificationManager.addStatusNotif(arg.text, arg.type);
@@ -290,46 +274,40 @@ ipcRenderer.on("notificationManager-refreshZoomNotif", (event, zoomFactor) => {
   notificationManager.refreshZoomNotif(zoomFactor);
 });
 
-// IPC console
-
 ipcRenderer.on("console-log", (event, text) => {
   console.log(text);
 });
 
-// IPS window
-
-ipcRenderer.on("action-page-focussearch", (event, arg) => {
+ipcRenderer.on("action-page-focussearch", () => {
   focusSearch();
 });
 
-ipcRenderer.on("window-updateTheme", (event) => {
+ipcRenderer.on("window-updateTheme", () => {
   updateTheme();
 });
 
-ipcRenderer.on("window-blur", (event) => {
+ipcRenderer.on("window-blur", () => {
   document.body.classList.add("blur");
 });
 
-ipcRenderer.on("window-focus", (event) => {
+ipcRenderer.on("window-focus", () => {
   document.body.classList.remove("blur");
 });
 
-ipcRenderer.on("window-maximize", (event) => {
+ipcRenderer.on("window-maximize", () => {
   document.getElementById("drag-zone").classList.add("maximize");
   document.getElementById("max-btn").style.display = "none";
   document.getElementById("restore-btn").style.display = "";
 });
 
-ipcRenderer.on("window-unmaximize", (event) => {
+ipcRenderer.on("window-unmaximize", () => {
   document.getElementById("drag-zone").classList.remove("maximize");
   document.getElementById("max-btn").style.display = "";
   document.getElementById("restore-btn").style.display = "none";
 });
 
-// IPC overlay
-
-ipcRenderer.on('overlay-toggleButton', (event, bool) => {
-  if(bool) {
+ipcRenderer.on("overlay-toggleButton", (event, bool) => {
+  if (bool) {
     document.getElementById("overlay-btn").classList.add("active");
     document.getElementById("titlebar").style.display = "none";
   } else {
@@ -338,10 +316,8 @@ ipcRenderer.on('overlay-toggleButton', (event, bool) => {
   }
 });
 
-// IPC tab render
-
 ipcRenderer.on("tabRenderer-addTab", (event, arg) => {
-  tabRenderer.addTab(arg.id, arg.url, arg.active)
+  tabRenderer.addTab(arg.id, arg.url, arg.active);
 });
 
 ipcRenderer.on("tabRenderer-activateTab", (event, id) => {
@@ -361,7 +337,11 @@ ipcRenderer.on("tabRenderer-setTabIcon", (event, arg) => {
 });
 
 ipcRenderer.on("tabRenderer-updateNavigationButtons", (event, arg) => {
-  tabRenderer.updateNavigationButtons(arg.canGoBack, arg.canGoForward, arg.isLoading);
+  tabRenderer.updateNavigationButtons(
+    arg.canGoBack,
+    arg.canGoForward,
+    arg.isLoading
+  );
 });
 
 ipcRenderer.on("tabRenderer-updateAddressBar", (event, url) => {
@@ -391,11 +371,11 @@ ipcRenderer.on("tabRenderer-moveTabToEnd", (event, id) => {
 
 ipcRenderer.on("tabRenderer-setHomePage", (event, homePage) => {
   const btn = document.getElementById("home-btn");
-  if(homePage.on == 1) {
+  if (homePage.on == 1) {
     btn.style.display = "";
     btn.onclick = () => {
       goHome();
-    }
+    };
     btn.title = "Go home\n(" + homePage.url + ")";
   } else {
     btn.style.display = "none";
@@ -414,28 +394,26 @@ ipcRenderer.on("tabRenderer-showTabPreview", (event, id, title, url) => {
   tabRenderer.showTabPreview(id, title, url);
 });
 
-// Init
-
 function init() {
-  loadWinControlsModule().then((winControls) => {
-    applyWinControls(winControls.systemTitlebar);
+  LoadWinControlsUtility.loadWinControls().then((winControls) => {
+    ApplyWinControlsUtility.applyWinControls(winControls.systemTitlebar);
   });
 
   updateTheme();
 }
 
-document.onkeyup = function(e) {
-  if(document.getElementById("find-input") == document.activeElement) {
+document.onkeyup = function (e) {
+  if (document.getElementById("find-input") == document.activeElement) {
     if (e.which == 27) {
       closeFindPanel();
-    } 
+    }
     if (e.which == 13) {
       if (e.shiftKey) {
         findPrev();
       } else {
         findNext();
       }
-    } 
+    }
     if (e.which == 38) {
       e.preventDefault();
       findPrev();
@@ -449,8 +427,8 @@ document.onkeyup = function(e) {
 
 document.onreadystatechange = () => {
   if (document.readyState == "complete") {
-      init();
+    init();
   }
-}
+};
 
-export {}
+export {};

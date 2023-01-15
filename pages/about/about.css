@@ -5,7 +5,7 @@
   src: url(../../assets/fonts/OpenSans-Semibold.ttf);
 }
 
-:root{
+:root {
   --color-red: rgb(255, 63, 52);
   --color-green: rgb(11, 232, 129);
   --color-blue: rgb(15, 188, 249);
@@ -32,7 +32,7 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-	box-sizing: border-box;
+  box-sizing: border-box;
   -webkit-user-drag: none;
 
   font-family: OpenSans;
@@ -81,11 +81,12 @@ body {
   padding-bottom: 8px;
 }
 
-.block-title img, .block-title label {
+.block-title img,
+.block-title label {
   vertical-align: middle;
 }
 
-.block-title label { 
+.block-title label {
   padding-left: 8px;
 }
 

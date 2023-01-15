@@ -10,7 +10,7 @@
   src: url(../../assets/fonts/OpenSans-Semibold.ttf);
 }
 
-:root{
+:root {
   --color-red: rgb(12, 5, 5);
   --color-green: rgb(11, 232, 129);
   --color-blue: rgb(15, 188, 249);
@@ -37,7 +37,7 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-    box-sizing: border-box;
+  box-sizing: border-box;
   -webkit-user-drag: none;
 
   font-family: OpenSans;
@@ -167,17 +167,20 @@
   grid-column: 3;
 }
 
-#titlebar #window-controls .title-bar-btn:hover, #titlebar #window-controls .button:hover {
-  background-color: #E81022;
+#titlebar #window-controls .title-bar-btn:hover,
+#titlebar #window-controls .button:hover {
+  background-color: #e81022;
   color: white;
   opacity: 1 !important;
 }
 
-#titlebar.blur #window-controls .button, #titlebar.blur #window-controls .title-bar-btn {
+#titlebar.blur #window-controls .button,
+#titlebar.blur #window-controls .title-bar-btn {
   opacity: 0.5;
 }
 
-#titlebar #window-controls .button:active, #titlebar #window-controls .title-bar-btn:active {
+#titlebar #window-controls .button:active,
+#titlebar #window-controls .title-bar-btn:active {
   opacity: 0.5 !important;
 }
 
@@ -314,7 +317,8 @@ body.no-titlebar .tab {
   display: block;
 }
 
-#next-btn, #prev-btn {
+#next-btn,
+#prev-btn {
   background-color: var(--color-element);
   position: absolute;
   top: calc(50% - 16px);
@@ -324,7 +328,8 @@ body.no-titlebar .tab {
   outline: none;
 }
 
-#next-btn img, #prev-btn img {
+#next-btn img,
+#prev-btn img {
   padding: 16px 8px;
   transition: padding 0.25s;
   margin-bottom: -4px;
@@ -344,29 +349,34 @@ body.no-titlebar .tab {
   animation-duration: 0.25s;
 }
 
-#next-btn:hover, #prev-btn:hover {
+#next-btn:hover,
+#prev-btn:hover {
   background-color: var(--color-second);
 }
 
-#next-btn:hover img, #prev-btn:hover img {
+#next-btn:hover img,
+#prev-btn:hover img {
   padding: 16px;
 }
 
-#next-btn:focus, #prev-btn:focus {
+#next-btn:focus,
+#prev-btn:focus {
   box-shadow: var(--shadow-focus);
 }
 
-#next-btn:active, #prev-btn:active {
+#next-btn:active,
+#prev-btn:active {
   background-color: var(--color-border);
 }
 
-#next-btn.disable, #prev-btn.disable {
+#next-btn.disable,
+#prev-btn.disable {
   display: none;
 }
 
 /* Input */
 
-input[type=text] {
+input[type="text"] {
   width: calc(100% - 4px);
 }
 
@@ -478,6 +488,8 @@ input[type=text] {
   height: 32px;
 }
 
-.nav-checkbox img, .nav-checkbox label, .nav-checkbox {
+.nav-checkbox img,
+.nav-checkbox label,
+.nav-checkbox {
   vertical-align: middle;
 }
